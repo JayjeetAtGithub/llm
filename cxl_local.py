@@ -1,7 +1,6 @@
 import os
 import PyPDF2
-from llama_index import VectorStoreIndex, SimpleDirectoryReader, ServiceContext, load_index_from_storage, StorageContext
-from llama_index.llms import OpenAI
+from llama_index import VectorStoreIndex, SimpleDirectoryReader, ServiceContext
 
 
 def read_pdf(pdf_path, outfile):
@@ -22,7 +21,9 @@ if __name__ == "__main__":
     outfile.close()
 
     llm = "local"
-    service_context = ServiceContext.from_defaults(llm=llm)
+    embed_model = "local"
+
+    service_context = ServiceContext.from_defaults(llm=llm, embed_model=embed_model)
     documents = SimpleDirectoryReader("papers_data").load_data()
     index = VectorStoreIndex.from_documents(documents)
 

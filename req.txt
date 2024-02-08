@@ -1,0 +1,3 @@
+llama-index
+llama-cpp-python
+pypdf2

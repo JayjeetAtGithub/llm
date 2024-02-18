@@ -1,7 +1,6 @@
 import os
 import PyPDF2
-from llama_index import SimpleDirectoryReader, ServiceContext
-from llama_index.indices.vector_store.base import VectorStoreIndex
+from llama_index.core import SimpleDirectoryReader, ServiceContext, VectorStoreIndex
 
 
 def read_pdf(pdf_path, outfile):

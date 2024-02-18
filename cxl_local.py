@@ -12,6 +12,7 @@ def read_pdf(pdf_path, outfile):
 
 
 if __name__ == "__main__":
+    os.environ["HF_HOME"] = "./cache"
 
     outfile = open('papers_data/papers.txt', 'w')
     for file in os.listdir('./CXL_papers'):

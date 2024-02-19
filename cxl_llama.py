@@ -5,7 +5,7 @@ import torch
 
 from llama_index.llms.huggingface import HuggingFaceLLM
 from llama_index.core import PromptTemplate, Settings, SimpleDirectoryReader, VectorStoreIndex
-from llama_index.embeddings.huggingface import HuggingFaceInferenceAPIEmbedding
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 if __name__ == "__main__":
     # Set up logging
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         model_kwargs={"torch_dtype": torch.float16, "load_in_8bit": True},
     )
 
-    embed_model = HuggingFaceInferenceAPIEmbedding(model_name="BAAI/bge-small-en-v1.5")
+    embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
     Settings.llm = llm
     Settings.embed_model = embed_model
 

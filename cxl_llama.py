@@ -14,7 +14,7 @@ if __name__ == "__main__":
     os.environ["HF_HOME"] = os.path.join(os.getcwd(), "huggingface_cache")
     os.environ["HF_TOKEN"] = "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"
 
-    selected_model = "meta-llama/Llama-2-7b-hf"
+    model = "meta-llama/Llama-2-7b-hf"
 
     SYSTEM_PROMPT = """You are an AI assistant that answers questions in a friendly manner, based on the given source documents. Here are some rules you always follow:
     - Generate human readable output, avoid creating output with gibberish text.
@@ -33,8 +33,8 @@ if __name__ == "__main__":
         max_new_tokens=2048,
         generate_kwargs={"temperature": 0.7, "do_sample": True},
         query_wrapper_prompt=query_wrapper_prompt,
-        tokenizer_name=selected_model,
-        model_name=selected_model,
+        tokenizer_name=model,
+        model_name=model,
         device_map="auto",
         # change these settings below depending on your GPU
         model_kwargs={"torch_dtype": torch.float16, "load_in_8bit": False},

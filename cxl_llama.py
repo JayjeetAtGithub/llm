@@ -31,7 +31,7 @@ if __name__ == "__main__":
     llm = HuggingFaceLLM(
         context_window=4096,
         max_new_tokens=2048,
-        generate_kwargs={"temperature": 0.7, "do_sample": False},
+        generate_kwargs={"temperature": 0.7, "do_sample": True},
         query_wrapper_prompt=query_wrapper_prompt,
         tokenizer_name=selected_model,
         model_name=selected_model,
@@ -40,6 +40,7 @@ if __name__ == "__main__":
         model_kwargs={"torch_dtype": torch.float16, "load_in_8bit": False},
     )
 
+    # Set the embeddings in Settings object
     embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
     Settings.llm = llm
     Settings.embed_model = embed_model

@@ -39,7 +39,7 @@ if __name__ == "__main__":
         model_kwargs={"torch_dtype": torch.float16, "load_in_8bit": True},
     )
 
-    embed_model = HuggingFaceInferenceAPIEmbedding(model_name="BAAI/bge-small-en-v1.5")
+    embed_model = HuggingFaceInferenceAPIEmbedding(model_name="BAAI/bge-small-en-v1.5", token="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")
     Settings.llm = llm
     Settings.embed_model = embed_model
 

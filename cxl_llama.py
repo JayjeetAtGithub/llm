@@ -11,7 +11,7 @@ if __name__ == "__main__":
     # Set up logging
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-    os.environ["TRANSFORMERS_CACHE"] = os.path.join(os.getcwd(), "huggingface_cache")
+    os.environ["HF_HOME"] = os.path.join(os.getcwd(), "huggingface_cache")
     os.environ["HF_TOKEN"] = "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"
 
     selected_model = "meta-llama/Llama-2-7b-hf"

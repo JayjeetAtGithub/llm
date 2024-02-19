@@ -35,12 +35,11 @@ if __name__ == "__main__":
         tokenizer_name=selected_model,
         model_name=selected_model,
         device_map="auto",
-        token="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",
         # change these settings below depending on your GPU
         model_kwargs={"torch_dtype": torch.float16, "load_in_8bit": True},
     )
 
-    embed_model = HuggingFaceInferenceAPIEmbedding(model_name="BAAI/bge-small-en-v1.5", token="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")
+    embed_model = HuggingFaceInferenceAPIEmbedding(model_name="BAAI/bge-small-en-v1.5")
     Settings.llm = llm
     Settings.embed_model = embed_model
 

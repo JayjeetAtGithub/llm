@@ -1,6 +1,5 @@
 import os
-from llama_index.core import ServiceContext, SimpleDirectoryReader, VectorStoreIndex, StorageContext, load_index_from_storage
-from llama_index.llms.openai import OpenAI
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext, load_index_from_storage
 import PyPDF2
 
 
@@ -23,8 +22,6 @@ if __name__ == "__main__":
     PERSIST_DIR = "./papers_storage"
     if not os.path.exists(PERSIST_DIR):
         # load the documents and create the index
-        llm = OpenAI(model="gpt-3.5-turbo", temperature=0)
-        service_context = ServiceContext.from_defaults(llm=llm)
         documents = SimpleDirectoryReader("papers_data").load_data()
         index = VectorStoreIndex.from_documents(documents)
         # store it for later
@@ -35,7 +32,7 @@ if __name__ == "__main__":
         index = load_index_from_storage(storage_context)
 
 
-    query_engine = index.as_query_engine(similarity_top_k=5)
+    query_engine = index.as_query_engine()
     while True:
         prompt = str(input("Enter your query: "))
         response = query_engine.query(prompt)

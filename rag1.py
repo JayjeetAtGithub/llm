@@ -26,12 +26,9 @@ if __name__ == "__main__":
     # )
 
     # embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
+    # Settings.llm = llm
     # Settings.embed_model = embed_model
-
-    llm = OpenAI(model="gpt-3.5-turbo", temperature=0)
-    Settings.llm = llm
-
-
+    
     documents = SimpleDirectoryReader("papers_data").load_data()
 
     vector_store = LanceDBVectorStore(uri="/tmp/lancedb")

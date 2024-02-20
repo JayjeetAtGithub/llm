@@ -4,22 +4,19 @@ import sys
 import torch
 import textwrap
 
-from llama_index.llms.huggingface import HuggingFaceLLM
-from llama_index.core import PromptTemplate, Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.vector_stores.lancedb import LanceDBVectorStore
+os.environ["TRANSFORMERS_CACHE"] = os.path.join(os.getcwd(), "huggingface_cache")
+os.environ["HF_TOKEN"] = "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"
+os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")
+
 
 if __name__ == "__main__":
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-    os.environ["TRANSFORMERS_CACHE"] = os.path.join(os.getcwd(), "huggingface_cache")
-    os.environ["HF_TOKEN"] = "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"
-    os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")
 
-    print("Environment variables: ")
-    print(os.environ["TRANSFORMERS_CACHE"])
-    print(os.environ["HF_TOKEN"])
-    print(os.environ["LANCEDB_CONFIG_DIR"])
+    from llama_index.llms.huggingface import HuggingFaceLLM
+    from llama_index.core import PromptTemplate, Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
+    from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+    from llama_index.vector_stores.lancedb import LanceDBVectorStore
 
     model = "meta-llama/Llama-2-7b-hf"
 

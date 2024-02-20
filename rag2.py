@@ -15,20 +15,6 @@ if __name__ == "__main__":
         completion_to_prompt,
     )
 
-    model = "meta-llama/Llama-2-7b-hf"
-
-    SYSTEM_PROMPT = """You are an AI assistant that answers questions in a friendly manner, based on the given source documents. Here are some rules you always follow:
-    - Generate human readable output, avoid creating output with gibberish text.
-    - Generate only the requested output, don't include any other language before or after the requested output.
-    - Never say thank you, that you are happy to help, that you are an AI agent, etc. Just answer directly.
-    - Generate professional language typically used in business documents in North America.
-    - Never generate offensive or foul language.
-    """
-
-    prompt = PromptTemplate(
-        "[INST]<<SYS>>\n" + SYSTEM_PROMPT + "<</SYS>>\n\n{query_str}[/INST] "
-    )
-    
     model_url = "https://huggingface.co/TheBloke/Llama-2-7B-GGUF/resolve/main/llama-2-7b.Q5_K_M.gguf"
 
     llm = LlamaCPP(

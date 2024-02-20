@@ -5,7 +5,7 @@ os.environ["HF_HOME"] = os.path.join(os.getcwd(), "huggingface_cache")
 os.environ["HF_TOKEN"] = "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"
 os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")
 os.environ["PYTORCH_KERNEL_CACHE_PATH"] = os.path.join(os.getcwd(), "pytorch_kernel_cache")
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "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"
 
 if __name__ == "__main__":
     from llama_index.llms.huggingface import HuggingFaceLLM

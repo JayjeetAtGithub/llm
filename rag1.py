@@ -9,7 +9,7 @@ os.environ["PYTORCH_KERNEL_CACHE_PATH"] = os.path.join(os.getcwd(), "pytorch_ker
 if __name__ == "__main__":
     from llama_index.llms.huggingface import HuggingFaceLLM
     from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
-    from llama_index.core.prompts import SimpleInputPrompt
+    from llama_index.core.prompts.prompts import SimpleInputPrompt
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
     from llama_index.vector_stores.lancedb import LanceDBVectorStore
 

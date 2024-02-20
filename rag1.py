@@ -24,7 +24,7 @@ if __name__ == "__main__":
     llm = HuggingFaceLLM(
         context_window=4096,
         max_new_tokens=256,
-        generate_kwargs={"temperature": 0.0, "do_sample": True},
+        generate_kwargs={"temperature": 0.0, "do_sample": False},
         system_prompt=system_prompt,
         query_wrapper_prompt=query_wrapper_prompt,
         tokenizer_name=model,

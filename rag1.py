@@ -10,9 +10,6 @@ os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")
 os.environ["PYTORCH_KERNEL_CACHE_PATH"] = os.path.join(os.getcwd(), "pytorch_kernel_cache")
 
 if __name__ == "__main__":
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-    logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-
     from llama_index.llms.huggingface import HuggingFaceLLM
     from llama_index.core import PromptTemplate, Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
@@ -33,7 +30,7 @@ if __name__ == "__main__":
     )
     
     llm = HuggingFaceLLM(
-        context_window=4096,
+        context_window=32000,
         max_new_tokens=2048,
         generate_kwargs={"temperature": 0.7, "do_sample": True},
         query_wrapper_prompt=prompt,

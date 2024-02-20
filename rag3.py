@@ -1,9 +1,7 @@
 import os
-from llama_index import VectorStoreIndex, SimpleDirectoryReader, ServiceContext, load_index_from_storage, StorageContext
-from llama_index.llms import OpenAI
-from pathlib import Path
+from llama_index.core import ServiceContext, SimpleDirectoryReader, VectorStoreIndex, StorageContext, load_index_from_storage
+from llama_index.llms.openai import OpenAI
 import PyPDF2
-from llama_index import download_loader
 
 
 def read_pdf(pdf_path, outfile):

@@ -37,6 +37,8 @@ if __name__ == "__main__":
         documents, storage_context=storage_context
     )
 
+    query = str(input("Enter query: "))
+
     query_engine = index.as_query_engine()
-    response = query_engine.query("What is a CXL type 3 device ? How is it different from a Type 1 device ?")
+    response = query_engine.query(query)
     print(response)

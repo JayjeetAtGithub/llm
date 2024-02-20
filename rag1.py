@@ -8,27 +8,36 @@ os.environ["PYTORCH_KERNEL_CACHE_PATH"] = os.path.join(os.getcwd(), "pytorch_ker
 
 if __name__ == "__main__":
     from llama_index.llms.huggingface import HuggingFaceLLM
-    from llama_index.llms.openai import OpenAI
     from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
     from llama_index.vector_stores.lancedb import LanceDBVectorStore
+    from llama_index.prompts.prompts import SimpleInputPrompt
 
-    # model = "meta-llama/Llama-2-7b-hf"
-    
-    # llm = HuggingFaceLLM(
-    #     context_window=4096,
-    #     max_new_tokens=2048,
-    #     generate_kwargs={"temperature": 0.1},
-    #     tokenizer_name=model,
-    #     model_name=model,
-    #     device_map="auto",
-    #     model_kwargs={"torch_dtype": torch.float16, "load_in_8bit": False},
-    # )
+    system_prompt = """
+        You are a Q/A assistant for a research paper library. Your goal is to answer questions 
+        as accurately as possible based on the instructions and context provided.  
+    """
+    query_wrapper_prompt = SimpleInputPrompt("<|USER|>{query_str}<|ASSISTANT|>")
 
-    # embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
-    # Settings.llm = llm
-    # Settings.embed_model = embed_model
+    model = "meta-llama/Llama-2-7b-hf"
     
+    llm = HuggingFaceLLM(
+        context_window=4096,
+        max_new_tokens=256,
+        generate_kwargs={"temperature": 0.0, "do_sample": False},
+        system_prompt=system_prompt,
+        query_wrapper_prompt=query_wrapper_prompt,
+        tokenizer_name=model,
+        model_name=model,
+        device_map="auto",
+        model_kwargs={"torch_dtype": torch.float16, "load_in_8bit": False},
+    )
+
+    embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
+    
+    Settings.llm = llm
+    Settings.embed_model = embed_model
+
     documents = SimpleDirectoryReader("papers_data").load_data()
 
     vector_store = LanceDBVectorStore(uri="/tmp/lancedb")

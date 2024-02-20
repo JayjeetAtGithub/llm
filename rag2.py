@@ -10,10 +10,10 @@ if __name__ == "__main__":
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
     from llama_index.vector_stores.lancedb import LanceDBVectorStore
     from llama_index.llms.llama_cpp import LlamaCPP
-    from llama_index.llms.llama_cpp.llama_utils import (
-        messages_to_prompt,
-        completion_to_prompt,
-    )
+    # from llama_index.llms.llama_cpp.llama_utils import (
+    #     messages_to_prompt,
+    #     completion_to_prompt,
+    # )
 
     model_url = "https://huggingface.co/TheBloke/Llama-2-7B-GGUF/resolve/main/llama-2-7b.Q5_K_M.gguf"
 
@@ -25,8 +25,8 @@ if __name__ == "__main__":
         context_window=3900,
         generate_kwargs={},
         model_kwargs={"n_gpu_layers": 3},
-        messages_to_prompt=messages_to_prompt,
-        completion_to_prompt=completion_to_prompt,
+        # messages_to_prompt=messages_to_prompt,
+        # completion_to_prompt=completion_to_prompt,
         verbose=True,
     )
 

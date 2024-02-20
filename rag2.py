@@ -1,5 +1,4 @@
 import os
-import torch
 
 os.environ["HF_HOME"] = os.path.join(os.getcwd(), "huggingface_cache")
 os.environ["HF_TOKEN"] = "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"

@@ -19,7 +19,7 @@ if __name__ == "__main__":
     """
     query_wrapper_prompt = SimpleInputPrompt("<|USER|>{query_str}<|ASSISTANT|>")
 
-    model = "meta-llama/Llama-2-7b-hf"
+    model = "meta-llama/Llama-2-7b-chat-hf"
     
     llm = HuggingFaceLLM(
         context_window=4096,
@@ -37,6 +37,7 @@ if __name__ == "__main__":
     
     Settings.llm = llm
     Settings.embed_model = embed_model
+    Settings.chunk_size = 1024
 
     documents = SimpleDirectoryReader("papers_data").load_data()
 

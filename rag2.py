@@ -15,7 +15,7 @@ if __name__ == "__main__":
     #     completion_to_prompt,
     # )
 
-    model_url = "https://huggingface.co/TheBloke/Llama-2-7B-GGUF/resolve/main/llama-2-7b.Q5_K_M.gguf"
+    model_url = "https://huggingface.co/TheBloke/Llama-2-7B-GGUF/resolve/main/llama-2-7b.Q3_K_M.gguf"
 
     llm = LlamaCPP(
         model_url=model_url,

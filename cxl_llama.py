@@ -2,10 +2,12 @@ import os
 import logging
 import sys
 import torch
+import textwrap
 
 from llama_index.llms.huggingface import HuggingFaceLLM
-from llama_index.core import PromptTemplate, Settings, SimpleDirectoryReader, VectorStoreIndex
+from llama_index.core import PromptTemplate, Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.vector_stores.lancedb import LanceDBVectorStore
 
 if __name__ == "__main__":
     # Set up logging
@@ -46,7 +48,13 @@ if __name__ == "__main__":
     Settings.embed_model = embed_model
 
     documents = SimpleDirectoryReader("papers_data").load_data()
-    index = VectorStoreIndex.from_documents(documents)
+
+    vector_store = LanceDBVectorStore(uri="/tmp/lancedb")
+    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+    index = VectorStoreIndex.from_documents(
+        documents, storage_context=storage_context
+    )
+
     query_engine = index.as_query_engine()
     response = query_engine.query("What did the author do growing up?")
-    print(response)
+    print(textwrap.fill(str(response), 100))

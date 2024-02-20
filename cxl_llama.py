@@ -15,6 +15,7 @@ if __name__ == "__main__":
     logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
     os.environ["HF_HOME"] = os.path.join(os.getcwd(), "huggingface_cache")
     os.environ["HF_TOKEN"] = "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"
+    os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")
 
     model = "meta-llama/Llama-2-7b-hf"
 

@@ -13,8 +13,6 @@ def read_pdf(pdf_path, outfile):
 
 
 if __name__ == "__main__":
-    os.environ["OPENAI_API_KEY"] = "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"
-
     outfile = open('papers_data/papers.txt', 'w')
     for file in os.listdir('./CXL_papers'):
         if file.endswith('.pdf'):

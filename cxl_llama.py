@@ -10,7 +10,6 @@ from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.lancedb import LanceDBVectorStore
 
 if __name__ == "__main__":
-    # Set up logging
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
     os.environ["HF_HOME"] = os.path.join(os.getcwd(), "huggingface_cache")
@@ -27,23 +26,22 @@ if __name__ == "__main__":
     - Never generate offensive or foul language.
     """
 
-    query_wrapper_prompt = PromptTemplate(
+    prompt = PromptTemplate(
         "[INST]<<SYS>>\n" + SYSTEM_PROMPT + "<</SYS>>\n\n{query_str}[/INST] "
     )
+    print(prompt)
 
     llm = HuggingFaceLLM(
         context_window=4096,
         max_new_tokens=2048,
         generate_kwargs={"temperature": 0.7, "do_sample": True},
-        query_wrapper_prompt=query_wrapper_prompt,
+        query_wrapper_prompt=prompt,
         tokenizer_name=model,
         model_name=model,
         device_map="auto",
-        # change these settings below depending on your GPU
         model_kwargs={"torch_dtype": torch.float16, "load_in_8bit": False},
     )
 
-    # Set the embeddings in Settings object
     embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
     Settings.llm = llm
     Settings.embed_model = embed_model

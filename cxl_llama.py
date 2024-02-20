@@ -16,6 +16,11 @@ if __name__ == "__main__":
     os.environ["HF_TOKEN"] = "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"
     os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")
 
+    print("Environment variables: ")
+    print(os.environ["TRANSFORMERS_CACHE"])
+    print(os.environ["HF_TOKEN"])
+    print(os.environ["LANCEDB_CONFIG_DIR"])
+
     model = "meta-llama/Llama-2-7b-hf"
 
     SYSTEM_PROMPT = """You are an AI assistant that answers questions in a friendly manner, based on the given source documents. Here are some rules you always follow:

@@ -61,11 +61,14 @@ if __name__ == "__main__":
     )
 
     # Query the index
-    while True:
-        query = str(input("Enter query: "))
-        if len(query) > 0:
-            query_engine = index.as_query_engine()
-            response = query_engine.query(query)
-            print(response)
-        else:
-            print("No query provided !")
+    try:
+        while True:
+            query = str(input("Enter query: "))
+            if len(query) > 0:
+                query_engine = index.as_query_engine()
+                response = query_engine.query(query)
+                print(response)
+            else:
+                print("No query provided !")
+    except KeyboardInterrupt:
+        print("Exiting...")

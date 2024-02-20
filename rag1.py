@@ -8,10 +8,9 @@ os.environ["PYTORCH_KERNEL_CACHE_PATH"] = os.path.join(os.getcwd(), "pytorch_ker
 
 if __name__ == "__main__":
     from llama_index.llms.huggingface import HuggingFaceLLM
-    from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
+    from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext, SimpleInputPrompt
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
     from llama_index.vector_stores.lancedb import LanceDBVectorStore
-    from llama_index.prompts.prompts import SimpleInputPrompt
 
     system_prompt = """
         You are a Q/A assistant for a research paper library. Your goal is to answer questions 

@@ -6,7 +6,7 @@ os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")
 os.environ["PYTORCH_KERNEL_CACHE_PATH"] = os.path.join(os.getcwd(), "pytorch_kernel_cache")
 
 if __name__ == "__main__":
-    from llama_index.core import PromptTemplate, Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
+    from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
     from llama_index.vector_stores.lancedb import LanceDBVectorStore
     from llama_index.llms.llama_cpp import LlamaCPP
@@ -25,7 +25,7 @@ if __name__ == "__main__":
         # llama2 has a context window of 4096 tokens, but we set it lower to allow for some wiggle room
         context_window=3900,
         generate_kwargs={},
-        model_kwargs={"n_gpu_layers": 1},
+        model_kwargs={"n_gpu_layers": 3},
         messages_to_prompt=messages_to_prompt,
         completion_to_prompt=completion_to_prompt,
         verbose=True,

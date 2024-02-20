@@ -53,5 +53,5 @@ if __name__ == "__main__":
     )
 
     query_engine = index.as_query_engine()
-    response = query_engine.query("Types of CXL devices ?")
+    response = query_engine.query("What is a CXL type 3 device ? How is it different from a Type 1 device ?")
     print(response)

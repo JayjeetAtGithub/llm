@@ -6,7 +6,7 @@ A RAG (Retrieval Augmented Generation) application built using Llama-Index to br
 
 1. Clone the repository.
 ```bash
-git clone https://github.com/JayjeetAtGithub/cxl-rag
+git clone https://github.com/JayjeetAtGithub/rag-app
 cd rag-app/
 ```
 

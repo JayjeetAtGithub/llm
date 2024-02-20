@@ -56,5 +56,5 @@ if __name__ == "__main__":
     )
 
     query_engine = index.as_query_engine()
-    response = query_engine.query("What did the author do growing up?")
+    response = query_engine.query("What is CXL?")
     print(textwrap.fill(str(response), 100))

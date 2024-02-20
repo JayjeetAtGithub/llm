@@ -30,7 +30,7 @@ if __name__ == "__main__":
     )
     
     llm = HuggingFaceLLM(
-        context_window=32000,
+        context_window=4096,
         max_new_tokens=2048,
         generate_kwargs={"temperature": 0.7, "do_sample": True},
         query_wrapper_prompt=prompt,

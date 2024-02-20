@@ -12,7 +12,7 @@ from llama_index.vector_stores.lancedb import LanceDBVectorStore
 if __name__ == "__main__":
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-    os.environ["HF_HOME"] = os.path.join(os.getcwd(), "huggingface_cache")
+    os.environ["TRANSFORMERS_CACHE"] = os.path.join(os.getcwd(), "huggingface_cache")
     os.environ["HF_TOKEN"] = "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"
     os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")
 

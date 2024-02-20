@@ -9,29 +9,16 @@ os.environ["OPENAI_API_KEY"] = "sk-w0kZXOlvsAr99HjVHG5DT3BlbkFJo9XirrjfFrmEsVQYb
 
 if __name__ == "__main__":
     from llama_index.llms.huggingface import HuggingFaceLLM
-    from llama_index.core import PromptTemplate, Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
+    from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex, StorageContext
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
     from llama_index.vector_stores.lancedb import LanceDBVectorStore
 
     model = "meta-llama/Llama-2-7b-hf"
-
-    SYSTEM_PROMPT = """You are an AI assistant that answers questions in a friendly manner, based on the given source documents. Here are some rules you always follow:
-    - Generate human readable output, avoid creating output with gibberish text.
-    - Generate only the requested output, don't include any other language before or after the requested output.
-    - Never say thank you, that you are happy to help, that you are an AI agent, etc. Just answer directly.
-    - Generate professional language typically used in business documents in North America.
-    - Never generate offensive or foul language.
-    """
-
-    prompt = PromptTemplate(
-        "[INST]<<SYS>>\n" + SYSTEM_PROMPT + "<</SYS>>\n\n{query_str}[/INST] "
-    )
     
     llm = HuggingFaceLLM(
         context_window=4096,
         max_new_tokens=2048,
-        generate_kwargs={"temperature": 0.7, "do_sample": True},
-        query_wrapper_prompt=prompt,
+        generate_kwargs={"temperature": 0.0},
         tokenizer_name=model,
         model_name=model,
         device_map="auto",

@@ -4,7 +4,7 @@ import sys
 import torch
 import textwrap
 
-os.environ["TRANSFORMERS_CACHE"] = os.path.join(os.getcwd(), "huggingface_cache")
+os.environ["HF_HOME"] = os.path.join(os.getcwd(), "huggingface_cache")
 os.environ["HF_TOKEN"] = "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"
 os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")
 

@@ -31,8 +31,7 @@ if __name__ == "__main__":
     prompt = PromptTemplate(
         "[INST]<<SYS>>\n" + SYSTEM_PROMPT + "<</SYS>>\n\n{query_str}[/INST] "
     )
-    print(prompt)
-
+    
     llm = HuggingFaceLLM(
         context_window=4096,
         max_new_tokens=2048,

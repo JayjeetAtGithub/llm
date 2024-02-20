@@ -20,9 +20,8 @@ if __name__ == "__main__":
     llm = LlamaCPP(
         model_url=model_url,
         model_path=None,
-        temperature=0.1,
-        max_new_tokens=256,
-        # llama2 has a context window of 4096 tokens, but we set it lower to allow for some wiggle room
+        temperature=0.0,
+        max_new_tokens=1024,
         context_window=3900,
         generate_kwargs={},
         model_kwargs={"n_gpu_layers": 3},

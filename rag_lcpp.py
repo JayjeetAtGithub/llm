@@ -10,23 +10,23 @@ if __name__ == "__main__":
     from llama_index.embeddings.huggingface import HuggingFaceEmbedding
     from llama_index.vector_stores.lancedb import LanceDBVectorStore
     from llama_index.llms.llama_cpp import LlamaCPP
-    # from llama_index.llms.llama_cpp.llama_utils import (
-    #     messages_to_prompt,
-    #     completion_to_prompt,
-    # )
+    from llama_index.llms.llama_cpp.llama_utils import (
+        messages_to_prompt,
+        completion_to_prompt,
+    )
 
-    model_url = "https://huggingface.co/TheBloke/Llama-2-7B-GGUF/resolve/main/llama-2-7b.Q3_K_M.gguf"
+    model_url = "https://huggingface.co/TheBloke/Llama-2-7B-GGUF/resolve/main/llama-2-7b-chat.Q5_K_M.gguf"
 
     llm = LlamaCPP(
         model_url=model_url,
         model_path=None,
         temperature=0.0,
-        max_new_tokens=1024,
-        context_window=3900,
+        max_new_tokens=2048,
+        context_window=4096,
         generate_kwargs={},
         model_kwargs={"n_gpu_layers": 3},
-        # messages_to_prompt=messages_to_prompt,
-        # completion_to_prompt=completion_to_prompt,
+        messages_to_prompt=messages_to_prompt,
+        completion_to_prompt=completion_to_prompt,
         verbose=True,
     )
 
@@ -43,5 +43,15 @@ if __name__ == "__main__":
     )
 
     query_engine = index.as_query_engine()
-    response = query_engine.query("What is a CXL type 3 device ? How is it different from a Type 1 device ?")
-    print(response)
+    # Query the index
+    try:
+        while True:
+            query = str(input("Enter query: "))
+            if len(query) > 0:
+                query_engine = index.as_query_engine()
+                response = query_engine.query(query)
+                print(response)
+            else:
+                print("No query provided !")
+    except KeyboardInterrupt:
+        print("Exiting...")

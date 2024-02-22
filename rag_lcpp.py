@@ -17,6 +17,9 @@ if __name__ == "__main__":
 
     model_url = "https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGUF/resolve/main/llama-2-7b-chat.Q5_K_M.gguf"
 
+    print(messages_to_prompt)
+    print(completion_to_prompt)
+
     llm = LlamaCPP(
         model_url=model_url,
         model_path=None,

@@ -31,8 +31,14 @@ if __name__ == "__main__":
     """
     query_wrapper_prompt = SimpleInputPrompt("<|USER|>{query_str}<|ASSISTANT|>")
 
-    # Define the LLM and Embedding models
-    model = "meta-llama/Llama-2-7b-chat-hf"
+    model_to_use = str(input("Enter the Llama model to use (7b/13b): "))
+    if model_to_use == "7b":
+        model = "meta-llama/Llama-2-7b-chat-hf"
+    elif model_to_use == "13b":
+        model = "meta-llama/Llama-2-13b-chat-hf"
+    else:
+        print("Invalid model specified. Exiting...")
+        exit(1)
     
     llm = HuggingFaceLLM(
         context_window=4096,
@@ -72,3 +78,4 @@ if __name__ == "__main__":
                 print("No query provided !")
     except KeyboardInterrupt:
         print("Exiting...")
+        exit(0)

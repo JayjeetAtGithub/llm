@@ -32,7 +32,7 @@ if __name__ == "__main__":
     query_wrapper_prompt = SimpleInputPrompt("<|USER|>{query_str}<|ASSISTANT|>")
 
     model_to_use = str(input("Enter the Llama model to use (7b/13b): "))
-    model = f"codellama/CodeLlama-{model_to_use}-hf"
+    model = f"codellama/CodeLlama-{model_to_use}-instruct-hf"
 
     llm = HuggingFaceLLM(
         context_window=4096,

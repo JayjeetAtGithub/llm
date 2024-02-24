@@ -26,10 +26,8 @@ if __name__ == "__main__":
 
     # Define the system and query wrapper prompts
     system_prompt = """
-        You are a Q/A assistant for a research paper library. Your goal is to answer questions 
-        as accurately as possible based on the instructions and context provided.  
+        You are an expert programmer that writes simple, concise code and explanations.
     """
-    query_wrapper_prompt = SimpleInputPrompt("<|USER|>{query_str}<|ASSISTANT|>")
 
     model_to_use = str(input("Enter the Llama model to use (7b/13b): "))
     model = f"codellama/CodeLlama-{model_to_use}-instruct-hf"
@@ -39,7 +37,6 @@ if __name__ == "__main__":
         max_new_tokens=2048,
         generate_kwargs={"temperature": 0.0, "do_sample": False},
         system_prompt=system_prompt,
-        query_wrapper_prompt=query_wrapper_prompt,
         tokenizer_name=model,
         model_name=model,
         device_map="auto",

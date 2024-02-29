@@ -9,10 +9,8 @@ from llama_index.llms.llama_cpp.llama_utils import (
 )
 
 if __name__ == "__main__":
-    model_url = "https://huggingface.co/TheBloke/CodeLlama-34B-GGUF/resolve/main/codellama-34b.Q5_K_M.gguf"
     llm = LlamaCPP(
-        model_url=model_url,
-        model_path=None,
+        model_path="codellama-34b.Q5_K_M.gguf",
         temperature=0.1,
         max_new_tokens=256,
         context_window=3900,

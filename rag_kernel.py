@@ -1,5 +1,6 @@
 import os
-from llama_index.core import Settings, GithubRepositoryReader, StorageContext, load_index_from_storage, VectorStoreIndex
+from llama_index.core import Settings, StorageContext, load_index_from_storage, VectorStoreIndex
+from llama_index.readers.github import GithubRepositoryReader
 from llama_index.llms.llama_cpp import LlamaCPP
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.llama_cpp.llama_utils import (

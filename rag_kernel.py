@@ -35,7 +35,7 @@ if __name__ == "__main__":
         storage_context = StorageContext.from_defaults(persist_dir="./storage")
         index = load_index_from_storage(storage_context)
     else:
-        reader = GithubRepositoryReader("JayjeetAtGithub", "llm", ignore_directories=[".github", ".vscode", "benchmarks", "docs", "examples", "experimental", "scripts", "tests"])
+        reader = GithubRepositoryReader("JayjeetAtGithub", "llm", use_parser=False, verbose=False)
         branch_documents = reader.load_data(branch="main")
         index = VectorStoreIndex.from_documents(branch_documents)
         index.storage_context.persist()

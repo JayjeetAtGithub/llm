@@ -8,6 +8,17 @@ from llama_index.llms.llama_cpp.llama_utils import (
     completion_to_prompt,
 )
 
+# Setup the local caches for HuggingFace, LanceDB and PyTorch
+if not os.path.exists("huggingface_cache"):
+    os.makedirs("huggingface_cache")
+
+if not os.path.exists("lancedb_config"):
+    os.makedirs("lancedb_config")
+
+if not os.path.exists("pytorch_kernel_cache"):
+    os.makedirs("pytorch_kernel_cache")
+
+
 os.environ["HF_HOME"] = os.path.join(os.getcwd(), "huggingface_cache")
 os.environ["HF_TOKEN"] = "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"
 os.environ["LANCEDB_CONFIG_DIR"] = os.path.join(os.getcwd(), "lancedb_config")

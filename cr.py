@@ -1,6 +1,7 @@
 import os
 import chromadb
 import nltk
+import shutil
 from sentence_transformers import SentenceTransformer
 
 os.environ["OPENAI_API_KEY"] = "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"
@@ -15,6 +16,10 @@ def split_text_into_sentences(text):
 if __name__ == "__main__":
     from llama_index.core import SimpleDirectoryReader
     from llama_index.embeddings.openai import OpenAIEmbedding
+
+    # Remove previous instances
+    if os.path.exists("./chroma_db"):
+        shutil.rmtree("./chroma_db")
 
     # Instantiate the ChromaDB client and collection
     db = chromadb.PersistentClient(path="./chroma_db")

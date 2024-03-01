@@ -31,8 +31,6 @@ def get_embedding(text, model="text-embedding-3-small"):
 
 
 if __name__ == "__main__":
-    from llama_index.embeddings.openai import OpenAIEmbedding
-
     # Remove previous instances
     if os.path.exists("./chroma_db"):
         shutil.rmtree("./chroma_db")

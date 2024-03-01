@@ -3,7 +3,6 @@ import chromadb
 import nltk
 import shutil
 from dotenv import load_dotenv, find_dotenv
-from sentence_transformers import SentenceTransformer
 
 # Initializations
 load_dotenv(find_dotenv())
@@ -33,7 +32,7 @@ if __name__ == "__main__":
 
     # Generate embeddings for each sentence
     embed_model = OpenAIEmbedding(model="text-embedding-3-small")
-    for idx, sentence in enumerate(sentences[:100]):
+    for idx, sentence in enumerate(sentences[:500]):
         embeddings = embed_model.get_text_embedding(sentence)
         chroma_collection.add(
             documents=[sentence],

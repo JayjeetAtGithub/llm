@@ -2,9 +2,11 @@ import os
 import chromadb
 import nltk
 import shutil
+from dotenv import load_dotenv, find_dotenv
 from sentence_transformers import SentenceTransformer
 
-os.environ["OPENAI_API_KEY"] = "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"
+# Initializations
+load_dotenv(find_dotenv())
 nltk.download('punkt')
 
 

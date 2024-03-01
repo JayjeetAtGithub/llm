@@ -2,20 +2,30 @@ import os
 import chromadb
 import nltk
 import shutil
+from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 
 # Initializations
 load_dotenv(find_dotenv())
 nltk.download('punkt')
-
+client = OpenAI()
 
 def split_text_into_sentences(text):
     sentences = nltk.sent_tokenize(text)
     return sentences
 
 
+def read_txt_file(file_path):
+    with open(file_path, "r") as file:
+        return file.read()
+    
+
+def get_embedding(text, model="text-embedding-3-small"):
+   text = text.replace("\n", " ")
+   return client.embeddings.create(input = [text], model=model).data[0].embedding
+
+
 if __name__ == "__main__":
-    from llama_index.core import SimpleDirectoryReader
     from llama_index.embeddings.openai import OpenAIEmbedding
 
     # Remove previous instances
@@ -27,13 +37,12 @@ if __name__ == "__main__":
     chroma_collection = db.get_or_create_collection("quickstart")
 
     # Read data and chunk them into sentences
-    documents = SimpleDirectoryReader("papers_data").load_data()
-    sentences = split_text_into_sentences(documents[0].text)
+    document = read_txt_file("papers_data/papers.txt")
+    sentences = split_text_into_sentences(document)
 
     # Generate embeddings for each sentence
-    embed_model = OpenAIEmbedding(model="text-embedding-3-small")
     for idx, sentence in enumerate(sentences[:500]):
-        embeddings = embed_model.get_text_embedding(sentence)
+        embeddings = get_embedding(sentence)
         chroma_collection.add(
             documents=[sentence],
             ids=[f"id{idx}"],

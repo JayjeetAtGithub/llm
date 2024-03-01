@@ -1,5 +1,4 @@
 import os
-import chromadb
 import nltk
 import shutil
 from openai import OpenAI
@@ -9,6 +8,9 @@ from dotenv import load_dotenv, find_dotenv
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+import chromadb
+
 load_dotenv(find_dotenv())
 nltk.download('punkt')
 client = OpenAI()

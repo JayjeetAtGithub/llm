@@ -43,5 +43,4 @@ if __name__ == "__main__":
         )
         print(f"Added {idx}")
 
-    print(chroma_collection.peek())
     print(chroma_collection.count())

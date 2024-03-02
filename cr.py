@@ -47,8 +47,7 @@ if __name__ == "__main__":
     sentences = split_text_into_sentences(document)
 
     embeddings_list = list()
-    for sentence in sentences:
-        print("Getting embeddings")
+    for sentence in sentences[:100]:
         embeddings_list.append(get_embedding(sentence))
 
     profiler.start()

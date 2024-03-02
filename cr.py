@@ -54,7 +54,7 @@ if __name__ == "__main__":
             "token": sentence,
             "embedding": vector_embedding
         })
-
+    print(len(embeddings_list))
     with open("embeddings.txt", "w") as file:
         file.write(json.dumps(embeddings_list))
 

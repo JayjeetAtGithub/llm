@@ -48,14 +48,15 @@ if __name__ == "__main__":
     sentences = split_text_into_sentences(document)
 
     embeddings_list = list()
-    for sentence in sentences[:2]:
+    for idx, sentence in enumerate(sentences):
+        print(f"Processing {idx}")
         vector_embedding = get_embedding(sentence)
         embeddings_list.append({
+            "id": idx,
             "token": sentence,
             "embedding": vector_embedding
         })
-    print((embeddings_list[0]["token"]))
-    print((embeddings_list[1]["token"]))
+
     with open("embeddings.txt", "w") as file:
         file.write(json.dumps(embeddings_list))
 

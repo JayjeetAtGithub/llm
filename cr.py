@@ -50,7 +50,7 @@ if __name__ == "__main__":
     for sentence in sentences[:100]:
         vector_embedding = get_embedding(sentence)
         embeddings_list.append(vector_embedding)
-        print(vector_embedding)
+        print(type(vector_embedding))
 
     profiler.start()
     # Generate embeddings for each sentence

@@ -22,7 +22,7 @@ def read_txt_file(file_path):
 
 def get_openai_embedding(text, model="text-embedding-3-small"):
    text = text.replace("\n", " ")
-   return client.embeddings.create(input = [text], model=model).data[0].embedding
+   return client.embeddings.create(input = [text], model=model).data[0].embedding[:5]
 
 
 def write_embeddings_to_file(embeddings_list):

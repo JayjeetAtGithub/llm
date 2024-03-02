@@ -48,6 +48,7 @@ if __name__ == "__main__":
 
     embeddings_list = list()
     for sentence in sentences:
+        print("Getting embeddings")
         embeddings_list.append(get_embedding(sentence))
 
     profiler.start()

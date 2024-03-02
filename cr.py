@@ -46,6 +46,7 @@ if __name__ == "__main__":
     # Read data and chunk them into sentences
     document = read_txt_file("papers_data/papers.txt")
     sentences = split_text_into_sentences(document)
+    print(f"Total sentences: {len(sentences)}")
 
     embeddings_list = list()
     for idx, sentence in enumerate(sentences):

@@ -3,6 +3,7 @@ import nltk
 import shutil
 from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
+from pyinstrument import Profiler
 
 # Initializations
 __import__('pysqlite3')
@@ -31,6 +32,8 @@ def get_embedding(text, model="text-embedding-3-small"):
 
 
 if __name__ == "__main__":
+    profiler = Profiler()
+
     # Remove previous instances
     if os.path.exists("./chroma_db"):
         shutil.rmtree("./chroma_db")
@@ -43,6 +46,7 @@ if __name__ == "__main__":
     document = read_txt_file("papers_data/papers.txt")
     sentences = split_text_into_sentences(document)
 
+    profiler.start()
     # Generate embeddings for each sentence
     for idx, sentence in enumerate(sentences[:100]):
         embeddings = get_embedding(sentence)
@@ -53,5 +57,7 @@ if __name__ == "__main__":
             embeddings=embeddings,
         )
         print(f"Added {idx}")
+    profiler.stop()
 
     print(chroma_collection.count())
+    profiler.print()

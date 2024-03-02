@@ -1,6 +1,7 @@
 import os
 import nltk
 import shutil
+import json
 from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 from pyinstrument import Profiler
@@ -32,37 +33,42 @@ def get_embedding(text, model="text-embedding-3-small"):
 
 
 if __name__ == "__main__":
-    profiler = Profiler()
+    # profiler = Profiler()
 
-    # Remove previous instances
-    if os.path.exists("./chroma_db"):
-        shutil.rmtree("./chroma_db")
+    # # Remove previous instances
+    # if os.path.exists("./chroma_db"):
+    #     shutil.rmtree("./chroma_db")
 
-    # Instantiate the ChromaDB client and collection
-    db = chromadb.PersistentClient(path="./chroma_db")
-    chroma_collection = db.get_or_create_collection("quickstart")
+    # # Instantiate the ChromaDB client and collection
+    # db = chromadb.PersistentClient(path="./chroma_db")
+    # chroma_collection = db.get_or_create_collection("quickstart")
 
     # Read data and chunk them into sentences
     document = read_txt_file("papers_data/papers.txt")
     sentences = split_text_into_sentences(document)
 
     embeddings_list = list()
-    for sentence in sentences[:100]:
+    for sentence in sentences[:2]:
         vector_embedding = get_embedding(sentence)
-        embeddings_list.append(vector_embedding)
-        print(type(vector_embedding))
+        embeddings_list.append({
+            "token": sentence,
+            "embedding": vector_embedding
+        })
 
-    profiler.start()
-    # Generate embeddings for each sentence
-    for idx, sentence in enumerate(sentences[:100]):
-        chroma_collection.add(
-            documents=[sentence],
-            ids=[f"id{idx}"],
-            metadatas={"id": idx},
-            embeddings=embeddings_list[idx],
-        )
-        print(f"Added {idx}")
-    profiler.stop()
+    with open("embeddings.txt", "w") as file:
+        file.write(json.dumps(embeddings_list))
 
-    print(chroma_collection.count())
-    profiler.print()
+    # profiler.start()
+    # # Generate embeddings for each sentence
+    # for idx, sentence in enumerate(sentences[:2]):
+    #     chroma_collection.add(
+    #         documents=[sentence],
+    #         ids=[f"id{idx}"],
+    #         metadatas={"id": idx},
+    #         embeddings=embeddings_list[idx],
+    #     )
+    #     print(f"Added {idx}")
+    # profiler.stop()
+
+    # print(chroma_collection.count())
+    # profiler.print()

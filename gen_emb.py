@@ -44,6 +44,8 @@ if __name__ == "__main__":
     sentences = split_text_into_sentences(document)
     print(f"Total sentences: {len(sentences)}")
 
+    sentences = sentences[:10]
+
     embeddings_list = list()
     with ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
         futures_to_openai = {executor.submit(gen_embedding, sentence, idx): idx for (idx, sentence) in enumerate(sentences)}

@@ -22,7 +22,7 @@ def read_txt_file(file_path):
 
 def get_openai_embedding(text, model="text-embedding-3-small"):
    text = text.replace("\n", " ")
-   return client.embeddings.create(input = [text], model=model).data[0].embedding[:5]
+   return client.embeddings.create(input = [text], model=model).data[0].embedding
 
 
 def write_embeddings_to_file(embeddings_list):
@@ -43,8 +43,6 @@ if __name__ == "__main__":
     document = read_txt_file("papers_data/papers.txt")
     sentences = split_text_into_sentences(document)
     print(f"Total sentences: {len(sentences)}")
-
-    sentences = sentences[:10]
 
     embeddings_list = list()
     with ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:

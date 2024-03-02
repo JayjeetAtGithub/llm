@@ -46,15 +46,18 @@ if __name__ == "__main__":
     document = read_txt_file("papers_data/papers.txt")
     sentences = split_text_into_sentences(document)
 
+    embeddings_list = list()
+    for sentence in sentences:
+        embeddings_list.append(get_embedding(sentence))
+
     profiler.start()
     # Generate embeddings for each sentence
     for idx, sentence in enumerate(sentences[:100]):
-        embeddings = get_embedding(sentence)
         chroma_collection.add(
             documents=[sentence],
             ids=[f"id{idx}"],
             metadatas={"id": idx},
-            embeddings=embeddings,
+            embeddings=embeddings_list[idx],
         )
         print(f"Added {idx}")
     profiler.stop()

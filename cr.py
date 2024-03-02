@@ -48,7 +48,9 @@ if __name__ == "__main__":
 
     embeddings_list = list()
     for sentence in sentences[:100]:
-        embeddings_list.append(get_embedding(sentence))
+        vector_embedding = get_embedding(sentence)
+        embeddings_list.append(vector_embedding)
+        print(vector_embedding)
 
     profiler.start()
     # Generate embeddings for each sentence

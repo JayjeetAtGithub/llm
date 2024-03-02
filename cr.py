@@ -44,7 +44,7 @@ if __name__ == "__main__":
     sentences = split_text_into_sentences(document)
 
     # Generate embeddings for each sentence
-    for idx, sentence in enumerate(sentences[:500]):
+    for idx, sentence in enumerate(sentences[:100]):
         embeddings = get_embedding(sentence)
         chroma_collection.add(
             documents=[sentence],

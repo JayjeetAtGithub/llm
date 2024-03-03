@@ -3,6 +3,7 @@ import shutil
 import json
 import platform
 import argparse
+import lancedb
 from dotenv import load_dotenv, find_dotenv
 from pyinstrument import Profiler
 
@@ -32,11 +33,17 @@ if __name__ == "__main__":
 
     profiler = Profiler()
 
-    # Remove previous instances and instantiate the ChromaDB client and collection
-    if os.path.exists("./chroma_db"):
-        shutil.rmtree("./chroma_db")
-    db = chromadb.PersistentClient(path="./chroma_db")
-    chroma_collection = db.get_or_create_collection("quickstart")
+    if args.db == "chroma":
+        # Remove previous instances and instantiate the ChromaDB client and collection
+        if os.path.exists("./chroma_db"):
+            shutil.rmtree("./chroma_db")
+        db = chromadb.PersistentClient(path="./chroma_db")
+        collection = db.get_or_create_collection("embeddings_table")
+    elif args.db == "lancedb":
+        if os.path.exists("./lance_db"):
+            shutil.rmtree("./lance_db")
+        db = lancedb.connect("./lance_db")
+        collection = db.open_table("embeddings_table")
 
     # Read the embeddings from the file
     embeddings_list = read_json_file("embeddings.json")
@@ -45,7 +52,7 @@ if __name__ == "__main__":
     profiler.start()
     # Generate embeddings for each sentence
     for embedding in embeddings_list:
-        chroma_collection.add(
+        collection.add(
             documents=[embedding["token"]],
             ids=[str(embedding["id"])],
             metadatas={"id": str(embedding["id"])},
@@ -54,5 +61,5 @@ if __name__ == "__main__":
         print(f"[INFO] Added {embedding['id']} to the collection.")
     profiler.stop()
 
-    print(chroma_collection.count())
+    print(collection.count())
     profiler.open_in_browser()

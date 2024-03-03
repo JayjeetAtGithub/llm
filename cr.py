@@ -56,7 +56,7 @@ if __name__ == "__main__":
             shutil.rmtree("./chroma_db")
         db = chromadb.PersistentClient(path="./chroma_db")
         collection = db.get_or_create_collection("embeddings_table")
-    elif args.db == "lancedb":
+    elif args.db == "lance":
         if os.path.exists("./lance_db"):
             shutil.rmtree("./lance_db")
         db = lancedb.connect("./lance_db")

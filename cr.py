@@ -1,13 +1,17 @@
 import os
 import shutil
 import json
+import platform
 from dotenv import load_dotenv, find_dotenv
 from pyinstrument import Profiler
 
 # Import ChromaDB properly
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+if platform.system() == "Linux":
+    __import__('pysqlite3')
+    import sys
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+
 import chromadb
 
 # Load the environment variables

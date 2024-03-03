@@ -5,6 +5,7 @@ from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 from concurrent.futures import ThreadPoolExecutor
 
+
 load_dotenv(find_dotenv())
 nltk.download('punkt')
 client = OpenAI()
@@ -18,7 +19,7 @@ def split_text_into_sentences(text):
 def read_txt_file(file_path):
     with open(file_path, "r") as file:
         return file.read()
-    
+
 
 def get_openai_embedding(text, model="text-embedding-3-small"):
    text = text.replace("\n", " ")
@@ -29,8 +30,9 @@ def write_embeddings_to_file(embeddings_list):
     with open("embeddings.txt", "w") as file:
         file.write(json.dumps(embeddings_list))
 
+
 def gen_embedding(sentence, idx):
-    print(f"Processing sentence with id: {idx}")
+    print(f"[INFO] Processing sentence with id: {idx}")
     vector_embedding = get_openai_embedding(sentence)
     return {
         "id": idx,
@@ -42,7 +44,7 @@ def gen_embedding(sentence, idx):
 if __name__ == "__main__":
     document = read_txt_file("papers_data/papers.txt")
     sentences = split_text_into_sentences(document)
-    print(f"Total sentences: {len(sentences)}")
+    print(f"[INFO] Total sentences: {len(sentences)}")
 
     embeddings_list = list()
     with ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
@@ -51,3 +53,4 @@ if __name__ == "__main__":
             embeddings_list.append(future.result())
 
     write_embeddings_to_file(embeddings_list)
+    print("[INFO] Finished generating embeddings.")

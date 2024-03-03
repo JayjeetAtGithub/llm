@@ -38,8 +38,8 @@ if __name__ == "__main__":
         print(embedding)
         chroma_collection.add(
             documents=[embedding["token"]],
-            ids=[embedding["id"]],
-            metadatas={"id": embedding["id"]},
+            ids=[str(embedding["id"])],
+            metadatas={"id": str(embedding["id"])},
             embeddings=[embedding["embedding"]],
         )
         print(f"[INFO] Added {embedding['id']} to the collection.")

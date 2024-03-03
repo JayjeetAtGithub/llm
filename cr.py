@@ -4,6 +4,7 @@ import json
 import platform
 import argparse
 import lancedb
+import pyarrow as pa
 from dotenv import load_dotenv, find_dotenv
 from pyinstrument import Profiler
 
@@ -36,8 +37,8 @@ def insert_into_collection(collection, embedding, db):
     elif db == "lancedb":
         collection.add([
             {
-                "vector": embedding["embedding"], 
-                "token": embedding["token"], 
+                "embedding": embedding["embedding"], 
+                "document": embedding["token"], 
                 "id": embedding["id"], 
                 "metadata": {"id": str(embedding["id"])}
             }])
@@ -60,7 +61,15 @@ if __name__ == "__main__":
         if os.path.exists("./lance_db"):
             shutil.rmtree("./lance_db")
         db = lancedb.connect("./lance_db")
-        collection = db.open_table("embeddings_table")
+        schema = pa.schema(
+            [
+                pa.field("embedding", pa.list_(pa.float32(), list_size=1578)),
+                pa.field("document", pa.string()),
+                pa.field("id", pa.string()),
+                pa.field("metadata", pa.struct([("id", pa.string())]))
+            ])
+        tbl = db.create_table("embeddings_table", schema=schema)
+
 
     embeddings_list = read_json_file("embeddings.json")
     print(f"[INFO] Total embeddings read: {len(embeddings_list)}")

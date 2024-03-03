@@ -2,6 +2,7 @@ import os
 import shutil
 import json
 import platform
+import argparse
 from dotenv import load_dotenv, find_dotenv
 from pyinstrument import Profiler
 
@@ -24,6 +25,11 @@ def read_json_file(file_path):
 
 
 if __name__ == "__main__":
+    # The vector database to use
+    parser = argparse.ArgumentParser() 
+    parser.add_argument("--db", type=str, default="chroma", help="The vector database to use (lancedb/chromadb)")   
+    args = parser.parse_args()
+
     profiler = Profiler()
 
     # Remove previous instances and instantiate the ChromaDB client and collection
@@ -49,4 +55,4 @@ if __name__ == "__main__":
     profiler.stop()
 
     print(chroma_collection.count())
-    profiler.print()
+    profiler.open_in_browser()

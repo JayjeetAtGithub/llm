@@ -35,7 +35,6 @@ if __name__ == "__main__":
     profiler.start()
     # Generate embeddings for each sentence
     for embedding in embeddings_list:
-        print(embedding)
         chroma_collection.add(
             documents=[embedding["token"]],
             ids=[str(embedding["id"])],

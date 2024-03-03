@@ -35,7 +35,7 @@ def gen_embedding(sentence, idx):
     print(f"[INFO] Processing sentence with id: {idx}")
     vector_embedding = get_openai_embedding(sentence)
     return {
-        "id": idx,
+        "id": str(idx),
         "token": sentence,
         "embedding": vector_embedding
     }

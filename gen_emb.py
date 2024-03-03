@@ -27,7 +27,7 @@ def get_openai_embedding(text, model="text-embedding-3-small"):
 
 
 def write_embeddings_to_file(embeddings_list):
-    with open("embeddings.txt", "w") as file:
+    with open("embeddings.json", "w") as file:
         file.write(json.dumps(embeddings_list))
 
 

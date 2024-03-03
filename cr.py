@@ -33,8 +33,8 @@ if __name__ == "__main__":
 
     profiler = Profiler()
 
+    # Remove the database if it exists and create a new one
     if args.db == "chroma":
-        # Remove previous instances and instantiate the ChromaDB client and collection
         if os.path.exists("./chroma_db"):
             shutil.rmtree("./chroma_db")
         db = chromadb.PersistentClient(path="./chroma_db")

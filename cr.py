@@ -23,6 +23,24 @@ load_dotenv(find_dotenv())
 def read_json_file(file_path):
     with open(file_path, "r") as file:
         return json.loads(file.read())
+    
+
+def insert_into_collection(collection, embedding, db):
+    if db == "chroma":
+        collection.add(
+            documents=[embedding["token"]],
+            ids=[str(embedding["id"])],
+            metadatas={"id": str(embedding["id"])},
+            embeddings=[embedding["embedding"]],
+        )
+    elif db == "lancedb":
+        collection.add([
+            {
+                "vector": embedding["embedding"], 
+                "token": embedding["token"], 
+                "id": embedding["id"], 
+                "metadata": {"id": str(embedding["id"])}
+            }])
 
 
 if __name__ == "__main__":
@@ -33,7 +51,6 @@ if __name__ == "__main__":
 
     profiler = Profiler()
 
-    # Remove the database if it exists and create a new one
     if args.db == "chroma":
         if os.path.exists("./chroma_db"):
             shutil.rmtree("./chroma_db")
@@ -45,19 +62,12 @@ if __name__ == "__main__":
         db = lancedb.connect("./lance_db")
         collection = db.open_table("embeddings_table")
 
-    # Read the embeddings from the file
     embeddings_list = read_json_file("embeddings.json")
     print(f"[INFO] Total embeddings read: {len(embeddings_list)}")
 
     profiler.start()
-    # Generate embeddings for each sentence
     for embedding in embeddings_list:
-        collection.add(
-            documents=[embedding["token"]],
-            ids=[str(embedding["id"])],
-            metadatas={"id": str(embedding["id"])},
-            embeddings=[embedding["embedding"]],
-        )
+        insert_into_collection(embedding, args.db)
         print(f"[INFO] Added {embedding['id']} to the collection.")
     profiler.stop()
 

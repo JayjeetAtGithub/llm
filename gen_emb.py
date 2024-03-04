@@ -49,7 +49,7 @@ def gen_embedding(sentence, idx, model):
 
 
 if __name__ == "__main__":
-    document = read_txt_file("papers_data/papers.txt")
+    document = read_txt_file("/mnt/workspace/kernel.txt")
     sentences = split_text_into_sentences(document)
     print(f"[INFO] Total sentences: {len(sentences)}")
 

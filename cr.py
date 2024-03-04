@@ -11,7 +11,6 @@ from pyinstrument import Profiler
 from deeplake.core.vectorstore import VectorStore
 from pymilvus import (
     connections,
-    utility,
     FieldSchema,
     CollectionSchema,
     DataType,

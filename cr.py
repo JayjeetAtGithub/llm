@@ -97,7 +97,32 @@ def insert_into_collection(collection, embedding, db):
             [embedding["token"]],
             [embedding["embedding"]]
         ])
-       
+
+
+def get_collection_info(collection, db):
+    if db == "milvus":
+        collection.flush()
+        index_params = {
+            "metric_type": "COSINE",
+            "index_type": "IVF_FLAT",
+            "params": {"nlist":1024}
+        }
+        collection.create_index(
+            field_name="embedding", 
+            index_params=index_params
+        )
+
+        print(collection.name)
+        print(collection.schema)
+        print(collection.num_entities)
+
+        collection.load(replica_number=1)
+    elif db == "chroma":
+        print(collection.count())
+    elif db == "lance":
+        print(collection.schema)
+        print(collection.count_rows)
+
 
 if __name__ == "__main__":
     # The vector database to use
@@ -116,12 +141,13 @@ if __name__ == "__main__":
     collection = init_db_collection(args.db)
 
     profiler.start()
-    for embedding in embeddings_list:
+    for embedding in embeddings_list[:1000]:
         insert_into_collection(collection, embedding, args.db)
         print(f"[INFO] Added {embedding['id']} to the {args.db} collection")
     profiler.stop()
 
-    if args.db == "milvus":
-        collection.flush()
+    # Print out collection stats
+    get_collection_info(collection, args.db)
 
+    # Open the pyinstrument profile in the browser
     profiler.open_in_browser()

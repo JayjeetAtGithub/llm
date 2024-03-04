@@ -127,14 +127,15 @@ def get_collection_info(collection, db):
 if __name__ == "__main__":
     # The vector database to use
     parser = argparse.ArgumentParser() 
-    parser.add_argument("--db", type=str, default="chroma", help="The vector database to use (lancedb/chromadb)")   
+    parser.add_argument("--db", type=str, default="chroma", help="The vector database to use (lancedb/chromadb)")
+    parser.add_argument("--embeddings", type=str, default="embeddings.json", help="The embeddings file to read from")   
     args = parser.parse_args()
 
     # Instantiate the profiler
     profiler = Profiler()    
 
     # Read out the em,beddings from the JSON file into memory
-    embeddings_list = read_json_file("embeddings.json")
+    embeddings_list = read_json_file(args.embeddings)
     print(f"[INFO] Total embeddings read: {len(embeddings_list)}")
 
     # Initialize the collection

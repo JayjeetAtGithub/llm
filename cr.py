@@ -186,7 +186,7 @@ def get_collection_info(collection, db):
 if __name__ == "__main__":
     # The vector database to use
     parser = argparse.ArgumentParser() 
-    parser.add_argument("--db", type=str, default="milvus", help="The vector database to use (lancedb/chromadb/deeplake/milvus)")
+    parser.add_argument("--db", type=str, default="milvus", help="The vector database to use (lancedb/chromadb/deeplake/milvus/qdrant)")
     parser.add_argument("--embeddings", type=str, default="embeddings.json", help="The embeddings file to read from")
     parser.add_argument("--bulk", action="store_true", help="Whether to bulk insert the embeddings")   
     args = parser.parse_args()

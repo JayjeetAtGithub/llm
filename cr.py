@@ -105,7 +105,7 @@ def get_collection_info(collection, db):
         index_params = {
             "metric_type": "COSINE",
             "index_type": "IVF_FLAT",
-            "params": {"nlist":1024}
+            "params": {"nlist": 1024}
         }
         collection.create_index(
             field_name="embedding", 

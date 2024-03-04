@@ -4,7 +4,7 @@ import multiprocessing as mp
 from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 from concurrent.futures import ThreadPoolExecutor
-
+from wonderwords import RandomWord
 
 load_dotenv(find_dotenv())
 nltk.download('punkt')
@@ -13,6 +13,9 @@ client = OpenAI()
 
 def split_text_into_sentences(text):
     sentences = nltk.sent_tokenize(text)
+    for sentence in sentences:
+        sentence = sentence.strip()
+        sentence = sentence.replace("\n", " ")
     return sentences
 
 
@@ -27,7 +30,9 @@ def get_openai_embedding(text, model="text-embedding-3-small"):
 
 
 def write_embeddings_to_file(embeddings_list):
-    with open("embeddings.json", "w") as file:
+    r = RandomWord()
+    file_name = f"embeddings-{r.word(word_min_length=3, word_max_length=8)}.json"
+    with open(file_name, "w") as file:
         file.write(json.dumps(embeddings_list))
 
 

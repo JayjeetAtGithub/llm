@@ -10,6 +10,7 @@ from dotenv import load_dotenv, find_dotenv
 from pyinstrument import Profiler
 from deeplake.core.vectorstore import VectorStore
 from pymilvus import (
+    utility,
     connections,
     FieldSchema,
     CollectionSchema,
@@ -39,7 +40,7 @@ def read_json_file(file_path):
         return json.loads(file.read())
     
 
-def init_db_collection(db):
+def init_db_collection(args):
     if args.db == "chroma":
         if os.path.exists("./chroma_db"):
             shutil.rmtree("./chroma_db")
@@ -51,7 +52,7 @@ def init_db_collection(db):
         db = lancedb.connect("./lance_db")
         schema = pa.schema(
             [
-                pa.field("embedding", pa.list_(pa.float32(), list_size=1536)),
+                pa.field("embedding", pa.list_(pa.float32(), list_size=args.dim)),
                 pa.field("token", pa.string()),
                 pa.field("id", pa.string()),
             ])
@@ -64,10 +65,12 @@ def init_db_collection(db):
         collection = VectorStore(path="./deeplake_db")
     elif args.db == "milvus":
         connections.connect("default", host="localhost", port="19530")
+        if utility.has_collection("embeddings_table"):
+            utility.drop_collection("embeddings_table")
         fields = [
             FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=False),
             FieldSchema(name="token", dtype=DataType.VARCHAR, max_length=4096),
-            FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=1536)
+            FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=args.dim)
         ]
         schema = CollectionSchema(fields, "embeddings_table")
         collection = Collection("embeddings_table", schema)
@@ -77,32 +80,32 @@ def init_db_collection(db):
         collection = QdrantClient(path="./qdrant_db")
         collection.create_collection(
             collection_name="embeddings_table",
-            vectors_config=VectorParams(size=1536, distance=Distance.DOT),
+            vectors_config=VectorParams(size=args.dim, distance=Distance.DOT),
         )
     return collection
 
 
-def insert_into_collection_bulk(collection, embeddings, db):
-    if db == "milvus":
+def insert_into_collection_bulk(collection, embeddings, args):
+    if args.db == "milvus":
         collection.insert([
             [embedding["id"] for embedding in embeddings],
             [embedding["token"] for embedding in embeddings],
             [embedding["embedding"] for embedding in embeddings]
         ])
-    elif db == "chroma":
+    elif args.db == "chroma":
         collection.add(
             documents=[embedding["token"] for embedding in embeddings],
             ids=[str(embedding["id"]) for embedding in embeddings],
             embeddings=[embedding["embedding"] for embedding in embeddings],
         )
-    elif db == "lance":
+    elif args.db == "lance":
         collection.add([
             {
                 "embedding": embedding["embedding"], 
                 "token": embedding["token"], 
                 "id": str(embedding["id"]), 
             } for embedding in embeddings])
-    elif db == "qdrant":
+    elif args.db == "qdrant":
         collection.upsert(
             collection_name="embeddings_table",
             wait=True,
@@ -116,33 +119,33 @@ def insert_into_collection_bulk(collection, embeddings, db):
         )
         
 
-def insert_into_collection(collection, embedding, db):
-    if db == "chroma":
+def insert_into_collection(collection, embedding, args):
+    if args.db == "chroma":
         collection.add(
             documents=[embedding["token"]],
             ids=[str(embedding["id"])],
             embeddings=[embedding["embedding"]],
         )
-    elif db == "lance":
+    elif args.db == "lance":
         collection.add([
             {
                 "embedding": embedding["embedding"], 
                 "token": embedding["token"], 
                 "id": str(embedding["id"]), 
             }])
-    elif db == "deeplake":
+    elif args.db == "deeplake":
         collection.add(
             text = embedding["token"],
             embedding = embedding["embedding"],
             metadata = {"id": str(embedding["id"])},
         )
-    elif db == "milvus":
+    elif args.db == "milvus":
         collection.insert([
             [embedding["id"]],
             [embedding["token"]],
             [embedding["embedding"]]
         ])
-    elif db == "qdrant":
+    elif args.db == "qdrant":
         collection.upsert(
             collection_name="embeddings_table",
             wait=True,
@@ -191,6 +194,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser() 
     parser.add_argument("--db", type=str, default="milvus", help="The vector database to use (lancedb/chromadb/deeplake/milvus/qdrant)")
     parser.add_argument("--embeddings", type=str, default="embeddings.json", help="The embeddings file to read from")
+    parser.add_argument("--dim", type=int, default=1536, help="The dimension of the vector embeddings")
     parser.add_argument("--bulk", action="store_true", help="Whether to bulk insert the embeddings")
     parser.add_argument("--load-milvus", action="store_true", help="Whether to load the Milvus collection")
     args = parser.parse_args()
@@ -203,15 +207,15 @@ if __name__ == "__main__":
     print(f"[INFO] Total embeddings read: {len(embeddings_list)}")
 
     # Initialize the collection
-    collection = init_db_collection(args.db)
+    collection = init_db_collection(args)
 
     profiler.start()
     if args.bulk:
-        insert_into_collection_bulk(collection, embeddings_list, args.db)
+        insert_into_collection_bulk(collection, embeddings_list, args)
         print(f"[INFO] Bulk added {len(embeddings_list)} embeddings to the {args.db} collection")
     else:
         for embedding in embeddings_list:
-            insert_into_collection(collection, embedding, args.db)
+            insert_into_collection(collection, embedding, args)
             print(f"[INFO] Added embedding {embedding['id']} to the {args.db} collection")
     profiler.stop()
 

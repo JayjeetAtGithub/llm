@@ -7,6 +7,8 @@ import lancedb
 import pyarrow as pa
 from dotenv import load_dotenv, find_dotenv
 from pyinstrument import Profiler
+from deeplake.core.vectorstore import VectorStore
+
 
 # Import ChromaDB properly
 if platform.system() == "Linux":
@@ -24,7 +26,7 @@ load_dotenv(find_dotenv())
 def read_json_file(file_path):
     with open(file_path, "r") as file:
         return json.loads(file.read())
-    
+
 
 def insert_into_collection(collection, embedding, db):
     if db == "chroma":
@@ -34,14 +36,20 @@ def insert_into_collection(collection, embedding, db):
             metadatas={"id": str(embedding["id"])},
             embeddings=[embedding["embedding"]],
         )
-    elif db == "lancedb":
+    elif db == "lance":
         collection.add([
             {
                 "embedding": embedding["embedding"], 
                 "document": embedding["token"], 
-                "id": embedding["id"], 
+                "id": str(embedding["id"]), 
                 "metadata": {"id": str(embedding["id"])}
             }])
+    elif db == "deeplake":
+        collection.add(
+            text = embedding["token"],
+            embedding = embedding["embedding"],
+            metadata = {"id": str(embedding["id"])},
+        )
 
 
 if __name__ == "__main__":
@@ -63,22 +71,25 @@ if __name__ == "__main__":
         db = lancedb.connect("./lance_db")
         schema = pa.schema(
             [
-                pa.field("embedding", pa.list_(pa.float32(), list_size=1578)),
+                pa.field("embedding", pa.list_(pa.float32(), list_size=1536)),
                 pa.field("document", pa.string()),
                 pa.field("id", pa.string()),
                 pa.field("metadata", pa.struct([("id", pa.string())]))
             ])
-        tbl = db.create_table("embeddings_table", schema=schema)
-
+        collection = db.create_table("embeddings_table", schema=schema)
+    elif args.db == "deeplake":
+        if os.path.exists("./deeplake_db"):
+            shutil.rmtree("./deeplake_db")
+        collection = VectorStore(path="./deeplake_db")
+        print(collection)
 
     embeddings_list = read_json_file("embeddings.json")
     print(f"[INFO] Total embeddings read: {len(embeddings_list)}")
 
     profiler.start()
-    for embedding in embeddings_list:
+    for embedding in embeddings_list[:2000]:
         insert_into_collection(collection, embedding, args.db)
         print(f"[INFO] Added {embedding['id']} to the collection.")
     profiler.stop()
 
-    print(collection.count())
     profiler.open_in_browser()

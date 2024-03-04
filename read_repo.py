@@ -16,9 +16,12 @@ if __name__ == "__main__":
 
     for dirpath, dnames, fnames in os.walk("./linux"):
         for f in fnames:
+            print("Reading file: ", f)
             if f.endswith(".c"):
                 contents = read_file(os.path.join(dirpath, f))
                 kernel_file.write(contents)
             if f.endswith(".h"):
                 contents = read_file(os.path.join(dirpath, f))
                 kernel_file.write(contents)
+
+    kernel_file.close()

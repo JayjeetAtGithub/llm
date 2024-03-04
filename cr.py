@@ -45,7 +45,7 @@ def init_db_collection(args):
         if os.path.exists("./chroma_db"):
             shutil.rmtree("./chroma_db")
         db = chromadb.PersistentClient(path="./chroma_db")
-        collection = db.get_or_create_collection("embeddings_table")
+        collection = db.get_or_create_collection(args.collection)
     elif args.db == "lance":
         if os.path.exists("./lance_db"):
             shutil.rmtree("./lance_db")
@@ -56,7 +56,7 @@ def init_db_collection(args):
                 pa.field("token", pa.string()),
                 pa.field("id", pa.string()),
             ])
-        collection = db.create_table("embeddings_table", schema=schema)
+        collection = db.create_table(args.collection, schema=schema)
     elif args.db == "deeplake":
         print("DeepLake implementation not available yet.")
         sys.exit(0)
@@ -65,21 +65,21 @@ def init_db_collection(args):
         collection = VectorStore(path="./deeplake_db")
     elif args.db == "milvus":
         connections.connect("default", host="localhost", port="19530")
-        if utility.has_collection("embeddings_table"):
-            utility.drop_collection("embeddings_table")
+        if utility.has_collection(args.collection):
+            utility.drop_collection(args.collection)
         fields = [
             FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=False),
             FieldSchema(name="token", dtype=DataType.VARCHAR, max_length=4096),
             FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=args.dim)
         ]
-        schema = CollectionSchema(fields, "embeddings_table")
-        collection = Collection("embeddings_table", schema)
+        schema = CollectionSchema(fields, args.collection)
+        collection = Collection(args.collection, schema)
     elif args.db == "qdrant":
         if os.path.exists("./qdrant_db"):
             shutil.rmtree("./qdrant_db")
         collection = QdrantClient(path="./qdrant_db")
         collection.create_collection(
-            collection_name="embeddings_table",
+            collection_name=args.collection,
             vectors_config=VectorParams(size=args.dim, distance=Distance.DOT),
         )
     return collection
@@ -107,7 +107,7 @@ def insert_into_collection_bulk(collection, embeddings, args):
             } for embedding in embeddings])
     elif args.db == "qdrant":
         collection.upsert(
-            collection_name="embeddings_table",
+            collection_name=args.collection,
             wait=True,
             points=[
                 PointStruct(
@@ -147,7 +147,7 @@ def insert_into_collection(collection, embedding, args):
         ])
     elif args.db == "qdrant":
         collection.upsert(
-            collection_name="embeddings_table",
+            collection_name=args.collection,
             wait=True,
             points=[
                 PointStruct(
@@ -186,15 +186,16 @@ def get_collection_info(collection, args):
         print(collection.schema)
         print(collection.count_rows())
     elif args.db == "qdrant":
-        print(collection.get_collection(collection_name="embeddings_table"))
+        print(collection.get_collection(collection_name=args.collection))
 
 
 if __name__ == "__main__":
     # The vector database to use
     parser = argparse.ArgumentParser() 
     parser.add_argument("--db", type=str, default="milvus", help="The vector database to use (lancedb/chromadb/deeplake/milvus/qdrant)")
-    parser.add_argument("--embeddings", type=str, default="embeddings.json", help="The embeddings file to read from")
+    parser.add_argument("--emb", type=str, default="embeddings.json", help="The embeddings file to read from")
     parser.add_argument("--dim", type=int, default=1536, help="The dimension of the vector embeddings")
+    parser.add_argument("--collection", type=str, default="embeddings_table", help="The collection name to use in the database")
     parser.add_argument("--bulk", action="store_true", help="Whether to bulk insert the embeddings")
     parser.add_argument("--load-milvus", action="store_true", help="Whether to load the Milvus collection")
     args = parser.parse_args()
@@ -203,7 +204,7 @@ if __name__ == "__main__":
     profiler = Profiler()
 
     # Read out the em,beddings from the JSON file into memory
-    embeddings_list = read_json_file(args.embeddings)
+    embeddings_list = read_json_file(args.emb)
     print(f"[INFO] Total embeddings read: {len(embeddings_list)}")
 
     # Initialize the collection

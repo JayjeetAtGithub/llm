@@ -156,30 +156,33 @@ def insert_into_collection(collection, embedding, db):
         )
 
 
-def get_collection_info(collection, db):
-    if db == "milvus":
+def get_collection_info(collection, args):
+    if args.db == "milvus":
         collection.flush()
-        index_params = {
-            "metric_type": "COSINE",
-            "index_type": "IVF_FLAT",
-            "params": {"nlist": 1024}
-        }
-        collection.create_index(
-            field_name="embedding", 
-            index_params=index_params
-        )
-
         print(collection.name)
         print(collection.schema)
         print(collection.num_entities)
+        
+        # Optionally, load the milvus collection on
+        # demand from the user
+        if args.load_milvus:
+            index_params = {
+                "metric_type": "COSINE",
+                "index_type": "IVF_FLAT",
+                "params": {"nlist": 1024}
+            }
+            collection.create_index(
+                field_name="embedding", 
+                index_params=index_params
+            )
+            collection.load(replica_number=1)
 
-        collection.load(replica_number=1)
-    elif db == "chroma":
+    elif args.db == "chroma":
         print(collection.count())
-    elif db == "lance":
+    elif args.db == "lance":
         print(collection.schema)
         print(collection.count_rows())
-    elif db == "qdrant":
+    elif args.db == "qdrant":
         print(collection.get_collection(collection_name="embeddings_table"))
 
 
@@ -188,7 +191,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser() 
     parser.add_argument("--db", type=str, default="milvus", help="The vector database to use (lancedb/chromadb/deeplake/milvus/qdrant)")
     parser.add_argument("--embeddings", type=str, default="embeddings.json", help="The embeddings file to read from")
-    parser.add_argument("--bulk", action="store_true", help="Whether to bulk insert the embeddings")   
+    parser.add_argument("--bulk", action="store_true", help="Whether to bulk insert the embeddings")
+    parser.add_argument("--load-milvus", action="store_true", help="Whether to load the Milvus collection")
     args = parser.parse_args()
 
     # Instantiate the profiler
@@ -212,7 +216,7 @@ if __name__ == "__main__":
     profiler.stop()
 
     # Print out collection stats
-    get_collection_info(collection, args.db)
+    get_collection_info(collection, args)
 
     # Open the pyinstrument profile in the browser
     profiler.open_in_browser()

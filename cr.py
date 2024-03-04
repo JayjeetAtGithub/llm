@@ -142,7 +142,7 @@ if __name__ == "__main__":
     collection = init_db_collection(args.db)
 
     profiler.start()
-    for embedding in embeddings_list[:1000]:
+    for embedding in embeddings_list:
         insert_into_collection(collection, embedding, args.db)
         print(f"[INFO] Added {embedding['id']} to the {args.db} collection")
     profiler.stop()

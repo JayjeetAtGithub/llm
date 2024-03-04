@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     embeddings_list = list()
     with ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
-        futures_to_openai = {executor.submit(gen_embedding, sentence, idx): idx for (idx, sentence) in enumerate(sentences[:2])}
+        futures_to_openai = {executor.submit(gen_embedding, sentence, idx): idx for (idx, sentence) in enumerate(sentences)}
         for future in futures_to_openai:
             embeddings_list.append(future.result())
 

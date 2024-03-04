@@ -74,7 +74,7 @@ def init_db_collection(db):
     elif args.db == "qdrant":
         if os.path.exists("./qdrant_db"):
             shutil.rmtree("./qdrant_db")
-        collection = QdrantClient(url="http://localhost:6333")
+        collection = QdrantClient(path="./qdrant_db")
         collection.create_collection(
             collection_name="embeddings_table",
             vectors_config=VectorParams(size=1536, distance=Distance.DOT),
@@ -179,6 +179,8 @@ def get_collection_info(collection, db):
     elif db == "lance":
         print(collection.schema)
         print(collection.count_rows())
+    elif db == "qdrant":
+        print(collection.get_collection(collection_name="embeddings_table"))
 
 
 if __name__ == "__main__":

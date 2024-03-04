@@ -49,7 +49,7 @@ def init_db_collection(db):
         schema = pa.schema(
             [
                 pa.field("embedding", pa.list_(pa.float32(), list_size=1536)),
-                pa.field("document", pa.string()),
+                pa.field("token", pa.string()),
                 pa.field("id", pa.string()),
             ])
         collection = db.create_table("embeddings_table", schema=schema)
@@ -63,13 +63,35 @@ def init_db_collection(db):
         connections.connect("default", host="localhost", port="19530")
         fields = [
             FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=False),
-            FieldSchema(name="document", dtype=DataType.VARCHAR, max_length=4096),
+            FieldSchema(name="token", dtype=DataType.VARCHAR, max_length=4096),
             FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=1536)
         ]
         schema = CollectionSchema(fields, "embeddings_table")
         collection = Collection("embeddings_table", schema)
     return collection
 
+
+def insert_into_collection_bulk(collection, embeddings, db):
+    if db == "milvus":
+        collection.insert([
+            [embedding["id"] for embedding in embeddings],
+            [embedding["token"] for embedding in embeddings],
+            [embedding["embedding"] for embedding in embeddings]
+        ])
+    elif db == "chroma":
+        collection.add(
+            documents=[embedding["token"] for embedding in embeddings],
+            ids=[str(embedding["id"]) for embedding in embeddings],
+            embeddings=[embedding["embedding"] for embedding in embeddings],
+        )
+    elif db == "lance":
+        collection.add([
+            {
+                "embedding": embedding["embedding"], 
+                "token": embedding["token"], 
+                "id": str(embedding["id"]), 
+            } for embedding in embeddings])
+    
 
 def insert_into_collection(collection, embedding, db):
     if db == "chroma":
@@ -82,7 +104,7 @@ def insert_into_collection(collection, embedding, db):
         collection.add([
             {
                 "embedding": embedding["embedding"], 
-                "document": embedding["token"], 
+                "token": embedding["token"], 
                 "id": str(embedding["id"]), 
             }])
     elif db == "deeplake":
@@ -121,18 +143,19 @@ def get_collection_info(collection, db):
         print(collection.count())
     elif db == "lance":
         print(collection.schema)
-        print(collection.count_rows)
+        print(collection.count_rows())
 
 
 if __name__ == "__main__":
     # The vector database to use
     parser = argparse.ArgumentParser() 
-    parser.add_argument("--db", type=str, default="chroma", help="The vector database to use (lancedb/chromadb)")
-    parser.add_argument("--embeddings", type=str, default="embeddings.json", help="The embeddings file to read from")   
+    parser.add_argument("--db", type=str, default="milvus", help="The vector database to use (lancedb/chromadb/deeplake/milvus)")
+    parser.add_argument("--embeddings", type=str, default="embeddings.json", help="The embeddings file to read from")
+    parser.add_argument("--bulk", type=bool, default=False, help="Whether to bulk insert the embeddings")   
     args = parser.parse_args()
 
     # Instantiate the profiler
-    profiler = Profiler()    
+    profiler = Profiler()
 
     # Read out the em,beddings from the JSON file into memory
     embeddings_list = read_json_file(args.embeddings)
@@ -142,9 +165,13 @@ if __name__ == "__main__":
     collection = init_db_collection(args.db)
 
     profiler.start()
-    for embedding in embeddings_list:
-        insert_into_collection(collection, embedding, args.db)
-        print(f"[INFO] Added {embedding['id']} to the {args.db} collection")
+    if args.bulk:
+        insert_into_collection_bulk(collection, embeddings_list, args.db)
+        print(f"[INFO] Bulk added {len(embeddings_list)} embeddings to the {args.db} collection")
+    else:
+        for embedding in embeddings_list:
+            insert_into_collection(collection, embedding, args.db)
+            print(f"[INFO] Added {embedding['id']} to the {args.db} collection")
     profiler.stop()
 
     # Print out collection stats

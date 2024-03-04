@@ -1,14 +1,13 @@
 import nltk
 import json
 import multiprocessing as mp
-from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 from concurrent.futures import ThreadPoolExecutor
 from wonderwords import RandomWord
+from sentence_transformers import SentenceTransformer
 
 load_dotenv(find_dotenv())
 nltk.download('punkt')
-client = OpenAI()
 
 
 def split_text_into_sentences(text):
@@ -24,8 +23,9 @@ def read_txt_file(file_path):
         return file.read()
 
 
-def get_openai_embedding(sentence, model="text-embedding-3-small"):
-   return client.embeddings.create(input = [sentence], model=model).data[0].embedding
+def get_embedding(sentence, model):
+    embedding = model.encode([sentence])
+    return embedding[0].tolist()
 
 
 def write_embeddings_to_file(embeddings_list):
@@ -35,12 +35,12 @@ def write_embeddings_to_file(embeddings_list):
         file.write(json.dumps(embeddings_list))
 
 
-def gen_embedding(sentence, idx):
+def gen_embedding(sentence, idx, model):
     print(f"[INFO] Processing sentence with id: {idx}")
     sentence = sentence.strip()
     sentence = sentence.replace("\n", " ")
     sentence = sentence.replace("\uffff", " ")
-    vector_embedding = get_openai_embedding(sentence)
+    vector_embedding = get_embedding(sentence, model)
     return {
         "id": str(idx),
         "token": sentence,
@@ -53,9 +53,11 @@ if __name__ == "__main__":
     sentences = split_text_into_sentences(document)
     print(f"[INFO] Total sentences: {len(sentences)}")
 
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+
     embeddings_list = list()
     with ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
-        futures_to_openai = {executor.submit(gen_embedding, sentence, idx): idx for (idx, sentence) in enumerate(sentences)}
+        futures_to_openai = {executor.submit(gen_embedding, sentence, idx, model): idx for (idx, sentence) in enumerate(sentences[:2])}
         for future in futures_to_openai:
             embeddings_list.append(future.result())
 

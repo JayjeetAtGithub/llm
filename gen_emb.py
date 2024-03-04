@@ -24,9 +24,8 @@ def read_txt_file(file_path):
         return file.read()
 
 
-def get_openai_embedding(text, model="text-embedding-3-small"):
-   text = text.replace("\n", " ")
-   return client.embeddings.create(input = [text], model=model).data[0].embedding
+def get_openai_embedding(sentence, model="text-embedding-3-small"):
+   return client.embeddings.create(input = [sentence], model=model).data[0].embedding
 
 
 def write_embeddings_to_file(embeddings_list):
@@ -38,6 +37,9 @@ def write_embeddings_to_file(embeddings_list):
 
 def gen_embedding(sentence, idx):
     print(f"[INFO] Processing sentence with id: {idx}")
+    sentence = sentence.strip()
+    sentence = sentence.replace("\n", " ")
+    sentence = sentence.replace("\uffff", " ")
     vector_embedding = get_openai_embedding(sentence)
     return {
         "id": str(idx),
@@ -53,7 +55,7 @@ if __name__ == "__main__":
 
     embeddings_list = list()
     with ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
-        futures_to_openai = {executor.submit(gen_embedding, sentence, idx): idx for (idx, sentence) in enumerate(sentences)}
+        futures_to_openai = {executor.submit(gen_embedding, sentence, idx): idx for (idx, sentence) in enumerate(sentences[:2])}
         for future in futures_to_openai:
             embeddings_list.append(future.result())
 

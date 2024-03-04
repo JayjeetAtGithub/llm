@@ -16,6 +16,10 @@ from pymilvus import (
     DataType,
     Collection,
 )
+from qdrant_client import QdrantClient
+from qdrant_client.http.models import Distance, VectorParams
+from qdrant_client.http.models import PointStruct
+
 
 # Import ChromaDB properly
 if platform.system() == "Linux":
@@ -67,6 +71,14 @@ def init_db_collection(db):
         ]
         schema = CollectionSchema(fields, "embeddings_table")
         collection = Collection("embeddings_table", schema)
+    elif args.db == "qdrant":
+        if os.path.exists("./qdrant_db"):
+            shutil.rmtree("./qdrant_db")
+        collection = QdrantClient(url="http://localhost:6333")
+        collection.create_collection(
+            collection_name="embeddings_table",
+            vectors_config=VectorParams(size=1536, distance=Distance.DOT),
+        )
     return collection
 
 
@@ -90,7 +102,19 @@ def insert_into_collection_bulk(collection, embeddings, db):
                 "token": embedding["token"], 
                 "id": str(embedding["id"]), 
             } for embedding in embeddings])
-    
+    elif db == "qdrant":
+        collection.upsert(
+            collection_name="embeddings_table",
+            wait=True,
+            points=[
+                PointStruct(
+                    id=embedding["id"], 
+                    vector=embedding["embedding"], 
+                    payload={"token": embedding["token"]},
+                ) for embedding in embeddings
+            ],
+        )
+        
 
 def insert_into_collection(collection, embedding, db):
     if db == "chroma":
@@ -118,6 +142,18 @@ def insert_into_collection(collection, embedding, db):
             [embedding["token"]],
             [embedding["embedding"]]
         ])
+    elif db == "qdrant":
+        collection.upsert(
+            collection_name="embeddings_table",
+            wait=True,
+            points=[
+                PointStruct(
+                    id=embedding["id"], 
+                    vector=embedding["embedding"], 
+                    payload={"token": embedding["token"]},
+                )
+            ],
+        )
 
 
 def get_collection_info(collection, db):

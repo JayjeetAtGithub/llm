@@ -30,7 +30,7 @@ def get_embedding(sentence, model):
 
 def write_embeddings_to_file(embeddings_list):
     r = RandomWord()
-    file_name = f"embeddings-{r.word(word_min_length=3, word_max_length=8)}.json"
+    file_name = f"/mnt/workspace/embeddings-{r.word(word_min_length=3, word_max_length=8)}.json"
     with open(file_name, "w") as file:
         file.write(json.dumps(embeddings_list))
 

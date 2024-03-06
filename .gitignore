@@ -4,3 +4,4 @@ venv/
 *.json
 *.sqlite3
 dataset_*/
+embeddings_dataset/

@@ -94,7 +94,7 @@ def insert_into_collection_bulk(collection, batch, args):
         ])
     elif args.db == "chroma":
         collection.add(
-            ids=[idx for idx, _ in enumerate(batch)],
+            ids=[str(idx) for idx, _ in enumerate(batch)],
             documents=[row[2] for row in batch],
             embeddings=[list(row[3]) for row in batch],
         )

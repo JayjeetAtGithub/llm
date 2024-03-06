@@ -8,7 +8,6 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from dotenv import load_dotenv, find_dotenv
 from pyinstrument import Profiler
-from deeplake.core.vectorstore import VectorStore
 from pymilvus import (
     utility,
     connections,
@@ -57,12 +56,6 @@ def init_db_collection(args):
                 pa.field("id", pa.int64()),
             ])
         collection = db.create_table(args.tbl, schema=schema)
-    elif args.db == "deeplake":
-        print("DeepLake implementation not available yet.")
-        sys.exit(0)
-        if os.path.exists("./deeplake_db"):
-            shutil.rmtree("./deeplake_db")
-        collection = VectorStore(path="./deeplake_db")
     elif args.db == "milvus":
         connections.connect("default", host="localhost", port="19530")
         if utility.has_collection(args.tbl):
@@ -75,9 +68,7 @@ def init_db_collection(args):
         schema = CollectionSchema(fields, args.tbl)
         collection = Collection(args.tbl, schema)
     elif args.db == "qdrant":
-        if os.path.exists("./qdrant_db"):
-            shutil.rmtree("./qdrant_db")
-        collection = QdrantClient(path="./qdrant_db")
+        collection = QdrantClient("localhost", port=6333)
         collection.create_collection(
             collection_name=args.tbl,
             vectors_config=VectorParams(size=args.dim, distance=Distance.DOT),
@@ -151,7 +142,7 @@ def get_collection_info(collection, args):
 if __name__ == "__main__":
     # The vector database to use
     parser = argparse.ArgumentParser() 
-    parser.add_argument("--db", type=str, default="milvus", help="The vector database to use (lancedb/chromadb/deeplake/milvus/qdrant)")
+    parser.add_argument("--db", type=str, default="milvus", help="The vector database to use (lance/chroma/milvus/qdrant)")
     parser.add_argument("--ds", type=str, default="embeddings_dataset", help="The embeddings directory to read from")
     parser.add_argument("--dim", type=int, default=1536, help="The dimension of the vector embeddings")
     parser.add_argument("--tbl", type=str, default="embeddings_table", help="The table name to use in the database")

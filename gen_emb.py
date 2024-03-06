@@ -1,4 +1,6 @@
+import sys
 import nltk
+import argparse
 import json
 import multiprocessing as mp
 from dotenv import load_dotenv, find_dotenv
@@ -49,17 +51,26 @@ def gen_embedding(sentence, idx, model):
 
 
 if __name__ == "__main__":
-    document = read_txt_file("kernel.txt")
+    parser = argparse.ArgumentParser() 
+    parser.add_argument("--doc", type=str, default="document.txt", help="The document for which to generate embeddings.")
+    args = parser.parse_args()
+
+    document = read_txt_file(args.doc)
     sentences = split_text_into_sentences(document)
     print(f"[INFO] Total sentences: {len(sentences)}")
 
     model = SentenceTransformer('all-MiniLM-L6-v2')
 
-    embeddings_list = list()
-    with ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
-        futures_to_openai = {executor.submit(gen_embedding, sentence, idx, model): idx for (idx, sentence) in enumerate(sentences[:2])}
-        for future in futures_to_openai:
-            embeddings_list.append(future.result())
+    try:
+        embeddings_list = list()
+        with ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
+            futures_to_openai = {executor.submit(gen_embedding, sentence, idx, model): idx for (idx, sentence) in enumerate(sentences)}
+            for future in futures_to_openai:
+                embeddings_list.append(future.result())
+    except KeyboardInterrupt:
+        print("Persist embeddings generated so far")
+        write_embeddings_to_file(embeddings_list)
+        sys.exit(0)
 
     write_embeddings_to_file(embeddings_list)
     print("[INFO] Finished generating embeddings.")

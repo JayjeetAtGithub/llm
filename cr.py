@@ -54,7 +54,7 @@ def init_db_collection(args):
             [
                 pa.field("embedding", pa.list_(pa.float32(), list_size=args.dim)),
                 pa.field("token", pa.string()),
-                pa.field("id", pa.string()),
+                pa.field("id", pa.int64()),
             ])
         collection = db.create_table(args.tbl, schema=schema)
     elif args.db == "deeplake":

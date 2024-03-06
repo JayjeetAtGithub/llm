@@ -21,6 +21,10 @@ from qdrant_client.http.models import Distance, VectorParams
 from qdrant_client.http.models import PointStruct
 
 
+# For the current dataset,
+MILVUS_MAX_BATCH_SIZE = 10305
+QDRANT_MAX_BATCH_SIZE = 1008
+
 # Import ChromaDB properly
 if platform.system() == "Linux":
     __import__('pysqlite3')
@@ -69,6 +73,7 @@ def init_db_collection(args):
         collection = Collection(args.tbl, schema)
     elif args.db == "qdrant":
         collection = QdrantClient("localhost", port=6333)
+        collection.delete_collection(collection_name="embeddings_table")
         collection.create_collection(
             collection_name=args.tbl,
             vectors_config=VectorParams(size=args.dim, distance=Distance.DOT),

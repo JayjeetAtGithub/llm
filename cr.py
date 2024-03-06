@@ -22,8 +22,8 @@ from qdrant_client.http.models import PointStruct
 
 
 # For the current dataset,
-MILVUS_MAX_BATCH_SIZE = 10305
-QDRANT_MAX_BATCH_SIZE = 1008
+MILVUS_MAX_BATCH_SIZE = 10000
+QDRANT_MAX_BATCH_SIZE = 1000
 
 # Import ChromaDB properly
 if platform.system() == "Linux":

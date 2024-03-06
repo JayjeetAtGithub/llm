@@ -3,3 +3,4 @@ venv/
 *_db/
 *.json
 *.sqlite3
+dataset_*/

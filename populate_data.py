@@ -9,7 +9,7 @@ def read_pdf(pdf_path, outfile):
     pdfFileObj.close()
 
 if __name__ == '__main__':
-    outfile = open('papers_data/papers.txt', 'w')
+    outfile = open('dataset_1/papers.txt', 'w')
     for file in os.listdir('./CXL_papers'):
         print("Reading file: ", file)
         if file.endswith('.pdf'):

@@ -12,7 +12,7 @@ def read_pdf(pdf_path, outfile):
 
 
 if __name__ == "__main__":
-    outfile = open('papers_data/papers.txt', 'w')
+    outfile = open('dataset_1/papers.txt', 'w')
     for file in os.listdir('./CXL_papers'):
         if file.endswith('.pdf'):
             pdf_path = os.path.join('./CXL_papers', file)
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     PERSIST_DIR = "./papers_storage"
     if not os.path.exists(PERSIST_DIR):
         # load the documents and create the index
-        documents = SimpleDirectoryReader("papers_data").load_data()
+        documents = SimpleDirectoryReader("dataset_1").load_data()
         index = VectorStoreIndex.from_documents(documents)
         # store it for later
         index.storage_context.persist(persist_dir=PERSIST_DIR)

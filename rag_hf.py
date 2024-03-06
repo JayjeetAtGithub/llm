@@ -53,7 +53,7 @@ if __name__ == "__main__":
     Settings.chunk_size = 1024
 
     # Load the documents and create the index
-    documents = SimpleDirectoryReader("papers_data").load_data()
+    documents = SimpleDirectoryReader("dataset_1").load_data()
     vector_store = LanceDBVectorStore(uri="/tmp/lancedb")
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
     index = VectorStoreIndex.from_documents(

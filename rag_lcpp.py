@@ -37,7 +37,7 @@ if __name__ == "__main__":
     Settings.llm = llm
     Settings.embed_model = embed_model
 
-    documents = SimpleDirectoryReader("papers_data").load_data()
+    documents = SimpleDirectoryReader("dataset_1").load_data()
 
     vector_store = LanceDBVectorStore(uri="/tmp/lancedb")
     storage_context = StorageContext.from_defaults(vector_store=vector_store)

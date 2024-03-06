@@ -30,7 +30,7 @@ def get_embedding(sentence, model):
 
 def write_embeddings_to_file(embeddings_list):
     r = RandomWord()
-    file_name = f"/mnt/workspace/embeddings-{r.word(word_min_length=3, word_max_length=8)}.json"
+    file_name = f"embeddings-{r.word(word_min_length=3, word_max_length=8)}.json"
     with open(file_name, "w") as file:
         file.write(json.dumps(embeddings_list))
 
@@ -49,7 +49,7 @@ def gen_embedding(sentence, idx, model):
 
 
 if __name__ == "__main__":
-    document = read_txt_file("/mnt/workspace/kernel.txt")
+    document = read_txt_file("kernel.txt")
     sentences = split_text_into_sentences(document)
     print(f"[INFO] Total sentences: {len(sentences)}")
 

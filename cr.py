@@ -19,7 +19,7 @@ from pymilvus import (
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, VectorParams
 from qdrant_client.http.models import PointStruct
-
+from itertools import batched
 
 # For the current dataset,
 MILVUS_MAX_BATCH_SIZE = 10000
@@ -83,11 +83,12 @@ def init_db_collection(args):
 
 def insert_into_collection_bulk(collection, batch, args):
     if args.db == "milvus":
-        collection.insert([
-            [idx for idx, _ in enumerate(batch)],
-            [row[2] for row in batch],
-            [list(row[3]) for row in batch],
-        ])
+        for b in batched(batch, MILVUS_MAX_BATCH_SIZE):
+            collection.insert([
+                [idx for idx, _ in enumerate(b)],
+                [row[2] for row in b],
+                [list(row[3]) for row in b],
+            ])
     elif args.db == "chroma":
         collection.add(
             ids=[str(idx) for idx, _ in enumerate(batch)],

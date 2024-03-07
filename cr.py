@@ -108,17 +108,18 @@ def insert_into_collection_bulk(collection, batch, args):
                 "embedding": list(row[3]), 
             } for idx, row in enumerate(batch)])
     elif args.db == "qdrant":
-        collection.upsert(
-            collection_name=args.tbl,
-            wait=True,
-            points=[
-                PointStruct(
-                    id=idx, 
-                    payload={"token": row[2]},
-                    vector=list(row[3]),
-                ) for idx, row in enumerate(batch)
-            ],
-        )
+        for b in list(create_batches(batch, QDRANT_MAX_BATCH_SIZE)):
+            collection.upsert(
+                collection_name=args.tbl,
+                wait=True,
+                points=[
+                    PointStruct(
+                        id=idx, 
+                        payload={"token": row[2]},
+                        vector=list(row[3]),
+                    ) for idx, row in enumerate(b)
+                ],
+            )
 
 def get_collection_info(collection, args):
     if args.db == "milvus":

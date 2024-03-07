@@ -19,7 +19,6 @@ from pymilvus import (
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, VectorParams
 from qdrant_client.http.models import PointStruct
-from itertools import batched
 
 # For the current dataset,
 MILVUS_MAX_BATCH_SIZE = 10000
@@ -41,6 +40,12 @@ def read_parquet_file(file_path):
     df = table.to_pandas()
     lst = df.values.tolist()
     return lst
+
+
+def create_batches(l, n): 
+    # looping till length l 
+    for i in range(0, len(l), n):  
+        yield l[i:i + n] 
     
 
 def init_db_collection(args):
@@ -83,7 +88,7 @@ def init_db_collection(args):
 
 def insert_into_collection_bulk(collection, batch, args):
     if args.db == "milvus":
-        for b in batched(batch, MILVUS_MAX_BATCH_SIZE):
+        for b in list(create_batches(batch, MILVUS_MAX_BATCH_SIZE)):
             collection.insert([
                 [idx for idx, _ in enumerate(b)],
                 [row[2] for row in b],

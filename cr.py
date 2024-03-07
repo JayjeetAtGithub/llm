@@ -4,6 +4,7 @@ import shutil
 import platform
 import argparse
 import lancedb
+import time
 import pyarrow as pa
 import pyarrow.parquet as pq
 from dotenv import load_dotenv, find_dotenv
@@ -88,7 +89,10 @@ def init_db_collection(args):
 
 def insert_into_collection_bulk(collection, batch, args):
     if args.db == "milvus":
-        for b in list(create_batches(batch, MILVUS_MAX_BATCH_SIZE)):
+        s =  time.time()
+        mini_batches = list(create_batches(batch, MILVUS_MAX_BATCH_SIZE))
+        print(f"Created {len(mini_batches)} mini-batches in {time.time() - s} seconds")
+        for b in mini_batches:
             print("Inserting batch of size", len(b))
             collection.insert([
                 [idx for idx, _ in enumerate(b)],

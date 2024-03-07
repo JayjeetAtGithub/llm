@@ -89,6 +89,7 @@ def init_db_collection(args):
 def insert_into_collection_bulk(collection, batch, args):
     if args.db == "milvus":
         for b in list(create_batches(batch, MILVUS_MAX_BATCH_SIZE)):
+            print("Inserting batch of size", len(b))
             collection.insert([
                 [idx for idx, _ in enumerate(b)],
                 [row[2] for row in b],

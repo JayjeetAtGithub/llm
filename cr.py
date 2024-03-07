@@ -92,13 +92,14 @@ def insert_into_collection_bulk(collection, batch, args):
         s =  time.time()
         mini_batches = list(create_batches(batch, MILVUS_MAX_BATCH_SIZE))
         print(f"Created {len(mini_batches)} mini-batches in {time.time() - s} seconds")
-        for b in mini_batches:
-            print("Inserting batch of size", len(b))
+        for i, b in enumerate(mini_batches):
+            s = time.time()
             collection.insert([
                 [idx for idx, _ in enumerate(b)],
                 [row[2] for row in b],
                 [list(row[3]) for row in b],
             ])
+            print(f"[INFO] Inserted batch {i} of size {len(b)} in {time.time() - s} seconds")
     elif args.db == "chroma":
         collection.add(
             ids=[str(idx) for idx, _ in enumerate(batch)],

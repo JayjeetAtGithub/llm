@@ -66,7 +66,7 @@ def init_db_collection(args):
             utility.drop_collection(args.tbl)
         fields = [
             FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=False),
-            FieldSchema(name="token", dtype=DataType.VARCHAR, max_length=8192),
+            FieldSchema(name="token", dtype=DataType.VARCHAR, max_length=16384),
             FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=args.dim)
         ]
         schema = CollectionSchema(fields, args.tbl)

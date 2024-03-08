@@ -177,7 +177,7 @@ if __name__ == "__main__":
     collection = init_db_collection(args)
 
     profiler.start()
-    for file in os.listdir(args.ds)[:1]:
+    for file in os.listdir(args.ds)[:4]:
         batch = read_parquet_file(os.path.join(args.ds, file))
         insert_into_collection_bulk(collection, batch, args)
         print(f"[INFO] Bulk added {len(batch)} embeddings to the {args.db} collection")

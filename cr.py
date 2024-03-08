@@ -111,7 +111,7 @@ def insert_into_collection_bulk(collection, batch, args):
             } for idx, row in enumerate(batch)])
     elif args.db == "qdrant":
         mini_batches = list(create_batches(batch, QDRANT_MAX_BATCH_SIZE))
-        for i, b in enumerate(mini_batches):
+        for b in mini_batches:
             s = time.time()
             collection.upsert(
                 collection_name=args.tbl,
@@ -124,7 +124,7 @@ def insert_into_collection_bulk(collection, batch, args):
                     ) for idx, row in enumerate(b)
                 ],
             )
-            print(f"[INFO] Inserted batch {i} of size {len(b)} in {time.time() - s} seconds")
+            print(f"[INFO] Inserted batch of size {len(b)} in {time.time() - s} seconds")
 
 
 def get_collection_info(collection, args):

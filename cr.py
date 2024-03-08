@@ -167,12 +167,18 @@ if __name__ == "__main__":
     parser.add_argument("--dim", type=int, default=1536, help="The dimension of the vector embeddings")
     parser.add_argument("--tbl", type=str, default="embeddings_table", help="The table name to use in the database")
     parser.add_argument("--load-milvus", action="store_true", help="Whether to load the Milvus collection")
+    parser.add_argument("--debug", action="store_true", help="Whether to run the script in debug mode")
     args = parser.parse_args()
 
     # Initialize the collection
     collection = init_db_collection(args)
 
-    for file in os.listdir(args.ds)[:4]:
+    if args.debug:
+        file_list = os.listdir(args.ds)[:3]
+    else:
+        file_list = os.listdir(args.ds)
+
+    for file in file_list:
         batch = read_parquet_file(os.path.join(args.ds, file))
         insert_into_collection_bulk(collection, batch, args)
         print(f"[INFO] Bulk added {len(batch)} embeddings to the {args.db} collection")

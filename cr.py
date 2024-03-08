@@ -156,6 +156,7 @@ def get_collection_info(collection, args):
         print(collection.schema)
         print(collection.count_rows())
     elif args.db == "qdrant":
+        print("Collection info")
         print(collection.get_collection(collection_name=args.tbl))
 
 

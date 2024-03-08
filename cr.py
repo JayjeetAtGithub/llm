@@ -5,6 +5,7 @@ import platform
 import argparse
 import lancedb
 import time
+import uuid
 import pyarrow as pa
 import pyarrow.parquet as pq
 from dotenv import load_dotenv, find_dotenv
@@ -118,10 +119,10 @@ def insert_into_collection_bulk(collection, batch, args):
                 wait=True,
                 points=[
                     PointStruct(
-                        id=idx, 
+                        id=str(uuid.uuid4()), 
                         payload={"token": row[2]},
                         vector=list(row[3]),
-                    ) for idx, row in enumerate(b)
+                    ) for row in b
                 ],
             )
             print(f"[INFO] Inserted batch of size {len(b)} in {time.time() - s} seconds")

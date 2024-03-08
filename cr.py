@@ -128,6 +128,7 @@ def insert_into_collection_bulk(collection, batch, args):
             )
             print(f"[INFO] Inserted batch {i} of size {len(b)} in {time.time() - s} seconds")
 
+
 def get_collection_info(collection, args):
     if args.db == "milvus":
         collection.flush()

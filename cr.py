@@ -8,7 +8,6 @@ import time
 import pyarrow as pa
 import pyarrow.parquet as pq
 from dotenv import load_dotenv, find_dotenv
-from pyinstrument import Profiler
 from pymilvus import (
     utility,
     connections,
@@ -172,21 +171,13 @@ if __name__ == "__main__":
     parser.add_argument("--load-milvus", action="store_true", help="Whether to load the Milvus collection")
     args = parser.parse_args()
 
-    # Instantiate the profiler
-    profiler = Profiler()
-
     # Initialize the collection
     collection = init_db_collection(args)
 
-    profiler.start()
     for file in os.listdir(args.ds)[:4]:
         batch = read_parquet_file(os.path.join(args.ds, file))
         insert_into_collection_bulk(collection, batch, args)
         print(f"[INFO] Bulk added {len(batch)} embeddings to the {args.db} collection")
-    profiler.stop()
 
     # Print out collection stats
     get_collection_info(collection, args)
-
-    # Open the pyinstrument profile in the browser
-    profiler.open_in_browser()

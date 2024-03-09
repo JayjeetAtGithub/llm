@@ -173,6 +173,7 @@ if __name__ == "__main__":
 
     # Read the default config file
     config = read_toml_file(DEFAULT_CONFIG_PATH)
+    config = {**config["global"]}
     if args.debug:
         print("[INFO] Running with config")
         print(config)

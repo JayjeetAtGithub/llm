@@ -200,7 +200,9 @@ if __name__ == "__main__":
     if args.query:
         print("querying not yet implemented")
         # Run a query on the collection
-        # vector = read_parquet_file(os.path.join(args.ds, file_list[0]))[0][3]
-        # print(vector)
-        # if args.query:
-        #     run_query(collection, args, vector)
+        vector = read_parquet_file(os.path.join(args.ds, file_list[0]))[0][3]
+        print(vector)
+
+        s = time.time()
+        run_query(collection, args, vector)
+        print(f"[INFO] Query took {time.time() - s} seconds")

@@ -1,0 +1,5 @@
+[global]
+database = "qdrant"
+dataset = "dbpedia-entities-openai-1M/data"
+dimension = 1536
+table = "embeddings_table"

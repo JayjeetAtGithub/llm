@@ -6,6 +6,7 @@ import argparse
 import lancedb
 import time
 import uuid
+import toml
 import pyarrow as pa
 import pyarrow.parquet as pq
 from dotenv import load_dotenv, find_dotenv
@@ -22,6 +23,7 @@ from qdrant_client.http.models import Distance, VectorParams
 from qdrant_client.http.models import PointStruct
 
 # For the current dataset,
+DEFAULT_CONFIG_PATH = "configs/default.toml"
 MILVUS_MAX_BATCH_SIZE = 10000
 QDRANT_MAX_BATCH_SIZE = 1000
 
@@ -34,6 +36,11 @@ import chromadb
 
 # Load the environment variables
 load_dotenv(find_dotenv())
+
+
+def read_toml_file(file_path):
+    with open(file_path, "r") as f:
+        return toml.load(f)
 
 
 def read_parquet_file(file_path):
@@ -49,46 +56,46 @@ def create_batches(l, n):
         yield l[i:i + n] 
     
 
-def init_db_collection(args):
-    if args.db == "chroma":
+def init_db_collection(config):
+    if config["database"] == "chroma":
         if os.path.exists("./chroma_db"):
             shutil.rmtree("./chroma_db")
         db = chromadb.PersistentClient(path="./chroma_db")
-        collection = db.get_or_create_collection(args.tbl)
-    elif args.db == "lance":
+        collection = db.get_or_create_collection(config["table"])
+    elif config["database"] == "lance":
         if os.path.exists("./lance_db"):
             shutil.rmtree("./lance_db")
         db = lancedb.connect("./lance_db")
         schema = pa.schema(
             [
-                pa.field("embedding", pa.list_(pa.float32(), list_size=args.dim)),
+                pa.field("embedding", pa.list_(pa.float32(), list_size=config["dimension"])),
                 pa.field("token", pa.string()),
                 pa.field("id", pa.int64()),
             ])
-        collection = db.create_table(args.tbl, schema=schema)
-    elif args.db == "milvus":
+        collection = db.create_table(config["table"], schema=schema)
+    elif config["database"] == "milvus":
         connections.connect("default", host="localhost", port="19530")
-        if utility.has_collection(args.tbl):
-            utility.drop_collection(args.tbl)
+        if utility.has_collection(config["table"]):
+            utility.drop_collection(config["table"])
         fields = [
             FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
             FieldSchema(name="token", dtype=DataType.VARCHAR, max_length=16384),
-            FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=args.dim)
+            FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=config["dimension"])
         ]
-        schema = CollectionSchema(fields, args.tbl)
-        collection = Collection(args.tbl, schema)
-    elif args.db == "qdrant":
+        schema = CollectionSchema(fields, config["table"])
+        collection = Collection(config["table"], schema)
+    elif config["database"] == "qdrant":
         collection = QdrantClient("localhost", port=6333)
         collection.delete_collection(collection_name="embeddings_table")
         collection.create_collection(
-            collection_name=args.tbl,
-            vectors_config=VectorParams(size=args.dim, distance=Distance.DOT),
+            collection_name=config["table"],
+            vectors_config=VectorParams(size=config["dimension"], distance=Distance.DOT),
         )
     return collection
 
 
-def run_query(collection, args, vector):
-    if args.db == "qdrant":
+def run_query(collection, config, vector):
+    if config["database"] == "qdrant":
         results = collection.search(
             collection_name="embeddings_table",
             query_vector=vector,
@@ -99,8 +106,8 @@ def run_query(collection, args, vector):
         print(results)
 
 
-def insert_into_collection_bulk(collection, batch, args):
-    if args.db == "milvus":
+def insert_into_collection_bulk(collection, batch, config):
+    if config["database"] == "milvus":
         mini_batches = list(create_batches(batch, MILVUS_MAX_BATCH_SIZE))
         for b in mini_batches:
             s = time.time()
@@ -109,25 +116,25 @@ def insert_into_collection_bulk(collection, batch, args):
                 [list(row[3]) for row in b],
             ])
             print(f"[INFO] Inserted batch of size {len(b)} in {time.time() - s} seconds")
-    elif args.db == "chroma":
+    elif config["database"] == "chroma":
         collection.add(
             ids=[str(idx) for idx, _ in enumerate(batch)],
             documents=[row[2] for row in batch],
             embeddings=[list(row[3]) for row in batch],
         )
-    elif args.db == "lance":
+    elif config["database"] == "lance":
         collection.add([
             {
                 "id": idx, 
                 "token": row[2], 
                 "embedding": list(row[3]), 
             } for idx, row in enumerate(batch)])
-    elif args.db == "qdrant":
+    elif config["database"] == "qdrant":
         mini_batches = list(create_batches(batch, QDRANT_MAX_BATCH_SIZE))
         for b in mini_batches:
             s = time.time()
             collection.upsert(
-                collection_name=args.tbl,
+                collection_name=config["table"],
                 wait=True,
                 points=[
                     PointStruct(
@@ -140,69 +147,57 @@ def insert_into_collection_bulk(collection, batch, args):
             print(f"[INFO] Inserted batch of size {len(b)} in {time.time() - s} seconds")
 
 
-def get_collection_info(collection, args):
-    if args.db == "milvus":
+def get_collection_info(collection, config):
+    if config["database"] == "milvus":
         collection.flush()
         print(collection.name)
         print(collection.schema)
         print(collection.num_entities)
-        
-        # Optionally, load the milvus collection on
-        # demand from the user
-        if args.load_milvus:
-            index_params = {
-                "metric_type": "COSINE",
-                "index_type": "IVF_FLAT",
-                "params": {"nlist": 1024}
-            }
-            collection.create_index(
-                field_name="embedding", 
-                index_params=index_params
-            )
-            collection.load(replica_number=1)
 
-    elif args.db == "chroma":
+    elif config["database"] == "chroma":
         print(collection.count())
-    elif args.db == "lance":
+    elif config["database"] == "lance":
         print(collection.schema)
         print(collection.count_rows())
-    elif args.db == "qdrant":
+    elif config["database"] == "qdrant":
         print("Collection info")
-        print(collection.get_collection(collection_name=args.tbl))
+        print(collection.get_collection(collection_name=config["table"]))
 
 
 if __name__ == "__main__":
-    # The vector database to use
     parser = argparse.ArgumentParser() 
-    parser.add_argument("--db", type=str, default="milvus", help="The vector database to use (lance/chroma/milvus/qdrant)")
-    parser.add_argument("--ds", type=str, default="embeddings_dataset", help="The embeddings directory to read from")
-    parser.add_argument("--dim", type=int, default=1536, help="The dimension of the vector embeddings")
-    parser.add_argument("--tbl", type=str, default="embeddings_table", help="The table name to use in the database")
-    parser.add_argument("--load-milvus", action="store_true", help="Whether to load the Milvus collection")
     parser.add_argument("--debug", action="store_true", help="Whether to run the script in debug mode")
-    parser.add_argument("--run-query", action="store_true", help="Whether to run a query on the collection")
+    parser.add_argument("--query", action="store_true", help="Whether to run a query on the collection")
+    parser.add_argument("--ingest", action="store_true", help="Whether to ingest the embeddings into the collection")
     args = parser.parse_args()
 
-    # Initialize the collection
-    collection = init_db_collection(args)
+    # Read the default config file
+    config = read_toml_file(DEFAULT_CONFIG_PATH)
 
-    # Read the parquet files
-    if args.debug:
-        file_list = os.listdir(args.ds)[:2]
-    else:
-        file_list = os.listdir(args.ds)
+    # Ingest the dataset
+    if args.ingest:
+        collection = init_db_collection(config)
 
-    # Insert the embeddings into the collection
-    for file in file_list:
-        batch = read_parquet_file(os.path.join(args.ds, file))
-        insert_into_collection_bulk(collection, batch, args)
-        print(f"[INFO] Bulk added {len(batch)} embeddings to the {args.db} collection")
+        # Read the parquet files
+        if args.debug:
+            file_list = os.listdir(config["dataset"])[:2]
+        else:
+            file_list = os.listdir(config["dataset"])
 
-    # Print out collection stats after insertion
-    get_collection_info(collection, args)
+        # Insert the embeddings into the collection
+        for file in file_list:
+            batch = read_parquet_file(os.path.join(config["dataset"], file))
+            insert_into_collection_bulk(collection, batch, config)
+            print(f"[INFO] Bulk added {len(batch)} embeddings to the {config["dataset"]} collection")
 
-    # Run a query on the collection
-    vector = read_parquet_file(os.path.join(args.ds, file_list[0]))[0][3]
-    print(vector)
-    if args.run_query:
-        run_query(collection, args, vector)
+        # Print out collection stats after insertion
+        get_collection_info(collection, config)
+    
+    # Query the dataset
+    if args.query:
+        print("querying not yet implemented")
+        # Run a query on the collection
+        # vector = read_parquet_file(os.path.join(args.ds, file_list[0]))[0][3]
+        # print(vector)
+        # if args.query:
+        #     run_query(collection, args, vector)

@@ -198,9 +198,8 @@ if __name__ == "__main__":
     
     # Query the dataset
     if args.query:
-        # Run a query on the collection
+        file_list = os.listdir(config["dataset"])
         vector = read_parquet_file(os.path.join(config["dataset"], file_list[0]))[0][3]
-        print(vector)
 
         s = time.time()
         run_query(collection, args, vector)

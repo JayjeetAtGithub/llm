@@ -53,8 +53,14 @@ def read_parquet_file(file_path):
 def create_batches(l, n): 
     # looping till length l 
     for i in range(0, len(l), n):  
-        yield l[i:i + n] 
-    
+        yield l[i:i + n]
+
+
+def get_db_collection(config):
+    if config["database"] == "qdrant":
+        client = QdrantClient("localhost", port=6333)
+        return client.get_collections()[0]
+
 
 def init_db_collection(config):
     if config["database"] == "chroma":
@@ -199,6 +205,7 @@ if __name__ == "__main__":
     # Query the dataset
     if args.query:
         file_list = os.listdir(config["dataset"])
+        collection = get_db_collection(config)
         vector = read_parquet_file(os.path.join(config["dataset"], file_list[0]))[0][3]
 
         s = time.time()

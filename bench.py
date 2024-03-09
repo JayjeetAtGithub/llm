@@ -188,12 +188,12 @@ if __name__ == "__main__":
 
     # Read the parquet files
     if args.debug:
-        file_list = os.listdir(args.ds)[:3]
+        file_list = os.listdir(args.ds)[:2]
     else:
         file_list = os.listdir(args.ds)
 
     # Insert the embeddings into the collection
-    for file in file_list[:3]:
+    for file in file_list:
         batch = read_parquet_file(os.path.join(args.ds, file))
         insert_into_collection_bulk(collection, batch, args)
         print(f"[INFO] Bulk added {len(batch)} embeddings to the {args.db} collection")

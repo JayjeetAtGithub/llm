@@ -92,6 +92,7 @@ def run_query(collection, args, vector):
         results = collection.search(
             collection_name="embeddings_table",
             query_vector=vector,
+            with_vectors =True,
             with_payload=True,
             limit=5,
         )

@@ -87,6 +87,18 @@ def init_db_collection(args):
     return collection
 
 
+def run_query(collection, args, vector):
+    if args.db == "qdrant":
+        results = collection.search(
+            collection_name="embeddings_table",
+            query_vector=vector,
+            with_vector=True,
+            with_payload=True,
+            limit=5,
+        )
+        print(results)
+
+
 def insert_into_collection_bulk(collection, batch, args):
     if args.db == "milvus":
         mini_batches = list(create_batches(batch, MILVUS_MAX_BATCH_SIZE))
@@ -168,20 +180,29 @@ if __name__ == "__main__":
     parser.add_argument("--tbl", type=str, default="embeddings_table", help="The table name to use in the database")
     parser.add_argument("--load-milvus", action="store_true", help="Whether to load the Milvus collection")
     parser.add_argument("--debug", action="store_true", help="Whether to run the script in debug mode")
+    parser.add_argument("--run-query", action="store_true", help="Whether to run a query on the collection")
     args = parser.parse_args()
 
     # Initialize the collection
     collection = init_db_collection(args)
 
+    # Read the parquet files
     if args.debug:
         file_list = os.listdir(args.ds)[:3]
     else:
         file_list = os.listdir(args.ds)
 
+    # Insert the embeddings into the collection
     for file in file_list:
         batch = read_parquet_file(os.path.join(args.ds, file))
         insert_into_collection_bulk(collection, batch, args)
         print(f"[INFO] Bulk added {len(batch)} embeddings to the {args.db} collection")
 
-    # Print out collection stats
+    # Print out collection stats after insertion
     get_collection_info(collection, args)
+
+    # Run a query on the collection
+    vector = read_parquet_file(os.path.join(args.ds, file_list[0]))[0][3]
+    print(vector)
+    if args.run_query:
+        run_query(collection, args, vector)

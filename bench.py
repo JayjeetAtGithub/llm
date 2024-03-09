@@ -198,7 +198,6 @@ if __name__ == "__main__":
     
     # Query the dataset
     if args.query:
-        print("querying not yet implemented")
         # Run a query on the collection
         vector = read_parquet_file(os.path.join(args.ds, file_list[0]))[0][3]
         print(vector)

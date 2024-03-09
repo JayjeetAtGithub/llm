@@ -191,7 +191,6 @@ if __name__ == "__main__":
         for file in file_list:
             batch = read_parquet_file(os.path.join(config["dataset"], file))
             insert_into_collection_bulk(collection, batch, config)
-            print(f"[INFO] Bulk added {len(batch)} embeddings to the {config["table"]} collection")
         
         # Print out collection stats after insertion
         get_collection_info(collection, config)

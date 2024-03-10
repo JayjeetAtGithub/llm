@@ -60,8 +60,7 @@ def get_db_collection(config):
     if config["database"] == "qdrant":
         client = QdrantClient("localhost", port=6333)
         collection_response =  client.get_collections()
-        print(collection_response)
-        print(vars(collection_response))
+        return collection_response.collections[0]
 
 
 def init_db_collection(config):

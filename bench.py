@@ -203,5 +203,5 @@ if __name__ == "__main__":
         vector = read_parquet_file(os.path.join(config["dataset"], file_list[0]))[0][3]
 
         s = time.time()
-        run_query(args, vector)
+        run_query(config, vector)
         print(f"[INFO] Query took {time.time() - s} seconds")

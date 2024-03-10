@@ -59,7 +59,9 @@ def create_batches(l, n):
 def get_db_collection(config):
     if config["database"] == "qdrant":
         client = QdrantClient("localhost", port=6333)
-        return client.get_collections()[0]
+        collection_response =  client.get_collections()[0]
+        print(collection_response)
+        print(vars(collection_response))
 
 
 def init_db_collection(config):

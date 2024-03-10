@@ -56,13 +56,6 @@ def create_batches(l, n):
         yield l[i:i + n]
 
 
-def get_db_collection(config):
-    if config["database"] == "qdrant":
-        client = QdrantClient("localhost", port=6333)
-        collection_response =  client.get_collections()
-        return collection_response.collections[0]
-
-
 def init_db_collection(config):
     if config["database"] == "chroma":
         if os.path.exists("./chroma_db"):
@@ -101,9 +94,10 @@ def init_db_collection(config):
     return collection
 
 
-def run_query(collection, config, vector):
+def run_query(config, vector):
     if config["database"] == "qdrant":
-        results = collection.search(
+        client = QdrantClient("localhost", port=6333)
+        results = client.search(
             collection_name="embeddings_table",
             query_vector=vector,
             with_vectors =True,
@@ -206,9 +200,8 @@ if __name__ == "__main__":
     # Query the dataset
     if args.query:
         file_list = os.listdir(config["dataset"])
-        collection = get_db_collection(config)
         vector = read_parquet_file(os.path.join(config["dataset"], file_list[0]))[0][3]
 
         s = time.time()
-        run_query(collection, args, vector)
+        run_query(args, vector)
         print(f"[INFO] Query took {time.time() - s} seconds")

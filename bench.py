@@ -18,9 +18,9 @@ from pymilvus import (
     DataType,
     Collection,
 )
-from qdrant_client import QdrantClient
-from qdrant_client.http.models import Distance, VectorParams
-from qdrant_client.http.models import PointStruct
+from qdrant_client import QdrantClient, models
+from qdrant_client.http.models import Distance, VectorParams, PointStruct
+
 
 # Constants
 DEFAULT_CONFIG_FILE = "configs/default.toml"
@@ -90,6 +90,9 @@ def init_db_collection(config):
         collection.create_collection(
             collection_name=config["table"],
             vectors_config=VectorParams(size=config["dimension"], distance=Distance.DOT),
+            optimizers_config=models.OptimizersConfigDiff(
+                indexing_threshold=0,
+            ),
         )
     return collection
 

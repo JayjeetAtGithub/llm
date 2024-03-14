@@ -94,9 +94,13 @@ def init_db_collection(config):
     return collection
 
 
-def run_query(config, vector):
+def init_client(config):
     if config["database"] == "qdrant":
-        client = QdrantClient("localhost", port=6333)
+        return QdrantClient("localhost", port=6333)
+
+
+def run_query(config, client, vector):
+    if config["database"] == "qdrant":
         results = client.search(
             collection_name=config["table"],
             query_vector=vector,
@@ -205,6 +209,8 @@ if __name__ == "__main__":
         file_list = os.listdir(config["dataset"])
         vector = read_parquet_file(os.path.join(config["dataset"], file_list[0]))[0][config["embedding_idx"]]
 
+        client = init_client(config)
+
         s = time.time()
-        run_query(config, vector)
+        run_query(config, client, vector)
         print(f"[INFO] Query took {time.time() - s} seconds")

@@ -1,4 +1,4 @@
-[qdrant-1M]
+[qdrant-1M-1536]
 database = "qdrant"
 dataset = "dbpedia-entities-openai-1M/data"
 dimension = 1536

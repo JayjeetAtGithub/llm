@@ -112,6 +112,7 @@ def insert_into_collection_bulk(collection, batch, config):
         for b in mini_batches:
             s = time.time()
             collection.insert([
+                # Add an Id to the row (probably uuid.uuid4() would be a good idea)
                 [row[2] for row in b],
                 [list(row[3]) for row in b],
             ])

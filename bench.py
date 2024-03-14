@@ -87,6 +87,7 @@ def init_db_collection(config):
     elif config["database"] == "qdrant":
         collection = QdrantClient("localhost", port=6333)
         collection.delete_collection(collection_name=config["table"])
+        print("Deleted collection")
         collection.create_collection(
             collection_name=config["table"],
             vectors_config=VectorParams(size=config["dimension"], distance=Distance.DOT),

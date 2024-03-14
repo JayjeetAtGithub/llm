@@ -1,7 +1,15 @@
-[qdrant-1]
+[qdrant-1M]
 database = "qdrant"
 dataset = "dbpedia-entities-openai-1M/data"
 dimension = 1536
 table = "embeddings_table"
 payload_idx = 2
 embedding_idx = 3
+
+[qdrant-35M]
+database = "qdrant"
+dataset = "wikipedia-22-12-en-embeddings"
+table = "embeddings_table_02"
+dimension = 768
+payload_idx = 2
+embedding_idx = 8

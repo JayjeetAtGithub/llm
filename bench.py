@@ -168,7 +168,7 @@ def get_collection_info(collection, config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser() 
-    parser.add_argument("--bench", type=str, default="qdrant-1", help="The benchmark setup to use")
+    parser.add_argument("--bench", type=str, default="qdrant-1M", help="The benchmark setup to use")
     parser.add_argument("--debug", action="store_true", help="Whether to run the script in debug mode")
     parser.add_argument("--query", action="store_true", help="Whether to run a query on the collection")
     parser.add_argument("--ingest", action="store_true", help="Whether to ingest the embeddings into the collection")

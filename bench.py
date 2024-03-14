@@ -191,6 +191,7 @@ if __name__ == "__main__":
 
     # Ingest the dataset
     if args.ingest:
+        total_rows_written = 0
         collection = init_db_collection(config)
 
         # Read the parquet files
@@ -203,6 +204,8 @@ if __name__ == "__main__":
         for file in file_list:
             batch = read_parquet_file(os.path.join(config["dataset"], file))
             insert_into_collection_bulk(collection, batch, config)
+            total_rows_written += len(batch)
+            print(f"[INFO] Total rows written: {total_rows_written}")
         
         # Print out collection stats after insertion
         get_collection_info(collection, config)

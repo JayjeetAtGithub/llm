@@ -113,22 +113,22 @@ def insert_into_collection_bulk(collection, batch, config):
             s = time.time()
             collection.insert([
                 # Add an Id to the row (probably uuid.uuid4() would be a good idea)
-                [row[2] for row in b],
-                [list(row[3]) for row in b],
+                [row[config["payload_idx"]] for row in b],
+                [list(row[config["embedding_idx"]]) for row in b],
             ])
             print(f"[INFO] Inserted batch of size {len(b)} in {time.time() - s} seconds")
     elif config["database"] == "chroma":
         collection.add(
             ids=[str(idx) for idx, _ in enumerate(batch)],
-            documents=[row[2] for row in batch],
-            embeddings=[list(row[3]) for row in batch],
+            documents=[row[config["payload_idx"]] for row in batch],
+            embeddings=[list(row[config["embedding_idx"]]) for row in batch],
         )
     elif config["database"] == "lance":
         collection.add([
             {
                 "id": idx, 
-                "token": row[2], 
-                "embedding": list(row[3]), 
+                "token": row[config["payload_idx"]], 
+                "embedding": list(row[config["embedding_idx"]]), 
             } for idx, row in enumerate(batch)])
     elif config["database"] == "qdrant":
         mini_batches = list(create_batches(batch, QDRANT_MAX_BATCH_SIZE))
@@ -140,8 +140,8 @@ def insert_into_collection_bulk(collection, batch, config):
                 points=[
                     PointStruct(
                         id=str(uuid.uuid4()), 
-                        payload={"token": row[2]},
-                        vector=list(row[3]),
+                        payload={"token": row[config["payload_idx"]]},
+                        vector=list(row[config["embedding_idx"]]),
                     ) for row in b
                 ],
             )

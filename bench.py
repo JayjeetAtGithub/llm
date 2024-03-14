@@ -23,6 +23,7 @@ from qdrant_client.http.models import Distance, VectorParams
 from qdrant_client.http.models import PointStruct
 
 # Constants
+DEFAULT_CONFIG_FILE = "configs/default.toml"
 MILVUS_MAX_BATCH_SIZE = 10000
 QDRANT_MAX_BATCH_SIZE = 1000
 
@@ -167,15 +168,15 @@ def get_collection_info(collection, config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser() 
-    parser.add_argument("--config", type=str, default="configs/default.toml", help="The config file to use for the script")
+    parser.add_argument("--bench", type=str, default="qdrant-1", help="The benchmark setup to use")
     parser.add_argument("--debug", action="store_true", help="Whether to run the script in debug mode")
     parser.add_argument("--query", action="store_true", help="Whether to run a query on the collection")
     parser.add_argument("--ingest", action="store_true", help="Whether to ingest the embeddings into the collection")
     args = parser.parse_args()
 
     # Read the default config file
-    config = read_toml_file(args.config)
-    config = {**config["global"]}
+    config = read_toml_file(DEFAULT_CONFIG_FILE)
+    config = {**config[args.bench]}
     if args.debug:
         print("[INFO] Running with config")
         print(config)

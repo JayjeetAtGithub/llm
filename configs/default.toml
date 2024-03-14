@@ -1,4 +1,4 @@
-[global]
+[qdrant-1]
 database = "qdrant"
 dataset = "dbpedia-entities-openai-1M/data"
 dimension = 1536

@@ -203,7 +203,7 @@ if __name__ == "__main__":
     # Query the dataset
     if args.query:
         file_list = os.listdir(config["dataset"])
-        vector = read_parquet_file(os.path.join(config["dataset"], file_list[0]))[0][3]
+        vector = read_parquet_file(os.path.join(config["dataset"], file_list[0]))[0][config["embedding_idx"]]
 
         s = time.time()
         run_query(config, vector)

@@ -86,7 +86,7 @@ def init_db_collection(config):
         collection = Collection(config["table"], schema)
     elif config["database"] == "qdrant":
         collection = QdrantClient("localhost", port=6333)
-        collection.delete_collection(collection_name="embeddings_table")
+        collection.delete_collection(collection_name=config["table"])
         collection.create_collection(
             collection_name=config["table"],
             vectors_config=VectorParams(size=config["dimension"], distance=Distance.DOT),
@@ -98,7 +98,7 @@ def run_query(config, vector):
     if config["database"] == "qdrant":
         client = QdrantClient("localhost", port=6333)
         results = client.search(
-            collection_name="embeddings_table",
+            collection_name=config["table"],
             query_vector=vector,
             with_vectors=False,
             with_payload=True,

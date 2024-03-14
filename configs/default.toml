@@ -6,10 +6,10 @@ table = "embeddings_table"
 payload_idx = 2
 embedding_idx = 3
 
-[qdrant-35M]
+[qdrant-35M-768]
 database = "qdrant"
 dataset = "wikipedia-22-12-en-embeddings/data"
-table = "embeddings_table_02"
+table = "embeddings_35M_768"
 dimension = 768
 payload_idx = 2
 embedding_idx = 8

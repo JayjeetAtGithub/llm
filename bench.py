@@ -199,7 +199,7 @@ if __name__ == "__main__":
         else:
             file_list = os.listdir(config["dataset"])[:config["train_split"]]
 
-        print(f"Inserting {len(file_list)} into collection {config['table']}")
+        print(f"Inserting {len(file_list)} files into collection {config['table']}")
 
         # Insert the embeddings into the collection
         for file in file_list:

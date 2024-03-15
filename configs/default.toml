@@ -22,4 +22,4 @@ train_start_idx = 0
 train_stop_idx = 36
 query_start_idx = 200
 query_stop_idx = 216
-top_k = 20
+top_k = 5

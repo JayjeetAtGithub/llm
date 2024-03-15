@@ -2,7 +2,7 @@
 database = "qdrant"
 dataset = "dbpedia-entities-openai-1M/data"
 dimension = 1536
-table = "embeddings_table"
+table = "embeddings_1M_1536"
 payload_idx = 2
 embedding_idx = 3
 

@@ -197,7 +197,7 @@ if __name__ == "__main__":
         if args.debug:
             file_list = os.listdir(config["dataset"])[:2]
         else:
-            file_list = os.listdir(config["dataset"])[:config["train_split"]]
+            file_list = os.listdir(config["dataset"])[config["train_start_idx"]:config["train_stop_idx"]]
 
         print(f"Inserting {len(file_list)} files into collection {config['table']}")
 
@@ -213,11 +213,13 @@ if __name__ == "__main__":
     
     # Query the dataset
     if args.query:
-        file_list = os.listdir(config["dataset"])
-        vector = read_parquet_file(os.path.join(config["dataset"], file_list[0]))[0][config["embedding_idx"]]
-
         client = init_client(config)
 
-        s = time.time()
-        run_query(config, client, vector)
-        print(f"[INFO] Query took {time.time() - s} seconds")
+        file_list = os.listdir(config["dataset"])[config["query_start_idx"]:config["query_stop_idx"]]
+        for file in file_list:
+            for row in read_parquet_file(os.path.join(config["dataset"], file)):
+                vector = row[config["embedding_idx"]]
+                print(f"Running query for vector: {vector}")
+                run_query(config, client, vector)
+
+    print("[INFO] Done!")

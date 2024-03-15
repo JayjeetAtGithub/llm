@@ -7,8 +7,8 @@ payload_idx = 2
 embedding_idx = 3
 train_start_idx = 0
 train_stop_idx = 20
-test_start_idx = 21
-test_stop_idx = 30
+query_start_idx = 21
+query_stop_idx = 30
 
 [qdrant-35M-768]
 database = "qdrant"
@@ -19,5 +19,5 @@ payload_idx = 2
 embedding_idx = 8
 train_start_idx = 0
 train_stop_idx = 20
-test_start_idx = 21
-test_stop_idx = 30
+query_start_idx = 21
+query_stop_idx = 30

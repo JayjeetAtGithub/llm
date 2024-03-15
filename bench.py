@@ -185,9 +185,8 @@ if __name__ == "__main__":
     # Read the default config file
     config = read_toml_file(DEFAULT_CONFIG_FILE)
     config = {**config[args.bench]}
-    if args.debug:
-        print("[INFO] Running with config")
-        print(config)
+    print("[INFO] Running with config: ")
+    print(config)
 
     # Ingest the dataset
     if args.ingest:

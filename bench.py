@@ -102,7 +102,7 @@ def init_client(config):
         return QdrantClient("localhost", port=6333)
 
 
-def run_query(config, client, vector):
+def run_query(config, client, vector, total_time_for_queries):
     if config["database"] == "qdrant":
         s = time.time()
         results = client.search(
@@ -112,7 +112,7 @@ def run_query(config, client, vector):
             with_payload=True,
             limit=config["top_k"],
         )
-        print(f"[INFO] Query ran in {time.time() - s} seconds")
+        total_time_for_queries += time.time() - s
         for idx, point in enumerate(results):
             print(f"[INFO] Score #{idx}: {point.score}")
 
@@ -220,11 +220,14 @@ if __name__ == "__main__":
 
         file_list = os.listdir(config["dataset"])[config["query_start_idx"]:config["query_stop_idx"]]
         print(f"[INFO] Running queries from {len(file_list)} files")
+        total_time_for_queries = 0
 
         for file in file_list:
             for row in read_parquet_file(os.path.join(config["dataset"], file)):
                 vector = row[config["embedding_idx"]]
                 print(f"[INFO] Running query for vector: [{vector[0]}, {vector[1]}, {vector[2]}, ...]")
-                run_query(config, client, vector)
+                run_query(config, client, vector, total_time_for_queries)
+        
+        print(f"[INFO] Total time for queries: {total_time_for_queries} seconds")
 
     print("[INFO] Done!")

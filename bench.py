@@ -219,7 +219,7 @@ if __name__ == "__main__":
         for file in file_list:
             for row in read_parquet_file(os.path.join(config["dataset"], file)):
                 vector = row[config["embedding_idx"]]
-                print(f"Running query for vector: {vector}")
+                print(f"Running query for vector: [{vector[0]}, {vector[1]}, {vector[2]}, ...]")
                 run_query(config, client, vector)
 
     print("[INFO] Done!")

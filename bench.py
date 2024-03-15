@@ -219,6 +219,8 @@ if __name__ == "__main__":
         client = init_client(config)
 
         file_list = os.listdir(config["dataset"])[config["query_start_idx"]:config["query_stop_idx"]]
+        print(f"[INFO] Running queries from {len(file_list)} files")
+        
         for file in file_list:
             for row in read_parquet_file(os.path.join(config["dataset"], file)):
                 vector = row[config["embedding_idx"]]

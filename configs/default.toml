@@ -5,6 +5,7 @@ dimension = 1536
 table = "embeddings_1M_1536"
 payload_idx = 2
 embedding_idx = 3
+train_split = 20
 
 [qdrant-35M-768]
 database = "qdrant"
@@ -13,3 +14,4 @@ table = "embeddings_35M_768"
 dimension = 768
 payload_idx = 2
 embedding_idx = 8
+train_split = 200

@@ -198,7 +198,7 @@ if __name__ == "__main__":
         if args.debug:
             file_list = os.listdir(config["dataset"])[:2]
         else:
-            file_list = os.listdir(config["dataset"])
+            file_list = os.listdir(config["dataset"])[:config["train_split"]]
 
         # Insert the embeddings into the collection
         for file in file_list:

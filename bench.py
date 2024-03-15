@@ -111,7 +111,8 @@ def run_query(config, client, vector):
             with_payload=True,
             limit=5,
         )
-        print(results)
+        for idx, point in enumerate(results):
+            print(f"Match #{idx}: {point.score}")
 
 
 def insert_into_collection_bulk(collection, batch, config):

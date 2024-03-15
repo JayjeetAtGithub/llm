@@ -104,6 +104,7 @@ def init_client(config):
 
 def run_query(config, client, vector):
     if config["database"] == "qdrant":
+        s = time.time()
         results = client.search(
             collection_name=config["table"],
             query_vector=vector,
@@ -111,8 +112,9 @@ def run_query(config, client, vector):
             with_payload=True,
             limit=5,
         )
+        print(f"[INFO] Query ran in {time.time() - s} seconds")
         for idx, point in enumerate(results):
-            print(f"Match #{idx}: {point.score}")
+            print(f"[INFO] Score #{idx}: {point.score}")
 
 
 def insert_into_collection_bulk(collection, batch, config):
@@ -200,7 +202,7 @@ if __name__ == "__main__":
         else:
             file_list = os.listdir(config["dataset"])[config["train_start_idx"]:config["train_stop_idx"]]
 
-        print(f"Inserting {len(file_list)} files into collection {config['table']}")
+        print(f"[INFO] Inserting {len(file_list)} files into collection {config['table']}")
 
         # Insert the embeddings into the collection
         for file in file_list:
@@ -220,7 +222,7 @@ if __name__ == "__main__":
         for file in file_list:
             for row in read_parquet_file(os.path.join(config["dataset"], file)):
                 vector = row[config["embedding_idx"]]
-                print(f"Running query for vector: [{vector[0]}, {vector[1]}, {vector[2]}, ...]")
+                print(f"[INFO] Running query for vector: [{vector[0]}, {vector[1]}, {vector[2]}, ...]")
                 run_query(config, client, vector)
 
     print("[INFO] Done!")

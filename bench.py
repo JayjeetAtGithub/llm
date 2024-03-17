@@ -27,7 +27,6 @@ MILVUS_MAX_BATCH_SIZE = 10000
 QDRANT_MAX_BATCH_SIZE = 1000
 
 # Global variables
-global total_time_for_queries
 total_time_for_queries = 0
 
 # Import ChromaDB properly

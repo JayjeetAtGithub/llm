@@ -26,9 +26,6 @@ DEFAULT_CONFIG_FILE = "configs/default.toml"
 MILVUS_MAX_BATCH_SIZE = 10000
 QDRANT_MAX_BATCH_SIZE = 1000
 
-# Global variables
-total_time_for_queries = 0
-
 # Import ChromaDB properly
 if platform.system() == "Linux":
     __import__('pysqlite3')
@@ -106,15 +103,13 @@ def init_client(config):
 
 def run_query(config, client, vector):
     if config["database"] == "qdrant":
-        s = time.time()
         results = client.search(
             collection_name=config["table"],
             query_vector=vector,
-            with_vectors=False,
+            with_vectors=True,
             with_payload=True,
             limit=config["top_k"],
         )
-        total_time_for_queries += time.time() - s
         for idx, point in enumerate(results):
             print(f"[INFO] Score #{idx}: {point.score}")
 
@@ -233,5 +228,4 @@ if __name__ == "__main__":
                 if queries_ran >= config["queries_to_run"]:
                     break
                 
-        print(f"[INFO] Total time for {config['queries_to_run']} queries: {total_time_for_queries} seconds")
     print("[INFO] Done!")

@@ -21,12 +21,14 @@ from pymilvus import (
 from qdrant_client import QdrantClient, models
 from qdrant_client.http.models import Distance, VectorParams, PointStruct
 
-
 # Constants
 DEFAULT_CONFIG_FILE = "configs/default.toml"
 MILVUS_MAX_BATCH_SIZE = 10000
 QDRANT_MAX_BATCH_SIZE = 1000
-        
+
+# Global variables
+global total_time_for_queries
+total_time_for_queries = 0
 
 # Import ChromaDB properly
 if platform.system() == "Linux":
@@ -217,8 +219,6 @@ if __name__ == "__main__":
     
     # Query the dataset
     if args.query:
-        global total_time_for_queries
-        total_time_for_queries = 0
         queries_ran = 0
         client = init_client(config)
 

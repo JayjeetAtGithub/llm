@@ -216,6 +216,7 @@ if __name__ == "__main__":
     
     # Query the dataset
     if args.query:
+        queries_ran = 0
         client = init_client(config)
 
         file_list = os.listdir(config["dataset"])[config["query_start_idx"]:config["query_stop_idx"]]
@@ -227,7 +228,10 @@ if __name__ == "__main__":
                 vector = row[config["embedding_idx"]]
                 print(f"[INFO] Running query for vector: [{vector[0]}, {vector[1]}, {vector[2]}, ...]")
                 run_query(config, client, vector, total_time_for_queries)
+                queries_ran += 1
+                if queries_ran >= config["queries_to_run"]:
+                    break
         
-        print(f"[INFO] Total time for queries: {total_time_for_queries} seconds")
+        print(f"[INFO] Total time for {config["queries_to_run"]} queries: {total_time_for_queries} seconds")
 
     print("[INFO] Done!")

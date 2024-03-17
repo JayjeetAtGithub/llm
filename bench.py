@@ -232,5 +232,5 @@ if __name__ == "__main__":
                 if queries_ran >= config["queries_to_run"]:
                     break
                 
-        print(f"[INFO] Total time for {config["queries_to_run"]} queries: {total_time_for_queries} seconds")
+        print(f"[INFO] Total time for {config['queries_to_run']} queries: {total_time_for_queries} seconds")
     print("[INFO] Done!")

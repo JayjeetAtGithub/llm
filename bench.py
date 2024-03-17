@@ -26,6 +26,11 @@ from qdrant_client.http.models import Distance, VectorParams, PointStruct
 DEFAULT_CONFIG_FILE = "configs/default.toml"
 MILVUS_MAX_BATCH_SIZE = 10000
 QDRANT_MAX_BATCH_SIZE = 1000
+        
+
+# Global variables        
+total_time_for_queries = 0
+
 
 # Import ChromaDB properly
 if platform.system() == "Linux":
@@ -102,7 +107,7 @@ def init_client(config):
         return QdrantClient("localhost", port=6333)
 
 
-def run_query(config, client, vector, total_time_for_queries):
+def run_query(config, client, vector):
     if config["database"] == "qdrant":
         s = time.time()
         results = client.search(
@@ -221,13 +226,12 @@ if __name__ == "__main__":
 
         file_list = os.listdir(config["dataset"])[config["query_start_idx"]:config["query_stop_idx"]]
         print(f"[INFO] Running queries from {len(file_list)} files")
-        total_time_for_queries = 0
 
         for file in file_list:
             for row in read_parquet_file(os.path.join(config["dataset"], file)):
                 vector = row[config["embedding_idx"]]
                 print(f"[INFO] Running query for vector: [{vector[0]}, {vector[1]}, {vector[2]}, ...]")
-                run_query(config, client, vector, total_time_for_queries)
+                run_query(config, client, vector)
                 queries_ran += 1
                 if queries_ran >= config["queries_to_run"]:
                     break

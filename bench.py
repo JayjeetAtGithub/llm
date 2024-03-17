@@ -28,10 +28,6 @@ MILVUS_MAX_BATCH_SIZE = 10000
 QDRANT_MAX_BATCH_SIZE = 1000
         
 
-# Global variables        
-total_time_for_queries = 0
-
-
 # Import ChromaDB properly
 if platform.system() == "Linux":
     __import__('pysqlite3')
@@ -221,6 +217,8 @@ if __name__ == "__main__":
     
     # Query the dataset
     if args.query:
+        global total_time_for_queries
+        total_time_for_queries = 0
         queries_ran = 0
         client = init_client(config)
 

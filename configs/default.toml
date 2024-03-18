@@ -6,9 +6,9 @@ table = "embeddings_1M_1536"
 payload_idx = 2
 embedding_idx = 3
 train_start_idx = 0
-train_stop_idx = 20
-query_start_idx = 21
-query_stop_idx = 30
+train_stop_idx = 26
+query_start_idx = 0
+query_stop_idx = 2
 top_k = 5
 queries_to_run = 200
 

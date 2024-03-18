@@ -7,8 +7,8 @@ payload_idx = 2
 embedding_idx = 3
 train_start_idx = 0
 train_stop_idx = 26
-query_start_idx = 40
-query_stop_idx = 50
+query_start_idx = 5
+query_stop_idx = 15
 top_k = 5
 queries_to_run = 10000
 

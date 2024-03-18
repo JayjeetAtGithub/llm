@@ -10,7 +10,7 @@ train_stop_idx = 26
 query_start_idx = 0
 query_stop_idx = 2
 top_k = 5
-queries_to_run = 200
+queries_to_run = 10000
 
 [qdrant-35M-768]
 database = "qdrant"
@@ -24,4 +24,4 @@ train_stop_idx = 36
 query_start_idx = 200
 query_stop_idx = 216
 top_k = 5
-queries_to_run = 200
+queries_to_run = 10000

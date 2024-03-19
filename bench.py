@@ -106,7 +106,7 @@ def run_query(config, client, vector):
         results = client.search(
             collection_name=config["table"],
             query_vector=vector,
-            with_vectors=True,
+            with_vectors=False,
             with_payload=True,
             limit=config["top_k"],
         )

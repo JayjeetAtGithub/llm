@@ -114,9 +114,8 @@ def run_query(config, client, vector):
             with_payload=True,
             limit=config["top_k"],
         )
-        for idx, point in enumerate(results):
-            print(f"[INFO] Score #{idx}: {point.score}")
-
+        print(f"Num results returned: {len(results)}")
+        
 
 def insert_into_collection_bulk(collection, batch, config):
     if config["database"] == "milvus":
@@ -219,6 +218,7 @@ if __name__ == "__main__":
     # Query the dataset
     if args.query:
         queries_ran = 0
+        total_time_taken = 0
         client = init_client(config)
 
         file_list = os.listdir(config["dataset"])[config["query_start_idx"]:config["query_stop_idx"]]
@@ -228,9 +228,11 @@ if __name__ == "__main__":
             for row in read_parquet_file(os.path.join(config["dataset"], file)):
                 vector = row[config["embedding_idx"]]
                 print(f"[INFO] Running query #{queries_ran} for vector: [{vector[0]}, {vector[1]}, {vector[2]}, ...]")
+                s = time.time()
                 run_query(config, client, vector)
+                total_time_taken += time.time() - s
                 queries_ran += 1
                 if queries_ran >= config["queries_to_run"]:
                     break
-                
+        print(f"Total time for {config["queries_to_run"]} queries: {total_time_taken}")
     print("[INFO] Done!")

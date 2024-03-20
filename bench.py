@@ -217,6 +217,7 @@ if __name__ == "__main__":
     
     # Query the dataset
     if args.query:
+        stop_querying = False
         queries_ran = 0
         total_time_taken = 0
         client = init_client(config)
@@ -225,6 +226,8 @@ if __name__ == "__main__":
         print(f"[INFO] Running queries from {len(file_list)} files")
 
         for file in file_list:
+            if stop_querying:
+                break
             for row in read_parquet_file(os.path.join(config["dataset"], file)):
                 vector = row[config["embedding_idx"]]
                 print(f"[INFO] Running query #{queries_ran} for vector: [{vector[0]}, {vector[1]}, {vector[2]}, ...]")
@@ -234,8 +237,7 @@ if __name__ == "__main__":
                 queries_ran += 1
                 print(queries_ran)
                 if queries_ran >= config["queries_to_run"]:
-                    print("Stopping !")
-                    break
+                    stop_querying = True
     
         print(f"Total time for {config['queries_to_run']} queries: {total_time_taken}")
     print("[INFO] Done!")

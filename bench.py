@@ -233,7 +233,6 @@ if __name__ == "__main__":
                 run_query(config, client, vector)
                 total_time_taken += time.time() - s
                 queries_ran += 1
-                print(queries_ran)
                 if queries_ran >= config["queries_to_run"]:
                     stop_querying = True
                     break

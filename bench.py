@@ -101,12 +101,17 @@ def init_db_collection(config):
 
 
 def init_client(config):
-    if config["database"] == "qdrant":
+    if config["database"] == "lance":
+        db = lancedb.connect("./lance_db")
+        return db.open_table(config["table"])
+    elif config["database"] == "qdrant":
         return QdrantClient("localhost", port=6333)
 
 
 def run_query(config, client, vector):
-    if config["database"] == "qdrant":
+    if config["database"] == "lance":
+        results = client.search(vector).limit(config["top_k"])
+    elif config["database"] == "qdrant":
         results = client.search(
             collection_name=config["table"],
             query_vector=vector,
@@ -114,8 +119,8 @@ def run_query(config, client, vector):
             with_payload=True,
             limit=config["top_k"],
         )
-        print(f"Num results returned: {len(results)}")
-        
+    print(f"Num results returned: {len(results)}")
+    
 
 def insert_into_collection_bulk(collection, batch, config):
     if config["database"] == "milvus":
@@ -135,6 +140,7 @@ def insert_into_collection_bulk(collection, batch, config):
             embeddings=[list(row[config["embedding_idx"]]) for row in batch],
         )
     elif config["database"] == "lance":
+        # Lance uses IVF-PQ index
         collection.add([
             {
                 "id": idx, 
@@ -142,6 +148,7 @@ def insert_into_collection_bulk(collection, batch, config):
                 "embedding": list(row[config["embedding_idx"]]), 
             } for idx, row in enumerate(batch)])
     elif config["database"] == "qdrant":
+        # Qdrant uses an HNSW index
         mini_batches = list(create_batches(batch, QDRANT_MAX_BATCH_SIZE))
         for b in mini_batches:
             s = time.time()

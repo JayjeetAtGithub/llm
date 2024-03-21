@@ -11,12 +11,13 @@ query_start_idx = 5
 query_stop_idx = 15
 top_k = 5
 queries_to_run = 100000
+index = false
 
-[lancedb-1M-1536]
-database = "lance"
+[qdrant-1M-1536-indexed]
+database = "qdrant"
 dataset = "dbpedia-entities-openai-1M/data"
 dimension = 1536
-table = "embeddings_1M_1536"
+table = "embeddings_1M_1536_indexed"
 payload_idx = 2
 embedding_idx = 3
 train_start_idx = 0
@@ -25,6 +26,7 @@ query_start_idx = 5
 query_stop_idx = 15
 top_k = 5
 queries_to_run = 100000
+index = true
 
 [qdrant-35M-768]
 database = "qdrant"
@@ -39,3 +41,19 @@ query_start_idx = 200
 query_stop_idx = 216
 top_k = 5
 queries_to_run = 100000
+index = false
+
+[lancedb-1M-1536]
+database = "lance"
+dataset = "dbpedia-entities-openai-1M/data"
+dimension = 1536
+table = "embeddings_1M_1536"
+payload_idx = 2
+embedding_idx = 3
+train_start_idx = 0
+train_stop_idx = 26
+query_start_idx = 5
+query_stop_idx = 15
+top_k = 5
+queries_to_run = 100000
+index = false

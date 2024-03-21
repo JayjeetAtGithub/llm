@@ -84,7 +84,7 @@ def init_db_collection(config):
         schema = CollectionSchema(fields, config["table"])
         collection = Collection(config["table"], schema)
     elif config["database"] == "qdrant":
-        if args.index:
+        if config["index"]:
             indexing_threshold = 20000
         else:
             indexing_threshold = 0
@@ -188,7 +188,6 @@ if __name__ == "__main__":
     parser.add_argument("--bench", type=str, default="qdrant-1M-1536", help="The benchmark setup to use")
     parser.add_argument("--debug", action="store_true", help="Whether to run the script in debug mode")
     parser.add_argument("--query", action="store_true", help="Whether to run a query on the collection")
-    parser.add_argument("--index", action="store_true", help="Whether to index the collection")
     parser.add_argument("--ingest", action="store_true", help="Whether to ingest the embeddings into the collection")
     args = parser.parse_args()
 

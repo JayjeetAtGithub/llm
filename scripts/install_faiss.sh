@@ -22,3 +22,4 @@ cmake -DFAISS_ENABLE_GPU=OFF \
      ..
 
 sudo make -j$(nproc)
+sudo make install

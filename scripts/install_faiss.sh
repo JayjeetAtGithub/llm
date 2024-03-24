@@ -1,8 +1,12 @@
 #!/bin/bash
 set -ex
 
-git clone https://github.com/facebookresearch/faiss
+if [ ! -d "faiss" ]; then
+    git clone https://github.com/facebookresearch/faiss
+fi
+
 cd faiss/
+git pull
 
 sudo apt-get install -y libopenblas-dev
 

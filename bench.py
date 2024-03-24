@@ -100,7 +100,7 @@ def init_db_collection(config):
     return collection
 
 
-def init_client(config):
+def open_collection(config):
     if config["database"] == "lance":
         db = lancedb.connect("./lance_db")
         return db.open_table(config["table"])
@@ -108,11 +108,11 @@ def init_client(config):
         return QdrantClient("localhost", port=6333)
 
 
-def run_query(config, client, vector):
+def run_query(config, collection, vector):
     if config["database"] == "lance":
-        results = client.search(vector).limit(config["top_k"])
+        results = collection.search(vector).limit(config["top_k"])
     elif config["database"] == "qdrant":
-        results = client.search(
+        results = collection.search(
             collection_name=config["table"],
             query_vector=vector,
             with_vectors=False,
@@ -166,6 +166,13 @@ def insert_into_collection_bulk(collection, batch, config):
             print(f"[INFO] Inserted batch of size {len(b)} in {time.time() - s} seconds")
 
 
+def create_index(collection, config):
+    if config["database"] == "lance":
+        collection.create_index()
+    elif config["database"] == "qdrant":
+        print("Index already created during ingestion")
+
+
 def get_collection_info(collection, config):
     if config["database"] == "milvus":
         collection.flush()
@@ -216,6 +223,10 @@ if __name__ == "__main__":
             insert_into_collection_bulk(collection, batch, config)
             total_rows_written += len(batch)
             print(f"[INFO] Total rows written: {total_rows_written}")
+
+        # Create an index on the collection
+        if config["index"]:
+            create_index(collection, config)
         
         # Print out collection stats after insertion
         get_collection_info(collection, config)
@@ -225,7 +236,7 @@ if __name__ == "__main__":
         stop_querying = False
         queries_ran = 0
         total_time_taken = 0
-        client = init_client(config)
+        collection = open_collection(config)
 
         file_list = os.listdir(config["dataset"])[config["query_start_idx"]:config["query_stop_idx"]]
         print(f"[INFO] Running queries from {len(file_list)} files")
@@ -235,7 +246,7 @@ if __name__ == "__main__":
                 vector = row[config["embedding_idx"]]
                 print(f"[INFO] Running query #{queries_ran} for vector: [{vector[0]}, {vector[1]}, {vector[2]}, ...]")
                 s = time.time()
-                run_query(config, client, vector)
+                run_query(config, collection, vector)
                 total_time_taken += time.time() - s
                 queries_ran += 1
                 if queries_ran >= config["queries_to_run"]:

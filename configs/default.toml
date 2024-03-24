@@ -28,21 +28,6 @@ top_k = 5
 queries_to_run = 100000
 index = true
 
-[qdrant-35M-768]
-database = "qdrant"
-dataset = "wikipedia-22-12-en-embeddings/data"
-table = "embeddings_35M_768"
-dimension = 768
-payload_idx = 2
-embedding_idx = 8
-train_start_idx = 0
-train_stop_idx = 36
-query_start_idx = 200
-query_stop_idx = 216
-top_k = 5
-queries_to_run = 100000
-index = false
-
 [lancedb-1M-1536]
 database = "lance"
 dataset = "dbpedia-entities-openai-1M/data"

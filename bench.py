@@ -119,6 +119,13 @@ def run_query(config, collection, vector):
             with_payload=True,
             limit=config["top_k"],
         )
+    elif config["database"] == "milvus":
+        results = collection.search(
+            collection_name=config["table"],
+            data=[vector],
+            limit=config["top_k"]
+        )
+
     print(f"Num results returned: {len(results)}")
     
 

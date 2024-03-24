@@ -26,7 +26,7 @@ int main() {
     double t0 = elapsed();
 
     // dimension of the vectors to index
-    int d = 128;
+    int dim = 128;
 
     // size of the database we plan to index
     size_t nb = 200 * 1000;
@@ -36,15 +36,15 @@ int main() {
     size_t nt = 100 * 1000;
 
     // make the index object and train it
-    faiss::IndexFlatL2 coarse_quantizer(d);
+    faiss::IndexFlatL2 coarse_quantizer(dim);
 
     // a reasonable number of centroids to index nb vectors
     int ncentroids = int(4 * sqrt(nb));
 
     // the coarse quantizer should not be dealloced before the index
-    // 4 = nb of bytes per code (d must be a multiple of this)
+    // 4 = nb of bytes per code (dim must be a multiple of this)
     // 8 = nb of bits per sub-code (almost always 8)
-    faiss::IndexIVFPQ index(&coarse_quantizer, d, ncentroids, 4, 8);
+    faiss::IndexIVFPQ index(&coarse_quantizer, dim, ncentroids, 4, 8);
 
     std::mt19937 rng;
 
@@ -52,11 +52,11 @@ int main() {
         printf("[%.3f s] Generating %ld vectors in %dD for training\n",
                elapsed() - t0,
                nt,
-               d);
+               dim);
 
-        std::vector<float> trainvecs(nt * d);
+        std::vector<float> trainvecs(nt * dim);
         std::uniform_real_distribution<> distrib;
-        for (size_t i = 0; i < nt * d; i++) {
+        for (size_t i = 0; i < nt * dim; i++) {
             trainvecs[i] = distrib(rng);
         }
 
@@ -83,9 +83,9 @@ int main() {
                elapsed() - t0,
                nb);
 
-        std::vector<float> database(nb * d);
+        std::vector<float> database(nb * dim);
         std::uniform_real_distribution<> distrib;
-        for (size_t i = 0; i < nb * d; i++) {
+        for (size_t i = 0; i < nb * dim; i++) {
             database[i] = distrib(rng);
         }
 
@@ -102,10 +102,10 @@ int main() {
         int i1 = 1243;
 
         nq = i1 - i0;
-        queries.resize(nq * d);
+        queries.resize(nq * dim);
         for (int i = i0; i < i1; i++) {
-            for (int j = 0; j < d; j++) {
-                queries[(i - i0) * d + j] = database[i * d + j];
+            for (int j = 0; j < dim; j++) {
+                queries[(i - i0) * dim + j] = database[i * dim + j];
             }
         }
     }

@@ -92,7 +92,7 @@ def init_db_collection(config):
         collection.delete_collection(collection_name=config["table"])
         collection.create_collection(
             collection_name=config["table"],
-            vectors_config=VectorParams(size=config["dimension"], distance=Distance.DOT),
+            vectors_config=VectorParams(size=config["dimension"], distance=Distance.EUCLID),
             optimizers_config=models.OptimizersConfigDiff(
                 indexing_threshold=indexing_threshold,
             ),

@@ -123,11 +123,12 @@ def run_query(config, collection, vector):
         results = collection.search(
             collection_name=config["table"],
             data=[vector],
-            limit=config["top_k"]
+            limit=config["top_k"],
+            search_params={"metric_type": "L2", "params": {}},
         )
 
     print(f"Num results returned: {len(results)}")
-    
+
 
 def insert_into_collection_bulk(collection, batch, config):
     if config["database"] == "milvus":

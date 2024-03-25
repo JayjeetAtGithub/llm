@@ -12,8 +12,7 @@
 
 #include <sys/time.h>
 
-#include <faiss/IndexFlat.h>
-#include <faiss/IndexIVFPQ.h>
+#include <faiss/IndexHNSW.h>
 #include <faiss/index_io.h>
 
 double elapsed() {
@@ -24,39 +23,23 @@ double elapsed() {
 
 int main() {
     double t0 = elapsed();
-
-    // dimension of the vectors to index
     int dim = 128;
+    size_t num_vectors = 200 * 1000;
+    size_t num_train_vectors = 100 * 1000;
 
-    // size of the database we plan to index
-    size_t nb = 200 * 1000;
-
-    // make a set of nt training vectors in the unit cube
-    // (could be the database)
-    size_t nt = 100 * 1000;
-
-    // make the index object and train it
-    faiss::IndexFlatL2 coarse_quantizer(dim);
-
-    // a reasonable number of centroids to index nb vectors
-    int ncentroids = int(4 * sqrt(nb));
-
-    // the coarse quantizer should not be dealloced before the index
-    // 4 = nb of bytes per code (dim must be a multiple of this)
-    // 8 = nb of bits per sub-code (almost always 8)
-    faiss::IndexIVFPQ index(&coarse_quantizer, dim, ncentroids, 4, 8);
+    faiss::IndexHNSW index(dim);
 
     std::mt19937 rng;
 
     { // training
         printf("[%.3f s] Generating %ld vectors in %dD for training\n",
                elapsed() - t0,
-               nt,
+               num_train_vectors,
                dim);
 
-        std::vector<float> trainvecs(nt * dim);
+        std::vector<float> trainvecs(num_train_vectors * dim);
         std::uniform_real_distribution<> distrib;
-        for (size_t i = 0; i < nt * dim; i++) {
+        for (size_t i = 0; i < num_train_vectors * dim; i++) {
             trainvecs[i] = distrib(rng);
         }
 

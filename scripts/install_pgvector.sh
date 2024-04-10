@@ -9,6 +9,10 @@ if [ ! -d "postgres" ]; then
     git clone --branch REL_16_2 https://github.com/postgres/postgres
 fi
 
+if [ ! -d "pgvector" ]; then
+    git clone --branch v0.6.2 https://github.com/pgvector/pgvector
+fi
+
 cd postgres/
 
 ./configure --enable-debug
@@ -18,6 +22,10 @@ sudo make install
 sudo adduser postgres
 sudo mkdir -p /mnt/workspace/pgsql/data
 sudo chown postgres /mnt/workspace/pgsql/data
+
+cd ../pgvector/
+make -j$(nproc)
+sudo make install
 
 # manual steps
 # su - postgres

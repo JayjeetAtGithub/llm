@@ -1,6 +1,10 @@
 #!/bin/bash
 set -ex
 
+sudo apt update
+sudo apt-get install libicu-dev gcc build-essential libreadline-dev
+
+
 if [ ! -d "postgres" ]; then
     git clone --branch REL_16_2 https://github.com/postgres/postgres
 fi
@@ -8,7 +12,7 @@ fi
 cd postgres/
 
 ./configure --enable-debug
-make
+make -j$(nproc)
 
 sudo make install
 sudo adduser postgres

@@ -29,67 +29,48 @@ int main() {
 
     faiss::IndexHNSW index(dim);
 
-    std::mt19937 rng;
+    std::mt19937 rng;   
 
-    { // training
-        printf("[%.3f s] Generating %ld vectors in %dD for training\n",
-               elapsed() - t0,
-               num_train_vectors,
-               dim);
+    // { // I/O demo
+    //     const char* outfilename = "/tmp/index_trained.faissindex";
+    //     printf("[%.3f s] storing the pre-trained index to %s\n",
+    //            elapsed() - t0,
+    //            outfilename);
 
-        std::vector<float> trainvecs(num_train_vectors * dim);
-        std::uniform_real_distribution<> distrib;
-        for (size_t i = 0; i < num_train_vectors * dim; i++) {
-            trainvecs[i] = distrib(rng);
-        }
+    //     write_index(&index, outfilename);
+    // }
 
-        printf("[%.3f s] Training the index\n", elapsed() - t0);
-        index.verbose = true;
-
-        index.train(nt, trainvecs.data());
-    }
-
-    { // I/O demo
-        const char* outfilename = "/tmp/index_trained.faissindex";
-        printf("[%.3f s] storing the pre-trained index to %s\n",
-               elapsed() - t0,
-               outfilename);
-
-        write_index(&index, outfilename);
-    }
-
+    // Add the vectors to the index
     size_t nq;
     std::vector<float> queries;
 
-    { // populating the database
-        printf("[%.3f s] Building a dataset of %ld vectors to index\n",
-               elapsed() - t0,
-               nb);
+    printf("[%.3f s] Building a dataset of %ld vectors to index\n",
+            elapsed() - t0,
+            nb);
 
-        std::vector<float> database(nb * dim);
-        std::uniform_real_distribution<> distrib;
-        for (size_t i = 0; i < nb * dim; i++) {
-            database[i] = distrib(rng);
-        }
+    std::vector<float> database(nb * dim);
+    std::uniform_real_distribution<> distrib;
+    for (size_t i = 0; i < nb * dim; i++) {
+        database[i] = distrib(rng);
+    }
 
-        printf("[%.3f s] Adding the vectors to the index\n", elapsed() - t0);
+    printf("[%.3f s] Adding the vectors to the index\n", elapsed() - t0);
 
-        index.add(nb, database.data());
+    index.add(nb, database.data());
 
-        printf("[%.3f s] imbalance factor: %g\n",
-               elapsed() - t0,
-               index.invlists->imbalance_factor());
+    printf("[%.3f s] imbalance factor: %g\n",
+            elapsed() - t0,
+            index.invlists->imbalance_factor());
 
-        // remember a few elements from the database as queries
-        int i0 = 1234;
-        int i1 = 1243;
+    // remember a few elements from the database as queries
+    int i0 = 1234;
+    int i1 = 1243;
 
-        nq = i1 - i0;
-        queries.resize(nq * dim);
-        for (int i = i0; i < i1; i++) {
-            for (int j = 0; j < dim; j++) {
-                queries[(i - i0) * dim + j] = database[i * dim + j];
-            }
+    nq = i1 - i0;
+    queries.resize(nq * dim);
+    for (int i = i0; i < i1; i++) {
+        for (int j = 0; j < dim; j++) {
+            queries[(i - i0) * dim + j] = database[i * dim + j];
         }
     }
 

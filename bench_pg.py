@@ -37,7 +37,7 @@ if __name__ == "__main__":
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
-                conn.execute(f'INSERT INTO embeddings_table (content, embedding) VALUES ({row[2]}, {row[3].tolist()})')
+                conn.execute(f"INSERT INTO embeddings_table (content, embedding) VALUES ('{row[2]}', '{row[3].tolist()}')")
                 print(f"Inserted row {row_idx} into pg_vector")
                 row_idx += 1
 

@@ -18,9 +18,9 @@ if [ ! -d "/tmp/arrow" ]; then
 fi
 
 cd /tmp/arrow
-git checkout apache-arrow-13.0.0
+git checkout apache-arrow-15.0.2
 git submodule update --init --recursive
-git pull origin apache-arrow-13.0.0
+git pull origin apache-arrow-15.0.2
 
 mkdir -p cpp/release
 cd cpp/release

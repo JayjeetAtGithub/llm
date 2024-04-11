@@ -50,6 +50,7 @@ if __name__ == "__main__":
             for row in batch:
                 embedding = ','.join([str(x) for x in row[3]])
                 embedding_list.append(embedding)
+                print("Added embedding to query list")
         
         print("Start profiler....waiting 15 seconds")
         time.sleep(15)

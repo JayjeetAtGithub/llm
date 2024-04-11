@@ -8,6 +8,7 @@ fi
 cd faiss/
 git pull
 
+sudo apt-get update
 sudo apt-get install -y libopenblas-dev
 
 rm -rf build/

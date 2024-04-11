@@ -46,6 +46,5 @@ if __name__ == "__main__":
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
-                embedding = row[3]
-                conn.execute("SELECT * FROM embeddings_table ORDER BY embedding <-> '%s' LIMIT 5;", (embedding))
+                conn.execute("SELECT * FROM embeddings_table ORDER BY embedding <-> '%s' LIMIT 5;", (row[3]))
                 print(conn.fetchall())

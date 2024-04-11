@@ -16,6 +16,7 @@ def read_parquet_file(file_path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser() 
     parser.add_argument("--query", action="store_true", help="Whether to run a query on the collection")
+    parser.add_argument("--index", action="store_true", help="Whether to create an index on the collection")
     parser.add_argument("--ingest", action="store_true", help="Whether to ingest the embeddings into the collection")
     args = parser.parse_args()
 
@@ -41,6 +42,14 @@ if __name__ == "__main__":
                 row_idx += 1
 
         print(f"Inserted {row_idx} rows into pg_vector")
+
+    
+    if args.index:
+        conn.execute('SET max_parallel_maintenance_workers = 40;')
+        conn.execute('SET max_parallel_workers = 40;')
+        conn.execute('SET maintenance_work_mem = "64GB";')
+        conn.execute('CREATE INDEX ON embeddings_table USING hnsw (embedding vector_l2_ops);')
+        print("Created index on embeddings_table using HNSW algorithm")
 
     if args.query:
         embedding_list = list()

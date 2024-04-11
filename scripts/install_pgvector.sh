@@ -15,7 +15,7 @@ fi
 
 cd postgres/
 
-./configure --enable-debug
+./configure --enable-cassert --enable-debug CFLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer"
 sudo make -j$(nproc) install
 
 sudo adduser postgres

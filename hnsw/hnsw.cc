@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <arrow/io/api.h>
-#include <arrow/parquet/arrow/reader.h>
+#include <parquet/arrow/reader.h>
 
 
 arrow::Result<std::shared_ptr<arrow::Table>> read_parquet_file(const std::string& filename) {

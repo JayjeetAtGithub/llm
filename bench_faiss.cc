@@ -12,7 +12,8 @@
 
 #include <sys/time.h>
 
-#include <faiss/IndexHNSW.h>
+#include <faiss/IndexFlat.h>
+#include <faiss/IndexIVFPQ.h>
 #include <faiss/index_io.h>
 
 double elapsed() {
@@ -23,54 +24,89 @@ double elapsed() {
 
 int main() {
     double t0 = elapsed();
-    int dim = 128;
-    size_t num_vectors = 200 * 1000;
-    size_t num_train_vectors = 100 * 1000;
 
-    faiss::IndexHNSW index(dim);
+    // dimension of the vectors to index
+    int d = 128;
 
-    std::mt19937 rng;   
+    // size of the database we plan to index
+    size_t nb = 200 * 1000;
 
-    // { // I/O demo
-    //     const char* outfilename = "/tmp/index_trained.faissindex";
-    //     printf("[%.3f s] storing the pre-trained index to %s\n",
-    //            elapsed() - t0,
-    //            outfilename);
+    // make a set of nt training vectors in the unit cube
+    // (could be the database)
+    size_t nt = 100 * 1000;
 
-    //     write_index(&index, outfilename);
-    // }
+    // make the index object and train it
+    faiss::IndexFlatL2 coarse_quantizer(d);
 
-    // Add the vectors to the index
+    // a reasonable number of centroids to index nb vectors
+    int ncentroids = int(4 * sqrt(nb));
+
+    // the coarse quantizer should not be dealloced before the index
+    // 4 = nb of bytes per code (d must be a multiple of this)
+    // 8 = nb of bits per sub-code (almost always 8)
+    faiss::IndexIVFPQ index(&coarse_quantizer, d, ncentroids, 4, 8);
+
+    std::mt19937 rng;
+
+    { // training
+        printf("[%.3f s] Generating %ld vectors in %dD for training\n",
+               elapsed() - t0,
+               nt,
+               d);
+
+        std::vector<float> trainvecs(nt * d);
+        std::uniform_real_distribution<> distrib;
+        for (size_t i = 0; i < nt * d; i++) {
+            trainvecs[i] = distrib(rng);
+        }
+
+        printf("[%.3f s] Training the index\n", elapsed() - t0);
+        index.verbose = true;
+
+        index.train(nt, trainvecs.data());
+    }
+
+    { // I/O demo
+        const char* outfilename = "/tmp/index_trained.faissindex";
+        printf("[%.3f s] storing the pre-trained index to %s\n",
+               elapsed() - t0,
+               outfilename);
+
+        write_index(&index, outfilename);
+    }
+
     size_t nq;
     std::vector<float> queries;
 
-    printf("[%.3f s] Building a dataset of %ld vectors to index\n",
-            elapsed() - t0,
-            nb);
+    { // populating the database
+        printf("[%.3f s] Building a dataset of %ld vectors to index\n",
+               elapsed() - t0,
+               nb);
 
-    std::vector<float> database(nb * dim);
-    std::uniform_real_distribution<> distrib;
-    for (size_t i = 0; i < nb * dim; i++) {
-        database[i] = distrib(rng);
-    }
+        std::vector<float> database(nb * d);
+        std::uniform_real_distribution<> distrib;
+        for (size_t i = 0; i < nb * d; i++) {
+            database[i] = distrib(rng);
+        }
 
-    printf("[%.3f s] Adding the vectors to the index\n", elapsed() - t0);
+        printf("[%.3f s] Adding the vectors to the index\n", elapsed() - t0);
 
-    index.add(nb, database.data());
+        index.add(nb, database.data());
 
-    printf("[%.3f s] imbalance factor: %g\n",
-            elapsed() - t0,
-            index.invlists->imbalance_factor());
+        printf("[%.3f s] imbalance factor: %g\n",
+               elapsed() - t0,
+               index.invlists->imbalance_factor());
 
-    // remember a few elements from the database as queries
-    int i0 = 1234;
-    int i1 = 1243;
+        // remember a few elements from the database as queries
+        int i0 = 1234;
+        int i1 = 1243;
 
-    nq = i1 - i0;
-    queries.resize(nq * dim);
-    for (int i = i0; i < i1; i++) {
-        for (int j = 0; j < dim; j++) {
-            queries[(i - i0) * dim + j] = database[i * dim + j];
+        nq = i1 - i0;
+        queries.resize(nq * d);
+        for (int i = i0; i < i1; i++) {
+            for (int j = 0; j < d; j++) {
+                queries[(i - i0) * d + j] = database[i * d + j];
+            }
         }
     }
 

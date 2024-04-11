@@ -19,7 +19,7 @@ cd postgres/
 sudo make -j$(nproc) install
 
 sudo pkill -u postgres || true
-sudo deluser postgres
+sudo deluser postgres || true
 sudo adduser postgres
 sudo mkdir -p /mnt/workspace/pgsql/data
 sudo chown postgres /mnt/workspace/pgsql/data

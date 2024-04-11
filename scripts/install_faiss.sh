@@ -22,7 +22,7 @@ cmake -DFAISS_ENABLE_GPU=OFF \
       -DBUILD_TESTING=OFF \
       -DCMAKE_BUILD_TYPE=Debug \
       -DCMAKE_CXX_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
-      -DCMAKE_C_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer"
+      -DCMAKE_C_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
      ..
 
 sudo make -j$(nproc)

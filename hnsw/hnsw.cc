@@ -15,7 +15,7 @@ arrow::Result<std::shared_ptr<arrow::Table>> read_parquet_file(const std::string
 
   std::shared_ptr<arrow::Table> table;
   ARROW_RETURN_NOT_OK(arrow_reader->ReadTable(&table));
-  std::cout << "Read table with " << table->num_rows();
+  std::cout << table->ToString() << std::endl;
 }
 
 int main() {

@@ -47,5 +47,5 @@ if __name__ == "__main__":
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
                 embedding = ','.join([str(x) for x in row[3]])
-                conn.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '[{embedding}]' LIMIT 5;")
-                print(conn.fetchall())
+                conn.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '[{embedding}]' LIMIT 5;").fetchall()
+                print("Ran query on pg_vector")

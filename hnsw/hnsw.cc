@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <arrow/api.h>
 #include <arrow/io/api.h>
 #include <parquet/arrow/reader.h>
 

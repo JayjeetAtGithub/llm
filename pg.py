@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     if args.query:
         embedding_list = list()
-        file_list = os.listdir("dbpedia-entities-openai-1M/data")[5:15]
+        file_list = os.listdir("dbpedia-entities-openai-1M/data")[5:6]
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:

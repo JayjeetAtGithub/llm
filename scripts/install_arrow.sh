@@ -27,6 +27,7 @@ cd cpp/release
 
 cmake -DARROW_PARQUET=ON \
   -DARROW_CSV=ON \
+  -DARROW_DATASET=ON \
   -DCMAKE_CXX_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
   -DCMAKE_C_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
   ..

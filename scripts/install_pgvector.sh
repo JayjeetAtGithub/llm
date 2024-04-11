@@ -31,5 +31,5 @@ cd ../
 # su - postgres
 # /usr/local/pgsql/bin/initdb -D /mnt/workspace/pgsql/data
 # /usr/local/pgsql/bin/pg_ctl -D /mnt/workspace/pgsql/data -l logfile start
-# /usr/local/pgsql/bin/createdb test
-# /usr/local/pgsql/bin/psql test
+# /usr/local/pgsql/bin/createdb vectordb
+# /usr/local/pgsql/bin/psql vectordb

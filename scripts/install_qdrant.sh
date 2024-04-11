@@ -12,7 +12,7 @@ cp -r include/* /usr/local/include/
 
 # download qdrant
 if [ ! -d "qdrant" ]; then
-    git clone https://github.com/qdrant/qdrant
+    git clone --branch v1.8.4 https://github.com/qdrant/qdrant
 fi
 
 cd qdrant/

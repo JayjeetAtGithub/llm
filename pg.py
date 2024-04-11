@@ -1,4 +1,5 @@
 import os
+import time
 import argparse
 
 import psycopg
@@ -42,13 +43,19 @@ if __name__ == "__main__":
         print(f"Inserted {row_idx} rows into pg_vector")
 
     if args.query:
-        query_idx = 0
+        embedding_list = list()
         file_list = os.listdir("dbpedia-entities-openai-1M/data")[5:15]
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
                 embedding = ','.join([str(x) for x in row[3]])
-                res = conn.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '[{embedding}]' LIMIT 5;").fetchall()
-                print(f"Ran query {query_idx} on pg_vector")
-                query_idx += 1
+                embedding_list.append(embedding)
+        
+        print("Start profiler....waiting 15 seconds")
+        time.sleep(15)
 
+        query_idx = 0
+        for e in embedding_list:
+            res = conn.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '[{e}]' LIMIT 5;").fetchall()
+            print(f"Ran query {query_idx} on pg_vector")
+            query_idx += 1

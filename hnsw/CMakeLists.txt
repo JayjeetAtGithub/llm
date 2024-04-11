@@ -11,4 +11,3 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(hnsw hnsw.cc)
 target_link_libraries(hnsw arrow)
-`

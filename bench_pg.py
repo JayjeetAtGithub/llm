@@ -37,12 +37,11 @@ if __name__ == "__main__":
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
-                conn.execute('INSERT INTO embeddings_table (content, embedding) VALUES (%s, %s)', (row[2], row[3]))        
+                conn.execute('INSERT INTO embeddings_table (content, embedding) VALUES (%s, %s)', (row[2], row[3].tolist()))
                 print(f"Inserted row {row_idx} into pg_vector")
                 row_idx += 1
 
         print(f"Inserted {row_idx} rows into pg_vector")
-
     
     if args.index:
         conn.execute('CREATE EXTENSION IF NOT EXISTS vector')

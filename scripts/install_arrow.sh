@@ -27,6 +27,8 @@ cd cpp/release
 
 cmake -DARROW_PARQUET=ON \
   -DARROW_CSV=ON \
+  -DCMAKE_CXX_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
+  -DCMAKE_C_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
   ..
 
 sudo make -j$(nproc) install

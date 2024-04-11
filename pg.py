@@ -48,5 +48,5 @@ if __name__ == "__main__":
             for row in batch:
                 embedding_str = ','.join(str(x) for x in row[3])
                 print(f"Running query for vector: [{embedding_str}]")
-                conn.execute("SELECT * FROM embeddings_table ORDER BY embedding <-> '[%s]' LIMIT 5;", (embedding_str))
+                conn.execute("SELECT * FROM embeddings_table ORDER BY embedding <-> '%s' LIMIT 5;", (embedding_str))
                 print(conn.fetchall())

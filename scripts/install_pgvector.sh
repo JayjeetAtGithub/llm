@@ -16,16 +16,16 @@ fi
 cd postgres/
 
 ./configure --enable-debug
-make -j$(nproc)
+sudo make -j$(nproc) install
 
-sudo make install
 sudo adduser postgres
 sudo mkdir -p /mnt/workspace/pgsql/data
 sudo chown postgres /mnt/workspace/pgsql/data
 
 cd ../pgvector/
-make -j$(nproc)
-sudo make install
+sudo PG_CONFIG=/usr/local/pgsql/bin/pg_config make -j$(nproc) install
+
+cd ../
 
 # manual steps
 # su - postgres

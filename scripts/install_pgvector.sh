@@ -18,11 +18,11 @@ cd postgres/
 ./configure --enable-cassert --enable-debug CFLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer"
 sudo make -j$(nproc) install
 
-sudo pkill -u postgres || true
-sudo deluser postgres || true
-sudo adduser postgres
+# sudo pkill -u postgres || true
+# sudo deluser postgres || true
+# sudo adduser postgres
 sudo mkdir -p /mnt/workspace/pgsql/data
-sudo chown postgres /mnt/workspace/pgsql/data
+sudo chown noobjc /mnt/workspace/pgsql/data
 
 cd ../pgvector/
 sudo PG_CONFIG=/usr/local/pgsql/bin/pg_config make -j$(nproc) install

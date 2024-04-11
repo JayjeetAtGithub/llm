@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parser.add_argument("--ingest", action="store_true", help="Whether to ingest the embeddings into the collection")
     args = parser.parse_args()
 
-    conn = psycopg.connect("postgresql://postgres:postgres@localhost:5432/vectordb", autocommit=True)
+    conn = psycopg.connect("postgresql://noobjc@localhost:5432/vectordb", autocommit=True)
     print("Connected to PostgreSQL: ", conn)
 
     if args.ingest:

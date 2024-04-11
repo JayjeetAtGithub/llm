@@ -58,23 +58,13 @@ if __name__ == "__main__":
         conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
         register_vector(conn)
         print("Initiated extension: pg_vector")
-    
-        embedding_list = list()
+
         file_list = os.listdir("dbpedia-entities-openai-1M/data")[5:7]
-        embedding_idx = 0
+
+        query_idx = 0
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
-                embedding = ','.join([str(x) for x in row[3]])
-                embedding_list.append(embedding)
-                print(f"Added embedding {embedding_idx} to query list")
-                embedding_idx += 1
-        
-        print("Start profiler....waiting 15 seconds")
-        time.sleep(15)
-
-        query_idx = 0
-        for e in embedding_list:
-            res = conn.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '[{e}]' LIMIT 5;").fetchall()
-            print(f"Ran query {query_idx} on pg_vector")
-            query_idx += 1
+                res = conn.execute("SELECT * FROM embeddings_table ORDER BY embedding <-> '%s' LIMIT 5;", (row[3].tolist())).fetchall()
+                print(f"Ran query {query_idx} on pg_vector")
+                query_idx += 1

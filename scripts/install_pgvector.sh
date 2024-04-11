@@ -18,6 +18,7 @@ cd postgres/
 ./configure --enable-cassert --enable-debug CFLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer"
 sudo make -j$(nproc) install
 
+sudo deluser postgres
 sudo adduser postgres
 sudo mkdir -p /mnt/workspace/pgsql/data
 sudo chown postgres /mnt/workspace/pgsql/data

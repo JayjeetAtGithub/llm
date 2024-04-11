@@ -45,6 +45,10 @@ if __name__ == "__main__":
 
     
     if args.index:
+        conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+        register_vector(conn)
+        print("Initiated extension: pg_vector")
+
         conn.execute('SET max_parallel_maintenance_workers = 40;')
         conn.execute('SET max_parallel_workers = 40;')
         conn.execute('SET maintenance_work_mem = "64GB";')
@@ -52,6 +56,10 @@ if __name__ == "__main__":
         print("Created index on embeddings_table using HNSW algorithm")
 
     if args.query:
+        conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+        register_vector(conn)
+        print("Initiated extension: pg_vector")
+    
         embedding_list = list()
         file_list = os.listdir("dbpedia-entities-openai-1M/data")[5:7]
         embedding_idx = 0

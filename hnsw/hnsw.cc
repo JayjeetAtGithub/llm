@@ -22,6 +22,10 @@ arrow::Result<std::shared_ptr<arrow::Table>> read_parquet_file(const std::string
 
 int main() {
   std::cout << "Hello, World!" << std::endl;
-  read_parquet_file("/mnt/workspace/vectordb-benchmarks/dbpedia-entities-openai-1M/data/train-00000-of-00026-3c7b99d1c7eda36e.parquet");
+  auto s = read_parquet_file("/mnt/workspace/vectordb-benchmarks/dbpedia-entities-openai-1M/data/train-00000-of-00026-3c7b99d1c7eda36e.parquet");
+  if (!s.ok()) {
+    std::cerr << "Error reading Parquet file: " << s.status().ToString() << std::endl;
+    return 1;
+  }
   return 0;
 }

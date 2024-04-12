@@ -13,11 +13,11 @@ sudo apt install -y python3 \
                libssl-dev \
                llvm
 
-if [ ! -d "/tmp/arrow" ]; then
-    git clone https://github.com/apache/arrow /tmp/arrow
+if [ ! -d "/mnt/workspace/arrow" ]; then
+    git clone https://github.com/apache/arrow /mnt/workspace/arrow
 fi
 
-cd /tmp/arrow
+cd /mnt/workspace/arrow
 git checkout apache-arrow-15.0.2
 git submodule update --init --recursive
 git pull origin apache-arrow-15.0.2

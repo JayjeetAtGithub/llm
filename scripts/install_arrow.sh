@@ -26,6 +26,7 @@ mkdir -p cpp/release
 cd cpp/release
 
 cmake -DARROW_PARQUET=ON \
+  -DARROW_WITH_SNAPPY=ON \
   -DARROW_CSV=ON \
   -DARROW_DATASET=ON \
   -DCMAKE_CXX_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \

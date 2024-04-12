@@ -29,6 +29,7 @@ cmake -DARROW_PARQUET=ON \
   -DARROW_WITH_SNAPPY=ON \
   -DARROW_CSV=ON \
   -DARROW_DATASET=ON \
+  -DCMAKE_BUILD_TYPE=Debug \
   -DCMAKE_CXX_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
   -DCMAKE_C_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
   ..

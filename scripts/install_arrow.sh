@@ -22,8 +22,8 @@ git checkout apache-arrow-15.0.2
 git submodule update --init --recursive
 git pull origin apache-arrow-15.0.2
 
-mkdir -p cpp/release
-cd cpp/release
+mkdir -p cpp/debug
+cd cpp/debug
 
 cmake -DARROW_PARQUET=ON \
   -DARROW_WITH_SNAPPY=ON \

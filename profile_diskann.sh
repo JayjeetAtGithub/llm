@@ -47,7 +47,7 @@ if [ ! -d "${DISKANN_DATA_SIFT_GROUNDTRUTH_1}" ]; then
 fi
 
 if [ ! -d "${DISKANN_DATA_SIFT_GROUNDTRUTH_2}" ]; then
-   ${DISKANN_HOME}/build/apps/utils/compute_groundtruth  --data_type float --dist_fn l2 --base_file ${DISKANN_DATA_SIFT_LEARN_FBIN}  --query_file  ${DISKANN_DATA_SIFT_QUERY_FBIN} --gt_file ${DISKANN_DATA_SIFT_GROUNDTRUTH_2} --K 100
+   ${DISKANN_HOME}/build/apps/utils/compute_groundtruth  --data_type float --dist_fn l2 --base_file ${DISKANN_DATA_SIFT_LEARN_FBIN}  --query_file  ${DISKANN_DATA_SIFT_BASE_FBIN} --gt_file ${DISKANN_DATA_SIFT_GROUNDTRUTH_2} --K 100
 fi
 
 ${DISKANN_HOME}/build/apps/build_memory_index  --data_type float --dist_fn l2 --data_path ${DISKANN_DATA_SIFT_LEARN_FBIN} --index_path_prefix ${DISKANN_DATA_SIFT_INDEX} -R 32 -L 50 --alpha 1.2

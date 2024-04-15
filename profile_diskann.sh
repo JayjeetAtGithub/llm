@@ -24,6 +24,7 @@ DISKANN_DATA_SIFT_GROUNDTRUTH_BIN=${DISKANN_DATA}/sift/sift_groundtruth.fbin
 DISKANN_DATA_SIFT_INDEX=${DISKANN_DATA}/sift/sift_index
 DISKANN_DATA_SIFT_RES=${DISKANN_DATA}/sift/res
 
+# index and query
 
 if [ ! -d "${DISKANN_DATA_SIFT_LEARN_FBIN}" ]; then
     ${DISKANN_HOME}/build/apps/utils/fvecs_to_bin float ${DISKANN_DATA_SIFT_LEARN} ${DISKANN_DATA_SIFT_LEARN_FBIN}

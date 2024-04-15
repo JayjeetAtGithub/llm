@@ -29,7 +29,7 @@ cd /mnt/workspace/DiskANN
 git pull
 
 # build DiskANN
-mkdir build/
+mkdir -p build/
 cd build/
 
 cmake -DCMAKE_BUILD_TYPE=Debug \

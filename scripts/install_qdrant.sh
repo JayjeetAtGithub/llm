@@ -18,4 +18,5 @@ fi
 cd qdrant/
 git pull
 
+# for some reason, building qdrant in debug mode does not give any profile information, weird !!!
 cargo build --release

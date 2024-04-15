@@ -29,24 +29,24 @@ DISKANN_DATA_SIFT_INDEX=${DISKANN_DATA}/sift/sift_index
 DISKANN_DATA_SIFT_RES=${DISKANN_DATA}/sift/sift_res
 
 # convert the datasets into bin format
-if [ ! -d "${DISKANN_DATA_SIFT_BASE_FBIN}" ]; then
+if [ ! -f "${DISKANN_DATA_SIFT_BASE_FBIN}" ]; then
     ${DISKANN_HOME}/build/apps/utils/fvecs_to_bin float ${DISKANN_DATA_SIFT_BASE} ${DISKANN_DATA_SIFT_BASE_FBIN}
 fi
 
-if [ ! -d "${DISKANN_DATA_SIFT_LEARN_FBIN}" ]; then
+if [ ! -f "${DISKANN_DATA_SIFT_LEARN_FBIN}" ]; then
     ${DISKANN_HOME}/build/apps/utils/fvecs_to_bin float ${DISKANN_DATA_SIFT_LEARN} ${DISKANN_DATA_SIFT_LEARN_FBIN}
 fi
 
-if [ ! -d "${DISKANN_DATA_SIFT_QUERY_FBIN}" ]; then
+if [ ! -f "${DISKANN_DATA_SIFT_QUERY_FBIN}" ]; then
     ${DISKANN_HOME}/build/apps/utils/fvecs_to_bin float ${DISKANN_DATA_SIFT_QUERY} ${DISKANN_DATA_SIFT_QUERY_FBIN}
 fi
 
 # compute the groundtruth for query and base datasets
-if [ ! -d "${DISKANN_DATA_SIFT_GROUNDTRUTH_QUERY}" ]; then
+if [ ! -f "${DISKANN_DATA_SIFT_GROUNDTRUTH_QUERY}" ]; then
    ${DISKANN_HOME}/build/apps/utils/compute_groundtruth  --data_type float --dist_fn l2 --base_file ${DISKANN_DATA_SIFT_LEARN_FBIN}  --query_file  ${DISKANN_DATA_SIFT_QUERY_FBIN} --gt_file ${DISKANN_DATA_SIFT_GROUNDTRUTH_QUERY} --K 100
 fi
 
-if [ ! -d "${DISKANN_DATA_SIFT_GROUNDTRUTH_BASE}" ]; then
+if [ ! -f "${DISKANN_DATA_SIFT_GROUNDTRUTH_BASE}" ]; then
    ${DISKANN_HOME}/build/apps/utils/compute_groundtruth  --data_type float --dist_fn l2 --base_file ${DISKANN_DATA_SIFT_LEARN_FBIN}  --query_file  ${DISKANN_DATA_SIFT_BASE_FBIN} --gt_file ${DISKANN_DATA_SIFT_GROUNDTRUTH_BASE} --K 100
 fi
 

@@ -2,7 +2,7 @@
 set -ex
 
 DISKANN_HOME=/mnt/workspace/DiskANN
-DISKANN_DATA=${DISKANN_HOME}/data
+DISKANN_DATA=${DISKANN_HOME}/build/data
 
 # gist
 DISKANN_DATA_GIST_LEARN=${DISKANN_DATA}/gist/gist_learn.fvecs

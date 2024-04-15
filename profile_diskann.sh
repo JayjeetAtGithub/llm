@@ -54,6 +54,7 @@ fi
 ${DISKANN_HOME}/build/apps/build_memory_index  --data_type float --dist_fn l2 --data_path ${DISKANN_DATA_SIFT_LEARN_FBIN} --index_path_prefix ${DISKANN_DATA_SIFT_INDEX} -R 32 -L 50 --alpha 1.2
 
 echo "Waiting for 15 seconds, start profiler..."
+sleep 15
 
 # execute queries
 ${DISKANN_HOME}/build/apps/search_memory_index  --data_type float --dist_fn l2 --index_path_prefix ${DISKANN_DATA_SIFT_INDEX} --query_file ${DISKANN_DATA_SIFT_BASE_FBIN}  --gt_file ${DISKANN_DATA_SIFT_GROUNDTRUTH_BASE} -K 10 -L 10 20 30 40 50 100 -T 1 --result_path ${DISKANN_DATA_SIFT_RES}

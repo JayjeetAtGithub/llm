@@ -20,15 +20,15 @@ echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt
 sudo apt-get update
 sudo apt install intel-oneapi-mkl-devel
 
-# clone diskann code
-if [ ! -d "/mnt/workspace/diskann" ]; then
-    git clone https://github.com/microsoft/diskann /mnt/workspace/diskann
+# clone DiskANN code
+if [ ! -d "/mnt/workspace/DiskANN" ]; then
+    git clone https://github.com/microsoft/DiskANN /mnt/workspace/DiskANN
 fi
 
-cd /mnt/workspace/diskann
+cd /mnt/workspace/DiskANN
 git pull
 
-# build diskann
+# build DiskANN
 mkdir build/
 cd build/
 cmake -DCMAKE_BUILD_TYPE=Release ..

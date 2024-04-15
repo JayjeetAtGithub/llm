@@ -23,8 +23,8 @@ DISKANN_DATA_SIFT_QUERY=${DISKANN_DATA}/sift/sift_query.fvecs
 DISKANN_DATA_SIFT_BASE_FBIN=${DISKANN_DATA}/sift/sift_base.fbin
 DISKANN_DATA_SIFT_LEARN_FBIN=${DISKANN_DATA}/sift/sift_learn.fbin
 DISKANN_DATA_SIFT_QUERY_FBIN=${DISKANN_DATA}/sift/sift_query.fbin
-DISKANN_DATA_GIST_GROUNDTRUTH_QUERY=${DISKANN_DATA}/sift/sift_groundtruth_query
-DISKANN_DATA_GIST_GROUNDTRUTH_BASE=${DISKANN_DATA}/sift/sift_groundtruth_base
+DISKANN_DATA_SIFT_GROUNDTRUTH_QUERY=${DISKANN_DATA}/sift/sift_groundtruth_query
+DISKANN_DATA_SIFT_GROUNDTRUTH_BASE=${DISKANN_DATA}/sift/sift_groundtruth_base
 DISKANN_DATA_SIFT_INDEX=${DISKANN_DATA}/sift/sift_index
 DISKANN_DATA_SIFT_RES=${DISKANN_DATA}/sift/sift_res
 
@@ -42,12 +42,12 @@ if [ ! -d "${DISKANN_DATA_SIFT_QUERY_FBIN}" ]; then
 fi
 
 # compute the groundtruth for query and base datasets
-if [ ! -d "${DISKANN_DATA_GIST_GROUNDTRUTH_QUERY}" ]; then
-   ${DISKANN_HOME}/build/apps/utils/compute_groundtruth  --data_type float --dist_fn l2 --base_file ${DISKANN_DATA_SIFT_LEARN_FBIN}  --query_file  ${DISKANN_DATA_SIFT_QUERY_FBIN} --gt_file ${DISKANN_DATA_GIST_GROUNDTRUTH_QUERY} --K 100
+if [ ! -d "${DISKANN_DATA_SIFT_GROUNDTRUTH_QUERY}" ]; then
+   ${DISKANN_HOME}/build/apps/utils/compute_groundtruth  --data_type float --dist_fn l2 --base_file ${DISKANN_DATA_SIFT_LEARN_FBIN}  --query_file  ${DISKANN_DATA_SIFT_QUERY_FBIN} --gt_file ${DISKANN_DATA_SIFT_GROUNDTRUTH_QUERY} --K 100
 fi
 
-if [ ! -d "${DISKANN_DATA_GIST_GROUNDTRUTH_BASE}" ]; then
-   ${DISKANN_HOME}/build/apps/utils/compute_groundtruth  --data_type float --dist_fn l2 --base_file ${DISKANN_DATA_SIFT_LEARN_FBIN}  --query_file  ${DISKANN_DATA_SIFT_BASE_FBIN} --gt_file ${DISKANN_DATA_GIST_GROUNDTRUTH_BASE} --K 100
+if [ ! -d "${DISKANN_DATA_SIFT_GROUNDTRUTH_BASE}" ]; then
+   ${DISKANN_HOME}/build/apps/utils/compute_groundtruth  --data_type float --dist_fn l2 --base_file ${DISKANN_DATA_SIFT_LEARN_FBIN}  --query_file  ${DISKANN_DATA_SIFT_BASE_FBIN} --gt_file ${DISKANN_DATA_SIFT_GROUNDTRUTH_BASE} --K 100
 fi
 
 # build the in-memory index
@@ -56,4 +56,4 @@ ${DISKANN_HOME}/build/apps/build_memory_index  --data_type float --dist_fn l2 --
 echo "Waiting for 15 seconds, start profiler..."
 
 # execute queries
-${DISKANN_HOME}/build/apps/search_memory_index  --data_type float --dist_fn l2 --index_path_prefix ${DISKANN_DATA_SIFT_INDEX} --query_file ${DISKANN_DATA_SIFT_BASE_FBIN}  --gt_file ${DISKANN_DATA_GIST_GROUNDTRUTH_BASE} -K 10 -L 10 20 30 40 50 100 -T 1 --result_path ${DISKANN_DATA_SIFT_RES}
+${DISKANN_HOME}/build/apps/search_memory_index  --data_type float --dist_fn l2 --index_path_prefix ${DISKANN_DATA_SIFT_INDEX} --query_file ${DISKANN_DATA_SIFT_BASE_FBIN}  --gt_file ${DISKANN_DATA_SIFT_GROUNDTRUTH_BASE} -K 10 -L 10 20 30 40 50 100 -T 1 --result_path ${DISKANN_DATA_SIFT_RES}

@@ -5,8 +5,10 @@ DISKANN_HOME=/mnt/workspace/DiskANN
 DISKANN_DATA=${DISKANN_HOME}/build/data
 
 # gist
+DISKANN_DATA_GIST_BASE=${DISKANN_DATA}/gist/gist_base.fvecs
 DISKANN_DATA_GIST_LEARN=${DISKANN_DATA}/gist/gist_learn.fvecs
 DISKANN_DATA_GIST_QUERY=${DISKANN_DATA}/gist/gist_query.fvecs
+DISKANN_DATA_GIST_BASE_FBIN=${DISKANN_DATA}/gist/gist_base.fbin
 DISKANN_DATA_GIST_LEARN_FBIN=${DISKANN_DATA}/gist/gist_learn.fbin
 DISKANN_DATA_GIST_QUERY_FBIN=${DISKANN_DATA}/gist/gist_query.fbin
 DISKANN_DATA_GIST_GROUNDTRUTH=${DISKANN_DATA}/gist/gist_groundtruth.ivecs
@@ -15,8 +17,10 @@ DISKANN_DATA_GIST_INDEX=${DISKANN_DATA}/gist/gist_index
 DISKANN_DATA_GIST_RES=${DISKANN_DATA}/gist/gist_res
 
 # sift
+DISKANN_DATA_SIFT_BASE=${DISKANN_DATA}/sift/sift_base.fvecs
 DISKANN_DATA_SIFT_LEARN=${DISKANN_DATA}/sift/sift_learn.fvecs
 DISKANN_DATA_SIFT_QUERY=${DISKANN_DATA}/sift/sift_query.fvecs
+DISKANN_DATA_SIFT_BASE_FBIN=${DISKANN_DATA}/sift/sift_base.fbin
 DISKANN_DATA_SIFT_LEARN_FBIN=${DISKANN_DATA}/sift/sift_learn.fbin
 DISKANN_DATA_SIFT_QUERY_FBIN=${DISKANN_DATA}/sift/sift_query.fbin
 DISKANN_DATA_SIFT_GROUNDTRUTH=${DISKANN_DATA}/sift/sift_groundtruth.ivecs
@@ -25,6 +29,9 @@ DISKANN_DATA_SIFT_INDEX=${DISKANN_DATA}/sift/sift_index
 DISKANN_DATA_SIFT_RES=${DISKANN_DATA}/sift/sift_res
 
 # index and query
+if [ ! -d "${DISKANN_DATA_SIFT_BASE_FBIN}" ]; then
+    ${DISKANN_HOME}/build/apps/utils/fvecs_to_bin float ${DISKANN_DATA_SIFT_BASE} ${DISKANN_DATA_SIFT_BASE_FBIN}
+fi
 
 if [ ! -d "${DISKANN_DATA_SIFT_LEARN_FBIN}" ]; then
     ${DISKANN_HOME}/build/apps/utils/fvecs_to_bin float ${DISKANN_DATA_SIFT_LEARN} ${DISKANN_DATA_SIFT_LEARN_FBIN}

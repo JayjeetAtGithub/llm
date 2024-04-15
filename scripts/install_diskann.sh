@@ -31,5 +31,10 @@ git pull
 # build DiskANN
 mkdir build/
 cd build/
-cmake -DCMAKE_BUILD_TYPE=Release ..
+
+cmake -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_CXX_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
+      -DCMAKE_C_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
+      ..
+
 make -j$(nproc)

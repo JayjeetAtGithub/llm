@@ -17,8 +17,8 @@ using idx_t = faiss::idx_t;
 
 int main() {
     int d = 64;      // dimension
-    int nb = 100000; // database size
-    int nq = 10000;  // nb of queries
+    int nb = 1000000; // database size
+    int nq = 100000;  // nb of queries
 
     std::mt19937 rng;
     std::uniform_real_distribution<> distrib;

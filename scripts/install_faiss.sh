@@ -2,10 +2,10 @@
 set -ex
 
 if [ ! -d "faiss" ]; then
-    git clone https://github.com/facebookresearch/faiss
+    git clone https://github.com/facebookresearch/faiss /mnt/workspace/faiss
 fi
 
-cd faiss/
+cd /mnt/workspace/faiss/
 git pull
 
 sudo apt-get update

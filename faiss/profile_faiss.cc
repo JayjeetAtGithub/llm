@@ -22,6 +22,7 @@ int main() {
 
     faiss::IndexFlatL2 index(d);
     printf("is_trained = %s\n", index.is_trained ? "true" : "false");
+    index.add(nb, xb);
     printf("ntotal = %ld\n", index.ntotal);
     return 0;
 }

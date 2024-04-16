@@ -27,5 +27,5 @@ git clone [dataset-uri]
 
 4. Ingest data into the vector database instance
 ```bash
-python3 bench.py --ingest --bench [benchmark-name]
+python3 profile.py --ingest --bench [benchmark-name]
 ```

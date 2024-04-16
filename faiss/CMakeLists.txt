@@ -10,4 +10,4 @@ set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(profile_faiss profile_faiss.cc)
-target_link_libraries(profile_faiss arrow parquet)
+target_link_libraries(profile_faiss faiss arrow parquet)

@@ -5,8 +5,8 @@
 
 int main() {
     int d = 64;                            // dimension
-    int nb = 100000;                       // database size
-    int nq = 10000;                        // nb of queries
+    int nb = 1000000;                       // database size
+    int nq = 100000;                        // nb of queries
     float *xb = new float[d * nb];
     float *xq = new float[d * nq];
     

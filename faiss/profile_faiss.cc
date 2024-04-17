@@ -60,30 +60,30 @@ int main(int argc, char** argv) {
         xq[dim * i] += i / 1000.;
     }
 
-    faiss::Index index;
+    faiss::Index *index;
     
     // Create the index
     if (index_id == 0) {
-        index = faiss::IndexFlatL2(dim);
+        index = new faiss::IndexFlatL2(dim);
     } else if (index_id == 1) {
         faiss::IndexFlatL2 quantizer(dim);
-        index = faiss::IndexIVFFlat(&quantizer, dim, 100);
+        index = new faiss::IndexIVFFlat(&quantizer, dim, 100);
         assert(!index.is_trained);
-        index.train(nb, xb);
+        index->train(nb, xb);
         assert(index.is_trained);
     } else if (index_id == 2) {
-        index = faiss::IndexHNSWFlat(dim, 32);
-        index.train(nb, xb);
+        index = new faiss::IndexHNSWFlat(dim, 32);
+        index->train(nb, xb);
     }
 
     // Add the vectors to the index
-    index.add(nb, xb);
+    index->add(nb, xb);
 
     // Search the index
     idx_t *I = new idx_t[top_k * nq];
     float *D = new float[top_k * nq];
 
-    index.search(nq, xq, top_k, D, I);
+    index->search(nq, xq, top_k, D, I);
 
     printf("I=\n");
     for (int i = 0; i < nq; i++) {

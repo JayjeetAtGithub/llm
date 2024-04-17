@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 
     // Declare parameters
     int dim = 128;
-    int nb = 1000;
+    int nb = 10000;
     int nq = 10;
     int top_k = 5;
 

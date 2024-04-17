@@ -16,9 +16,14 @@
 using idx_t = faiss::idx_t;
 
 int main() {
-    int d = 64;      // dimension
-    int nb = 1000000; // database size
-    int nq = 100000;  // nb of queries
+    // use vectors of 128 dimensions
+    int d = 128;
+
+    // write a million vectors
+    int nb = 1000000;
+
+    // search 100,000 vectors
+    int nq = 100000;
 
     std::mt19937 rng;
     std::uniform_real_distribution<> distrib;
@@ -39,27 +44,18 @@ int main() {
     }
 
     int nlist = 100;
-    int k = 4;
+    int k = 5;
 
-    faiss::IndexFlatL2 quantizer(d); // the other index
+    faiss::IndexFlatL2 quantizer(d);
     faiss::IndexIVFFlat index(&quantizer, d, nlist);
     assert(!index.is_trained);
     index.train(nb, xb);
     assert(index.is_trained);
     index.add(nb, xb);
 
-    { // search xq
-        idx_t* I = new idx_t[k * nq];
-        float* D = new float[k * nq];
-
-        index.search(nq, xq, k, D, I);
-
-        printf("I=\n");
-        for (int i = nq - 5; i < nq; i++) {
-            for (int j = 0; j < k; j++)
-                printf("%5zd ", I[i * k + j]);
-            printf("\n");
-        }
+    {
+        idx_t *I = new idx_t[k * nq];
+        float *D = new float[k * nq];
 
         index.nprobe = 10;
         index.search(nq, xq, k, D, I);

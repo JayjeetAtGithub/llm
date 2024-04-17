@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
         xq[dim * i] += i / 1000.;
     }
 
-    faiss::Index index;
+    faiss::IndexFlat index;
     
     // Create the index
     if (index_id == 0) {

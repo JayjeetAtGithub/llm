@@ -54,6 +54,7 @@ int main(int argc, char** argv) {
 
     // Create the index and add data
     if (index_id == 0) {
+        std::cout << "Using IndexFlatL2\n";
         faiss::IndexFlatL2 index(dim);
         index.add(nb, xb);
         auto s  = std::chrono::high_resolution_clock::now();
@@ -63,16 +64,9 @@ int main(int argc, char** argv) {
         std::cout << "Time taken for search: " << diff.count() << " s\n";
 
     } else if (index_id == 1) {
+        std::cout << "Using IndexIVFFlat\n";
         faiss::IndexFlatL2 quantizer(dim);
         faiss::IndexIVFFlat index(&quantizer, dim, 100);
-        assert(!index.is_trained);
-        index.train(nb, xb);
-        assert(index.is_trained);
-        index.add(nb, xb);
-        index.search(nq, xq, top_k, D, I);
-
-    } else if (index_id == 2) {
-        faiss::IndexHNSWFlat index(dim, 32);
         assert(!index.is_trained);
         index.train(nb, xb);
         assert(index.is_trained);
@@ -83,15 +77,25 @@ int main(int argc, char** argv) {
         std::chrono::duration<double> diff = e-s;
         std::cout << "Time taken for search: " << diff.count() << " s\n";
 
+    } else if (index_id == 2) {
+        std::cout << "Using IndexHNSWFlat\n";
+        faiss::IndexHNSWFlat index(dim, 32);
+        index.add(nb, xb);
+        auto s = std::chrono::high_resolution_clock::now();
+        index.search(nq, xq, top_k, D, I);
+        auto e = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff = e-s;
+        std::cout << "Time taken for search: " << diff.count() << " s\n";
+
     }
 
 
-    printf("I=\n");
-    for (int i = 0; i < nq; i++) {
-        for (int j = 0; j < top_k; j++)
-            printf("%5zd ", I[i * top_k + j]);
-        printf("\n");
-    }
+    // printf("I=\n");
+    // for (int i = 0; i < nq; i++) {
+    //     for (int j = 0; j < top_k; j++)
+    //         printf("%5zd ", I[i * top_k + j]);
+    //     printf("\n");
+    // }
 
     delete[] I;
     delete[] D;

@@ -26,8 +26,8 @@ int main(int argc, char** argv) {
 
     // Declare parameters
     int dim = 128;
-    int nb = 10000;
-    int nq = 10;
+    int nb = 100000;
+    int nq = 1000;
     int top_k = 5;
 
     std::mt19937 rng;

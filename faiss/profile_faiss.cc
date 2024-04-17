@@ -25,8 +25,8 @@ int main(int argc, char** argv) {
     int index_id = std::stoi(argv[1]);
 
     // Declare parameters
-    int dim = 1536;
-    int nb = 1000000;
+    int dim = 128;
+    int nb = 1000;
     int nq = 10;
     int top_k = 5;
 

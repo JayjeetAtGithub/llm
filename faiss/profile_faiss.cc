@@ -60,9 +60,9 @@ int main() {
 
     faiss::IndexFlatL2 index(d);
     // faiss::IndexIVFFlat index(&quantizer, d, nlist);
-    assert(!index.is_trained);
-    index.train(nb, xb);
-    assert(index.is_trained);
+    // assert(!index.is_trained);
+    // index.train(nb, xb);
+    // assert(index.is_trained);
     index.add(nb, xb);
 
     {

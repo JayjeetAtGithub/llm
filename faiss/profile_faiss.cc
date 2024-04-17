@@ -12,70 +12,81 @@
 
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFFlat.h>
+#include <faiss/IndexHNSW.h>
 
 using idx_t = faiss::idx_t;
 
-int main() {
-    int d = 1536;
+int main(int argc, char** argv) {
 
+    if (argc < 2) {
+        std::cout << "usage: " << argv[0] << " [index_id]" << std::endl;
+        exit(1);
+    }
+
+    int index_id = stoi(argv[1]);
+
+    if (index_id == 0) {
+        std::cout << "Using IndexFlat" << std::endl;
+    } else if (index_id == 1) {
+        std::cout << "IndexIVFFlat" << std::endl;
+    } else if (index_id == 2){
+        std::cout << "IndexHNSWFlat" << std::endl;
+    } else {
+        std::cout << "Invalid index id" << std::endl;
+        exit(1);
+    }
+
+    int dim = 1536;
     int nb = 1000000;
-
     int nq = 10;
+    int top_k = 5;
 
     std::mt19937 rng;
     std::uniform_real_distribution<> distrib;
 
-    float* xb = new float[d * nb];
-    float* xq = new float[d * nq];
+    // Randomly generate the training and test vector datasets
+    {
+        float* xb = new float[dim * nb];
+        float* xq = new float[dim * nq];
 
-    for (int i = 0; i < nb; i++) {
-        for (int j = 0; j < d; j++)
-            xb[d * i + j] = distrib(rng);
-        xb[d * i] += i / 1000.;
+        for (int i = 0; i < nb; i++) {
+            for (int j = 0; j < dim; j++)
+                xb[dim * i + j] = distrib(rng);
+            xb[dim * i] += i / 1000.;
+        }
+
+        for (int i = 0; i < nq; i++) {
+            for (int j = 0; j < dim; j++)
+                xq[dim * i + j] = distrib(rng);
+            xq[dim * i] += i / 1000.;
+        }
     }
 
-    for (int i = 0; i < nq; i++) {
-        for (int j = 0; j < d; j++)
-            xq[d * i + j] = distrib(rng);
-        xq[d * i] += i / 1000.;
+    if (index_id == 0) {
+        faiss::IndexFlatL2 index(dim);
+    } else if (index_id == 1) {
+        faiss::IndexFlatL2 quantizer(dim);
+        faiss::IndexIVFFlat index(&quantizer, dim, 100);
+        assert(!index.is_trained);
+        index.train(nb, xb);
+        assert(index.is_trained);
+    } else if (index_id == 2) {
+        faiss::IndexHNSWFlat index(dim, 32);
+        index.train(nb, xb);
     }
 
-    // print the training and test vector datasets
-    // printf("xb=\n");
-    // for (int i = 0; i < nb; i++) {
-    //     for (int j = 0; j < d; j++)
-    //         printf("%5.2f ", xb[d * i + j]);
-    //     printf("\n");
-    // }
-
-    // printf("xq=\n");
-    // for (int i = 0; i < nq; i++) {
-    //     for (int j = 0; j < d; j++)
-    //         printf("%5.2f ", xq[d * i + j]);
-    //     printf("\n");
-    // }
-
-    int nlist = 100;
-    int k = 5;
-
-    faiss::IndexFlatL2 index(d);
-    // faiss::IndexIVFFlat index(&quantizer, d, nlist);
-    // assert(!index.is_trained);
-    // index.train(nb, xb);
-    // assert(index.is_trained);
     index.add(nb, xb);
 
     {
-        idx_t *I = new idx_t[k * nq];
-        float *D = new float[k * nq];
+        idx_t *I = new idx_t[top_k * nq];
+        float *D = new float[top_k * nq];
 
-        // index.nprobe = 10;
-        index.search(nq, xq, k, D, I);
+        index.search(nq, xq, top_k, D, I);
 
         printf("I=\n");
         for (int i = 0; i < nq; i++) {
-            for (int j = 0; j < k; j++)
-                printf("%5zd ", I[i * k + j]);
+            for (int j = 0; j < top_k; j++)
+                printf("%5zd ", I[i * top_k + j]);
             printf("\n");
         }
 

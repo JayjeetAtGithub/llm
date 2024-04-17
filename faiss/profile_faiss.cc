@@ -16,11 +16,11 @@
 using idx_t = faiss::idx_t;
 
 int main() {
-    int d = 3;
+    int d = 1536;
 
-    int nb = 10;
+    int nb = 10000;
 
-    int nq = 2;
+    int nq = 1000;
 
     std::mt19937 rng;
     std::uniform_real_distribution<> distrib;

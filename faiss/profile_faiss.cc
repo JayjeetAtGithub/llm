@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    int index_id = stoi(argv[1]);
+    int index_id = std::stoi(argv[1]);
 
     if (index_id == 0) {
         std::cout << "Using IndexFlat" << std::endl;

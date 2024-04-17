@@ -69,7 +69,7 @@ int main() {
         idx_t *I = new idx_t[k * nq];
         float *D = new float[k * nq];
 
-        index.nprobe = 10;
+        // index.nprobe = 10;
         index.search(nq, xq, k, D, I);
 
         printf("I=\n");

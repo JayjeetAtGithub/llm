@@ -58,8 +58,8 @@ int main() {
     int nlist = 100;
     int k = 5;
 
-    faiss::IndexFlatL2 quantizer(d);
-    faiss::IndexIVFFlat index(&quantizer, d, nlist);
+    faiss::IndexFlatL2 index(d);
+    // faiss::IndexIVFFlat index(&quantizer, d, nlist);
     assert(!index.is_trained);
     index.train(nb, xb);
     assert(index.is_trained);

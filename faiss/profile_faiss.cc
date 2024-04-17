@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
     }
     auto e = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = e-s;
-    std::cout << "Time taken for data generation: " << diff
+    std::cout << "Time taken for data generation: " << diff.count() << " s\n";
 
     if (index_id == 0) {
         std::cout << "Using IndexFlatL2\n";

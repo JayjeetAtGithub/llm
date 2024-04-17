@@ -6,7 +6,6 @@
  */
 
 #include <cassert>
-#include <cstdio>
 #include <cstdlib>
 #include <random>
 #include <iostream>
@@ -18,7 +17,6 @@
 using idx_t = faiss::idx_t;
 
 int main(int argc, char** argv) {
-
     if (argc < 2) {
         std::cout << "usage: " << argv[0] << " [index_id]" << std::endl;
         exit(1);
@@ -37,6 +35,7 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
+    // Declare parameters
     int dim = 1536;
     int nb = 1000000;
     int nq = 10;
@@ -60,7 +59,8 @@ int main(int argc, char** argv) {
             xq[dim * i + j] = distrib(rng);
         xq[dim * i] += i / 1000.;
     }
-
+    
+    // Create the index
     if (index_id == 0) {
         faiss::IndexFlatL2 index(dim);
     } else if (index_id == 1) {
@@ -74,25 +74,24 @@ int main(int argc, char** argv) {
         index.train(nb, xb);
     }
 
+    // Add the vectors to the index
     index.add(nb, xb);
 
-    {
-        idx_t *I = new idx_t[top_k * nq];
-        float *D = new float[top_k * nq];
+    // Search the index
+    idx_t *I = new idx_t[top_k * nq];
+    float *D = new float[top_k * nq];
 
-        index.search(nq, xq, top_k, D, I);
+    index.search(nq, xq, top_k, D, I);
 
-        printf("I=\n");
-        for (int i = 0; i < nq; i++) {
-            for (int j = 0; j < top_k; j++)
-                printf("%5zd ", I[i * top_k + j]);
-            printf("\n");
-        }
-
-        delete[] I;
-        delete[] D;
+    printf("I=\n");
+    for (int i = 0; i < nq; i++) {
+        for (int j = 0; j < top_k; j++)
+            printf("%5zd ", I[i * top_k + j]);
+        printf("\n");
     }
 
+    delete[] I;
+    delete[] D;
     delete[] xb;
     delete[] xq;
 

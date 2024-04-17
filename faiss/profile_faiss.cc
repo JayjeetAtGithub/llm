@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <random>
+#include <iostream>
 
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFFlat.h>

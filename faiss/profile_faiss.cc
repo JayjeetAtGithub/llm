@@ -68,9 +68,9 @@ int main(int argc, char** argv) {
     } else if (index_id == 1) {
         faiss::IndexFlatL2 quantizer(dim);
         index = new faiss::IndexIVFFlat(&quantizer, dim, 100);
-        assert(!index.is_trained);
+        assert(!index->is_trained);
         index->train(nb, xb);
-        assert(index.is_trained);
+        assert(index->is_trained);
     } else if (index_id == 2) {
         index = new faiss::IndexHNSWFlat(dim, 32);
         index->train(nb, xb);

@@ -20,7 +20,7 @@ int main() {
 
     int nb = 10000;
 
-    int nq = 1000;
+    int nq = 10;
 
     std::mt19937 rng;
     std::uniform_real_distribution<> distrib;

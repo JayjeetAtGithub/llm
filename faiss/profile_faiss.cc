@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
         index.search(nq, xq, top_k, D, I);
 
     } else if (index_id == 2) {
-        index = faiss::IndexHNSWFlat(dim, 32);
+        faiss::IndexHNSWFlat index(dim, 32);
         index.train(nb, xb);
         index.add(nb, xb);
         index.search(nq, xq, top_k, D, I);

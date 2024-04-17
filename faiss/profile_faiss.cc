@@ -45,21 +45,19 @@ int main(int argc, char** argv) {
     std::uniform_real_distribution<> distrib;
 
     // Randomly generate the training and test vector datasets
-    {
-        float* xb = new float[dim * nb];
-        float* xq = new float[dim * nq];
+    float* xb = new float[dim * nb];
+    float* xq = new float[dim * nq];
 
-        for (int i = 0; i < nb; i++) {
-            for (int j = 0; j < dim; j++)
-                xb[dim * i + j] = distrib(rng);
-            xb[dim * i] += i / 1000.;
-        }
+    for (int i = 0; i < nb; i++) {
+        for (int j = 0; j < dim; j++)
+            xb[dim * i + j] = distrib(rng);
+        xb[dim * i] += i / 1000.;
+    }
 
-        for (int i = 0; i < nq; i++) {
-            for (int j = 0; j < dim; j++)
-                xq[dim * i + j] = distrib(rng);
-            xq[dim * i] += i / 1000.;
-        }
+    for (int i = 0; i < nq; i++) {
+        for (int j = 0; j < dim; j++)
+            xq[dim * i + j] = distrib(rng);
+        xq[dim * i] += i / 1000.;
     }
 
     if (index_id == 0) {

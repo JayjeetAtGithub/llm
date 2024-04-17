@@ -41,19 +41,19 @@ int main() {
     }
 
     // print the training and test vector datasets
-    printf("xb=\n");
-    for (int i = 0; i < nb; i++) {
-        for (int j = 0; j < d; j++)
-            printf("%5.2f ", xb[d * i + j]);
-        printf("\n");
-    }
+    // printf("xb=\n");
+    // for (int i = 0; i < nb; i++) {
+    //     for (int j = 0; j < d; j++)
+    //         printf("%5.2f ", xb[d * i + j]);
+    //     printf("\n");
+    // }
 
-    printf("xq=\n");
-    for (int i = 0; i < nq; i++) {
-        for (int j = 0; j < d; j++)
-            printf("%5.2f ", xq[d * i + j]);
-        printf("\n");
-    }
+    // printf("xq=\n");
+    // for (int i = 0; i < nq; i++) {
+    //     for (int j = 0; j < d; j++)
+    //         printf("%5.2f ", xq[d * i + j]);
+    //     printf("\n");
+    // }
 
     int nlist = 100;
     int k = 5;

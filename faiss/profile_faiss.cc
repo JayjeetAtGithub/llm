@@ -24,17 +24,6 @@ int main(int argc, char** argv) {
 
     int index_id = std::stoi(argv[1]);
 
-    if (index_id == 0) {
-        std::cout << "IndexFlat" << std::endl;
-    } else if (index_id == 1) {
-        std::cout << "IndexIVFFlat" << std::endl;
-    } else if (index_id == 2){
-        std::cout << "IndexHNSWFlat" << std::endl;
-    } else {
-        std::cout << "Invalid index id" << std::endl;
-        exit(1);
-    }
-
     // Declare parameters
     int dim = 1536;
     int nb = 1000000;
@@ -60,20 +49,22 @@ int main(int argc, char** argv) {
         xq[dim * i] += i / 1000.;
     }
 
-    auto index;    
-    // Create the index
+    // Create the index and add data
+    faiss::Index index(dim);
     if (index_id == 0) {
-        index = faiss::IndexFlatL2(dim);
-    } else if (index_id == 1) {
-        faiss::IndexFlatL2 quantizer(dim);
-        index = faiss::IndexIVFFlat(&quantizer, dim, 100);
-        assert(!index.is_trained);
-        index.train(nb, xb);
-        assert(index.is_trained);
-    } else if (index_id == 2) {
-        index = faiss::IndexHNSWFlat(dim, 32);
-        index.train(nb, xb);
+       index = (faiss::Index)faiss::IndexFlatL2(dim);
     }
+    // } else if (index_id == 1) {
+    //     faiss::IndexFlatL2 quantizer(dim);
+    //     faiss::IndexIVFFlat index(&quantizer, dim, 100);
+    //     assert(!index.is_trained);
+    //     index.train(nb, xb);
+
+    //     assert(index.is_trained);
+    // } else if (index_id == 2) {
+    //     index = faiss::IndexHNSWFlat(dim, 32);
+    //     index.train(nb, xb);
+    // }
 
     // Add the vectors to the index
     index.add(nb, xb);

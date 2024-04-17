@@ -16,14 +16,11 @@
 using idx_t = faiss::idx_t;
 
 int main() {
-    // use vectors of 128 dimensions
-    int d = 128;
+    int d = 3;
 
-    // write a million vectors
-    int nb = 1000000;
+    int nb = 10;
 
-    // search 100,000 vectors
-    int nq = 100000;
+    int nq = 2;
 
     std::mt19937 rng;
     std::uniform_real_distribution<> distrib;
@@ -43,33 +40,48 @@ int main() {
         xq[d * i] += i / 1000.;
     }
 
-    int nlist = 100;
-    int k = 5;
-
-    faiss::IndexFlatL2 quantizer(d);
-    faiss::IndexIVFFlat index(&quantizer, d, nlist);
-    assert(!index.is_trained);
-    index.train(nb, xb);
-    assert(index.is_trained);
-    index.add(nb, xb);
-
-    {
-        idx_t *I = new idx_t[k * nq];
-        float *D = new float[k * nq];
-
-        index.nprobe = 10;
-        index.search(nq, xq, k, D, I);
-
-        printf("I=\n");
-        for (int i = nq - 5; i < nq; i++) {
-            for (int j = 0; j < k; j++)
-                printf("%5zd ", I[i * k + j]);
-            printf("\n");
-        }
-
-        delete[] I;
-        delete[] D;
+    // print the training and test vector datasets
+    printf("xb=\n");
+    for (int i = 0; i < nb; i++) {
+        for (int j = 0; j < d; j++)
+            printf("%5.2f ", xb[d * i + j]);
+        printf("\n");
     }
+
+    printf("xq=\n");
+    for (int i = 0; i < nq; i++) {
+        for (int j = 0; j < d; j++)
+            printf("%5.2f ", xq[d * i + j]);
+        printf("\n");
+    }
+
+    // int nlist = 100;
+    // int k = 5;
+
+    // faiss::IndexFlatL2 quantizer(d);
+    // faiss::IndexIVFFlat index(&quantizer, d, nlist);
+    // assert(!index.is_trained);
+    // index.train(nb, xb);
+    // assert(index.is_trained);
+    // index.add(nb, xb);
+
+    // {
+    //     idx_t *I = new idx_t[k * nq];
+    //     float *D = new float[k * nq];
+
+    //     index.nprobe = 10;
+    //     index.search(nq, xq, k, D, I);
+
+    //     printf("I=\n");
+    //     for (int i = nq - 5; i < nq; i++) {
+    //         for (int j = 0; j < k; j++)
+    //             printf("%5zd ", I[i * k + j]);
+    //         printf("\n");
+    //     }
+
+    //     delete[] I;
+    //     delete[] D;
+    // }
 
     delete[] xb;
     delete[] xq;

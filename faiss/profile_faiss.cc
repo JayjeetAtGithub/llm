@@ -18,7 +18,7 @@ using idx_t = faiss::idx_t;
 int main() {
     int d = 1536;
 
-    int nb = 10000;
+    int nb = 1000000;
 
     int nq = 10;
 

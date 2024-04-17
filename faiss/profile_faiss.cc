@@ -36,7 +36,9 @@ int main(int argc, char** argv) {
     // Randomly generate the training and test vector datasets
     float* xb = new float[dim * nb];
     float* xq = new float[dim * nq];
-
+    idx_t *I = new idx_t[top_k * nq];
+    float *D = new float[top_k * nq];
+    
     for (int i = 0; i < nb; i++) {
         for (int j = 0; j < dim; j++)
             xb[dim * i + j] = distrib(rng);
@@ -50,30 +52,28 @@ int main(int argc, char** argv) {
     }
 
     // Create the index and add data
-    faiss::Index index(dim);
     if (index_id == 0) {
-       index = (faiss::Index)faiss::IndexFlatL2(dim);
+        faiss::IndexFlatL2 index(dim);
+        index.add(nb, xb);
+        index.search(nq, xq, top_k, D, I);
+
+    } else if (index_id == 1) {
+        faiss::IndexFlatL2 quantizer(dim);
+        faiss::IndexIVFFlat index(&quantizer, dim, 100);
+        assert(!index.is_trained);
+        index.train(nb, xb);
+        assert(index.is_trained);
+        index.add(nb, xb);
+        index.search(nq, xq, top_k, D, I);
+
+    } else if (index_id == 2) {
+        index = faiss::IndexHNSWFlat(dim, 32);
+        index.train(nb, xb);
+        index.add(nb, xb);
+        index.search(nq, xq, top_k, D, I);
+
     }
-    // } else if (index_id == 1) {
-    //     faiss::IndexFlatL2 quantizer(dim);
-    //     faiss::IndexIVFFlat index(&quantizer, dim, 100);
-    //     assert(!index.is_trained);
-    //     index.train(nb, xb);
 
-    //     assert(index.is_trained);
-    // } else if (index_id == 2) {
-    //     index = faiss::IndexHNSWFlat(dim, 32);
-    //     index.train(nb, xb);
-    // }
-
-    // Add the vectors to the index
-    index.add(nb, xb);
-
-    // Search the index
-    idx_t *I = new idx_t[top_k * nq];
-    float *D = new float[top_k * nq];
-
-    index.search(nq, xq, top_k, D, I);
 
     printf("I=\n");
     for (int i = 0; i < nq; i++) {

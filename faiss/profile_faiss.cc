@@ -26,33 +26,34 @@ int main(int argc, char** argv) {
     int index_id = std::stoi(argv[1]);
 
     // Declare parameters
-    int dim = 128;
+    int dim = 512;
     int nb = 100000;
-    int nq = 1000;
+    int nq = 10000;
     int top_k = 5;
 
     std::mt19937 rng;
     std::uniform_real_distribution<> distrib;
 
-    // Randomly generate the training and test vector datasets
     float* xb = new float[dim * nb];
     float* xq = new float[dim * nq];
     idx_t *I = new idx_t[top_k * nq];
     float *D = new float[top_k * nq];
     
+    auto s = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < nb; i++) {
         for (int j = 0; j < dim; j++)
             xb[dim * i + j] = distrib(rng);
         xb[dim * i] += i / 1000.;
     }
-
     for (int i = 0; i < nq; i++) {
         for (int j = 0; j < dim; j++)
             xq[dim * i + j] = distrib(rng);
         xq[dim * i] += i / 1000.;
     }
+    auto e = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff = e-s;
+    std::cout << "Time taken for data generation: " << diff
 
-    // Create the index and add data
     if (index_id == 0) {
         std::cout << "Using IndexFlatL2\n";
         faiss::IndexFlatL2 index(dim);

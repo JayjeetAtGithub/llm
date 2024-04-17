@@ -55,33 +55,33 @@ int main() {
         printf("\n");
     }
 
-    // int nlist = 100;
-    // int k = 5;
+    int nlist = 100;
+    int k = 5;
 
-    // faiss::IndexFlatL2 quantizer(d);
-    // faiss::IndexIVFFlat index(&quantizer, d, nlist);
-    // assert(!index.is_trained);
-    // index.train(nb, xb);
-    // assert(index.is_trained);
-    // index.add(nb, xb);
+    faiss::IndexFlatL2 quantizer(d);
+    faiss::IndexIVFFlat index(&quantizer, d, nlist);
+    assert(!index.is_trained);
+    index.train(nb, xb);
+    assert(index.is_trained);
+    index.add(nb, xb);
 
-    // {
-    //     idx_t *I = new idx_t[k * nq];
-    //     float *D = new float[k * nq];
+    {
+        idx_t *I = new idx_t[k * nq];
+        float *D = new float[k * nq];
 
-    //     index.nprobe = 10;
-    //     index.search(nq, xq, k, D, I);
+        index.nprobe = 10;
+        index.search(nq, xq, k, D, I);
 
-    //     printf("I=\n");
-    //     for (int i = nq - 5; i < nq; i++) {
-    //         for (int j = 0; j < k; j++)
-    //             printf("%5zd ", I[i * k + j]);
-    //         printf("\n");
-    //     }
+        printf("I=\n");
+        for (int i = 0; i < nq; i++) {
+            for (int j = 0; j < k; j++)
+                printf("%5zd ", I[i * k + j]);
+            printf("\n");
+        }
 
-    //     delete[] I;
-    //     delete[] D;
-    // }
+        delete[] I;
+        delete[] D;
+    }
 
     delete[] xb;
     delete[] xq;

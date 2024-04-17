@@ -10,6 +10,7 @@
 #include <random>
 #include <iostream>
 #include <chrono>
+#include <thread>
 
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFFlat.h>

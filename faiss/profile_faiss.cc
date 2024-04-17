@@ -58,6 +58,8 @@ int main(int argc, char** argv) {
         std::cout << "Using IndexFlatL2\n";
         faiss::IndexFlatL2 index(dim);
         index.add(nb, xb);
+        std::cout << "Starting search....Waiting 10s\n";
+        std::this_thread::sleep_for(std::chrono::seconds(10));
         auto s  = std::chrono::high_resolution_clock::now();
         index.search(nq, xq, top_k, D, I);
         auto e  = std::chrono::high_resolution_clock::now();
@@ -71,6 +73,8 @@ int main(int argc, char** argv) {
         index.train(nb, xb);
         assert(index.is_trained);
         index.add(nb, xb);
+        std::cout << "Starting search....Waiting 10s\n";
+        std::this_thread::sleep_for(std::chrono::seconds(10));
         auto s = std::chrono::high_resolution_clock::now();
         index.search(nq, xq, top_k, D, I);
         auto e = std::chrono::high_resolution_clock::now();
@@ -81,6 +85,8 @@ int main(int argc, char** argv) {
         std::cout << "Using IndexHNSWFlat\n";
         faiss::IndexHNSWFlat index(dim, 32);
         index.add(nb, xb);
+        std::cout << "Starting search....Waiting 10s\n";
+        std::this_thread::sleep_for(std::chrono::seconds(10));
         auto s = std::chrono::high_resolution_clock::now();
         index.search(nq, xq, top_k, D, I);
         auto e = std::chrono::high_resolution_clock::now();

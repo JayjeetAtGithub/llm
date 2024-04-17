@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <random>
 #include <iostream>
+#include <chrono>
 
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFFlat.h>
@@ -55,7 +56,11 @@ int main(int argc, char** argv) {
     if (index_id == 0) {
         faiss::IndexFlatL2 index(dim);
         index.add(nb, xb);
+        auto s  = std::chrono::high_resolution_clock::now();
         index.search(nq, xq, top_k, D, I);
+        auto e  = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff = e-s;
+        std::cout << "Time taken for search: " << diff.count() << " s\n";
 
     } else if (index_id == 1) {
         faiss::IndexFlatL2 quantizer(dim);
@@ -68,9 +73,15 @@ int main(int argc, char** argv) {
 
     } else if (index_id == 2) {
         faiss::IndexHNSWFlat index(dim, 32);
+        assert(!index.is_trained);
         index.train(nb, xb);
+        assert(index.is_trained);
         index.add(nb, xb);
+        auto s = std::chrono::high_resolution_clock::now();
         index.search(nq, xq, top_k, D, I);
+        auto e = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff = e-s;
+        std::cout << "Time taken for search: " << diff.count() << " s\n";
 
     }
 

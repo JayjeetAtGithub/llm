@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
     
     size_t d, n;
     float* xb;
-    read_in_learn_dataset("sift1M/sift_learn.fvecs", xb, &d, &n);
+    read_in_learn_dataset("sift1M/siftsmall_learn.fvecs", xb, &d, &n);
     std::cout << "Read in learn dataset " << d << " x " << n << std::endl;
 
 

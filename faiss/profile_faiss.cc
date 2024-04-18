@@ -14,7 +14,6 @@
 #define TOP_K 5
 
 
-
 std::shared_ptr<faiss::Index> create_index(int index_id, size_t dim) {
     if (index_id == 0) {
         return std::make_shared<faiss::IndexFlatL2>(dim);
@@ -75,64 +74,6 @@ int main(int argc, char** argv) {
         index->search(n_query, data_query, TOP_K, dis.data(), nns.data());
         delete data_query;
     }
-
-
-
-
-    // if (index_id == 0) {
-    //     std::cout << "Using IndexFlatL2\n";
-    //     faiss::IndexFlatL2 index(dim);
-    //     index.add(nb, xb);
-    //     // std::cout << "Starting search....Waiting 10s\n";
-    //     // std::this_thread::sleep_for(std::chrono::seconds(10));
-    //     // auto s  = std::chrono::high_resolution_clock::now();
-    //     // index.search(nq, xq, top_k, D, I);
-    //     // auto e  = std::chrono::high_resolution_clock::now();
-    //     // std::chrono::duration<double> diff = e-s;
-    //     // std::cout << "Time taken for search: " << diff.count() << " s\n";
-
-    // } else if (index_id == 1) {
-    //     std::cout << "Using IndexIVFFlat\n";
-    //     faiss::IndexFlatL2 quantizer(dim);
-    //     faiss::IndexIVFFlat index(&quantizer, dim, 100);
-    //     assert(!index.is_trained);
-    //     index.train(nb, xb);
-    //     assert(index.is_trained);
-    //     index.add(nb, xb);
-    //     // std::cout << "Starting search....Waiting 10s\n";
-    //     // std::this_thread::sleep_for(std::chrono::seconds(10));
-    //     // auto s = std::chrono::high_resolution_clock::now();
-    //     // index.search(nq, xq, top_k, D, I);
-    //     // auto e = std::chrono::high_resolution_clock::now();
-    //     // std::chrono::duration<double> diff = e-s;
-    //     // std::cout << "Time taken for search: " << diff.count() << " s\n";
-
-    // } else if (index_id == 2) {
-    //     std::cout << "Using IndexHNSWFlat\n";
-    //     faiss::IndexHNSWFlat index(dim, 32);
-    //     index.add(nb, xb);
-    //     // std::cout << "Starting search....Waiting 10s\n";
-    //     // std::this_thread::sleep_for(std::chrono::seconds(10));
-    //     // auto s = std::chrono::high_resolution_clock::now();
-    //     // index.search(nq, xq, top_k, D, I);
-    //     // auto e = std::chrono::high_resolution_clock::now();
-    //     // std::chrono::duration<double> diff = e-s;
-    //     // std::cout << "Time taken for search: " << diff.count() << " s\n";
-
-    // }
-
-
-    // // printf("I=\n");
-    // // for (int i = 0; i < nq; i++) {
-    // //     for (int j = 0; j < top_k; j++)
-    // //         printf("%5zd ", I[i * top_k + j]);
-    // //     printf("\n");
-    // // }
-
-    // delete[] I;
-    // delete[] D;
-    // delete[] xb;
-    // delete[] xq;
 
     return 0;
 }

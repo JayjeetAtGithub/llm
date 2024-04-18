@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
         index->train(n_learn, data_learn);
     }
     index->add(n_learn, data_learn);
-    write_index(index, "index.faiss");
+    write_index(index.get(), "index.faiss");
 
 
 

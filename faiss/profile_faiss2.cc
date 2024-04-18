@@ -33,6 +33,15 @@
  * I/O functions for fvecs and ivecs
  *****************************************************/
 
+void preview_dataset(float* xb) {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 10; j++) {
+            std::cout << xb[i * 10 + j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
 float* fvecs_read(const char* fname, size_t* d_out, size_t* n_out) {
     FILE* f = fopen(fname, "r");
     if (!f) {

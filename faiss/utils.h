@@ -68,9 +68,3 @@ std::string index_id_to_name(int index_id) {
 std::string get_index_file_name(int index_id, std::string dataset) {
     return "index." + index_id_to_name(index_id) + "." + dataset + ".faiss";
 }
-
-double elapsed() {
-    struct timeval tv;
-    gettimeofday(&tv, nullptr);
-    return tv.tv_sec + tv.tv_usec * 1e-6;
-}

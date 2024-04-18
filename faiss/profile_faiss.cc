@@ -9,7 +9,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <chrono>
-#include <format>
 
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFFlat.h>
@@ -66,13 +65,15 @@ int main(int argc, char** argv) {
     
     size_t dim_learn, n_learn;
     float* data_learn;
-    read_dataset(std::format("{}/{}_base.fvecs", dataset, dataset), data_learn, &dim_learn, &n_learn);
+    std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
+    read_dataset(dataset_path_learn, data_learn, &dim_learn, &n_learn);
     std::cout << "Read in learn dataset " << dim_learn << " x " << n_learn << std::endl;
     preview_dataset(data_learn);
 
     size_t dim_query, n_query;
     float* data_query;
-    read_dataset("siftsmall/siftsmall_query.fvecs", data_query, &dim_query, &n_query);
+    std::string dataset_path_query = dataset + "/" + dataset + "_query.fvecs";
+    read_dataset(dataset_path_query, data_query, &dim_query, &n_query);
     std::cout << "Read in query dataset " << dim_query << " x " << n_query << std::endl;
     preview_dataset(data_query);
 

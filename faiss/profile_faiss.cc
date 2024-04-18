@@ -53,16 +53,15 @@ void read_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
 
 int main(int argc, char** argv) {
     if (argc < 2) {
-        std::cout << "usage: " << argv[0] << " [index_id]" << std::endl;
+        std::cout << "usage: " << argv[0] << " [index_id] " << "[dataset]" << std::endl;
         exit(1);
     }
 
     int index_id = std::stoi(argv[1]);
+    std::string dataset = std::to_string(argv[2]);
 
-    // Declare parameters
-    int dim = 256;
-    int nb = 1000000;
-    int nq = 100000;
+    std::cout << "Using dataset: " << dataset << std::endl;
+
     int top_k = 5;
 
     

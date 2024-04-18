@@ -38,6 +38,14 @@ float* fvecs_read(const char* fname, size_t* d_out, size_t* n_out) {
         memmove(x + i * d, x + 1 + i * (d + 1), d * sizeof(*x));
 
     fclose(f);
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 10; j++) {
+            printf("%5.4f ", xb[i * 10 + j]);
+        }
+        std::cout << std::endl;
+    }
+
     return x;
 }
 

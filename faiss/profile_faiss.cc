@@ -22,7 +22,7 @@
 using idx_t = faiss::idx_t;
 
 
-void read_in_learn_dataset(const char* filename, float* &xb, size_t &d, size_t &n) {
+void read_in_learn_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
     xb = fvecs_read(filename, d, n);
     std::cout << "Read in data of size: " << n << " x " << d << std::endl;
 }
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
     
     size_t d, n;
     float* xb;
-    read_in_learn_dataset("sift1M/sift_learn.fvecs", xb, d, n);
+    read_in_learn_dataset("sift1M/sift_learn.fvecs", xb, &d, &n);
     std::cout << "Read in learn dataset " << d << " x " << n << std::endl;
 
 

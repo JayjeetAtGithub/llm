@@ -45,6 +45,20 @@ int* ivecs_read(const char* fname, size_t* d_out, size_t* n_out) {
     return (int*)fvecs_read(fname, d_out, n_out);
 }
 
+
+void preview_dataset(float* xb) {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 10; j++) {
+            std::cout << xb[i * 10 + j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+void read_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
+    xb = fvecs_read(filename, d, n);
+}
+
 double elapsed() {
     struct timeval tv;
     gettimeofday(&tv, nullptr);

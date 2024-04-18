@@ -20,19 +20,6 @@
 #define TOP_K 5
 
 
-void preview_dataset(float* xb) {
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 10; j++) {
-            std::cout << xb[i * 10 + j] << " ";
-        }
-        std::cout << std::endl;
-    }
-}
-
-void read_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
-    xb = fvecs_read(filename, d, n);
-}
-
 
 std::shared_ptr<faiss::Index> create_index(int index_id, size_t dim) {
     if (index_id == 0) {

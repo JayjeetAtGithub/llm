@@ -5,3 +5,5 @@ venv/
 *.sqlite3
 dataset_*/
 embeddings_dataset/
+faiss/*.tar.gz
+faiss/sift*

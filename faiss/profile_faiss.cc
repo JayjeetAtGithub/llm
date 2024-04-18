@@ -22,19 +22,25 @@
 using idx_t = faiss::idx_t;
 
 
+void read_in_learn_dataset(const char* filename, float* &xb, size_t &d, size_t &n) {
+    xb = fvecs_read(filename, d, n);
+    std::cout << "Read in data of size: " << n << " x " << d << std::endl;
+}
 
 
-// std::shared_ptr<faiss::Index> create_index(int index_id, int dim, int nb, float* xb) {
-//     if (index_id == 0) {
-//         return std::make_shared<faiss::IndexFlatL2>(dim);
-//     } else if (index_id == 1) {
-//         faiss::IndexFlatL2 quantizer(dim);
-//         return std::make_shared<faiss::IndexIVFFlat>(&quantizer, dim, 100);
-//     } else if (index_id == 2) {
-//         return std::make_shared<faiss::IndexHNSWFlat>(dim, 32);
-//     }
-//     return nullptr;
-// }
+std::shared_ptr<faiss::Index> create_index(int index_id, const char* filename) {
+
+
+    if (index_id == 0) {
+        return std::make_shared<faiss::IndexFlatL2>(dim);
+    } else if (index_id == 1) {
+        faiss::IndexFlatL2 quantizer(dim);
+        return std::make_shared<faiss::IndexIVFFlat>(&quantizer, dim, 100);
+    } else if (index_id == 2) {
+        return std::make_shared<faiss::IndexHNSWFlat>(dim, 32);
+    }
+    return nullptr;
+}
 
 
 int main(int argc, char** argv) {
@@ -51,10 +57,11 @@ int main(int argc, char** argv) {
     int nq = 100000;
     int top_k = 5;
 
-    // read in data
+    
     size_t d, n;
-    float* xb = fvecs_read("siftsmall/siftsmall_base.fvecs", &d, &n);
-    std::cout << "Read in data of size: " << n << " x " << d << std::endl;
+    float* xb;
+    read_in_learn_dataset("sift1M/sift_learn.fvecs", xb, d, n);
+    std::cout << "Read in learn dataset " << d << " x " << n << std::endl;
 
 
     // if (index_id == 0) {

@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
         std::vector<faiss::idx_t> nns(TOP_K * n_query);
         std::vector<float> dis(TOP_K * n_query);
 
-        Index* index = read_index(index_path.c_str());
+        faiss::Index* index = faiss::read_index(index_path.c_str());
         index.search(n_query, data_query, TOP_K, dis.data(), nns.data());
 
         delete data_query;

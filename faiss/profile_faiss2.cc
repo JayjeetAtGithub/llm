@@ -20,6 +20,8 @@
 #include <faiss/AutoTune.h>
 #include <faiss/index_factory.h>
 
+#include "utils.h"
+
 /**
  * To run this demo, please download the ANN_SIFT1M dataset from
  *
@@ -99,6 +101,7 @@ int main() {
 
         size_t nt;
         float* xt = fvecs_read("siftsmall/siftsmall_learn.fvecs", &d, &nt);
+        preview_dataset(xt);
 
         printf("[%.3f s] Preparing index \"%s\" d=%ld\n",
                elapsed() - t0,

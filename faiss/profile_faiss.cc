@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
         std::string dataset_path_query = dataset + "/" + dataset + "_query.fvecs";
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "Read in query dataset " << dim_query << " x " << n_query << std::endl;
-        preview_dataset(data_query);
+        // preview_dataset(data_query);
 
         std::vector<faiss::idx_t> nns(TOP_K * n_query);
         std::vector<float> dis(TOP_K * n_query);

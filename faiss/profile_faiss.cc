@@ -66,6 +66,7 @@ int main(int argc, char** argv) {
         auto e  = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> diff = e-s;
         std::cout << "Time taken for search: " << diff.count() << " s\n";
+
     } else if (index_id == 1) {
         std::cout << "Using IndexIVFFlat\n";
         faiss::IndexFlatL2 quantizer(dim);

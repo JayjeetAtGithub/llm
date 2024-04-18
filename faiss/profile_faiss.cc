@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
 
     int index_id = std::stoi(argv[1]);
     std::string dataset = argv[2];
+    std::cout << "Using index: " << index_id_to_name(index_id) << "\n";
     std::cout << "Using dataset: " << dataset << std::endl;
     
     size_t dim_learn, n_learn;
@@ -64,8 +65,9 @@ int main(int argc, char** argv) {
         index->train(n_learn, data_learn);
     }
     index->add(n_learn, data_learn);
-    std::string index_path =  "index." + std::to_string(index_id) + ".faiss";
+    std::string index_path =  "index." + index_id_to_name(index_id) + ".faiss";
     write_index(index.get(), index_path.c_str());
+    delete data_learn;
 
 
 

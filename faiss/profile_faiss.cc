@@ -31,7 +31,7 @@ void preview_dataset(float* xb) {
     }
 }
 
-void read_in_learn_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
+void read_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
     xb = fvecs_read(filename, d, n);
 }
 

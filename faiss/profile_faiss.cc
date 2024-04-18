@@ -66,11 +66,19 @@ int main(int argc, char** argv) {
     int top_k = 5;
 
     
-    size_t d, n;
-    float* xb;
-    read_dataset("siftsmall/siftsmall_learn.fvecs", xb, &d, &n);
-    std::cout << "Read in learn dataset " << d << " x " << n << std::endl;
-    preview_dataset(xb);
+    size_t dim_learn, n_learn;
+    float* data_learn;
+    read_dataset("siftsmall/siftsmall_learn.fvecs", data_learn, &dim_learn, &n_learn);
+    std::cout << "Read in learn dataset " << dim_learn << " x " << n_learn << std::endl;
+    preview_dataset(data_learn);
+
+    size_t dim_query, n_query;
+    float* data_query;
+    read_dataset("siftsmall/siftsmall_query.fvecs", data_query, &dim_query, &n_query);
+    std::cout << "Read in query dataset " << dim_query << " x " << n_query << std::endl;
+    preview_dataset(data_query);
+
+
 
 
     // if (index_id == 0) {

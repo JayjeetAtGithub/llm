@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
         float* data_learn;
         std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
         read_dataset(dataset_path_learn.c_str(), data_learn, &dim_learn, &n_learn);
-        std::cout << "Read in learn dataset " << dim_learn << " x " << n_learn << std::endl;
+        std::cout << "Learn dataset shape: " << dim_learn << " x " << n_learn << std::endl;
         preview_dataset(data_learn);
 
         std::shared_ptr<faiss::Index> index = create_index(index_id, dim_learn);
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
         float* data_query;
         std::string dataset_path_query = dataset + "/" + dataset + "_query.fvecs";
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
-        std::cout << "Read in query dataset " << dim_query << " x " << n_query << std::endl;
+        std::cout << "Query dataset shape: " << dim_query << " x " << n_query << std::endl;
         preview_dataset(data_query);
 
         std::vector<faiss::idx_t> nns(TOP_K * n_query);

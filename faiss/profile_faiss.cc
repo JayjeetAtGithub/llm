@@ -14,7 +14,6 @@
 #define TOP_K 5
 
 
-
 std::shared_ptr<faiss::Index> create_index(int index_id, size_t dim) {
     if (index_id == 0) {
         return std::make_shared<faiss::IndexFlatL2>(dim);

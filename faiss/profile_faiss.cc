@@ -13,11 +13,11 @@
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFFlat.h>
 #include <faiss/IndexHNSW.h>
+#include <faiss/index_io.h>
 
 #include "utils.h"
 
-
-using idx_t = faiss::idx_t;
+#define TOP_K 5
 
 
 void preview_dataset(float* xb) {
@@ -55,11 +55,7 @@ int main(int argc, char** argv) {
 
     int index_id = std::stoi(argv[1]);
     std::string dataset = argv[2];
-
     std::cout << "Using dataset: " << dataset << std::endl;
-
-    int top_k = 5;
-
     
     size_t dim_learn, n_learn;
     float* data_learn;
@@ -77,6 +73,11 @@ int main(int argc, char** argv) {
 
 
     std::shared_ptr<faiss::Index> index = create_index(index_id, dim_learn);
+    if (index_id == 1) {
+        index->train(n_learn, data_learn);
+    }
+    index->add(n_learn, data_learn);
+    write_index(index, "index.faiss");
 
 
 

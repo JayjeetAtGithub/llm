@@ -11,3 +11,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(profile_faiss profile_faiss.cc)
 target_link_libraries(profile_faiss faiss arrow parquet)
+
+add_executable(profile_faiss2 profile_faiss2.cc)
+target_link_libraries(profile_faiss2 faiss arrow parquet)

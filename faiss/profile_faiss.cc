@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
     // read in data
     size_t d, n;
-    float* xb = fvecs_read("siftsmall/sift_base.fvecs", &d, &n);
+    float* xb = fvecs_read("faiss/siftsmall/sift_base.fvecs", &d, &n);
     std::cout << "Read in data of size: " << n << " x " << d << std::endl;
 
 

@@ -64,7 +64,8 @@ int main(int argc, char** argv) {
         index->train(n_learn, data_learn);
     }
     index->add(n_learn, data_learn);
-    write_index(index.get(), "index.faiss");
+    std::string index_path =  "index." + std::to_string(index_id) + ".faiss";
+    write_index(index.get(), index_path.c_str());
 
 
 

@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
@@ -50,20 +43,19 @@ int main(int argc, char** argv) {
     
     if (operation == "index") {
         size_t dim_learn, n_learn;
-        float* data_learn;
+        std::vector<float> data_learn;
         std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
-        read_dataset(dataset_path_learn.c_str(), data_learn, &dim_learn, &n_learn);
+        read_dataset(dataset_path_learn.c_str(), data_learn.data(), &dim_learn, &n_learn);
         std::cout << "Read in learn dataset " << dim_learn << " x " << n_learn << std::endl;
         preview_dataset(data_learn);
 
         std::shared_ptr<faiss::Index> index = create_index(index_id, dim_learn);
         if (index_id == 1) {
-            index->train(n_learn, data_learn);
+            index->train(n_learn, data_learn.data());
         }
-        index->add(n_learn, data_learn);
+        index->add(n_learn, data_learn.data());
         std::string index_path =  "index." + index_id_to_name(index_id) + ".faiss";
         write_index(index.get(), index_path.c_str());
-        delete data_learn;
     }
 
     if (operation == "query") {

@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
     }
 
     int index_id = std::stoi(argv[1]);
-    std::string dataset = std::to_string(argv[2]);
+    std::string dataset = argv[2];
 
     std::cout << "Using dataset: " << dataset << std::endl;
 

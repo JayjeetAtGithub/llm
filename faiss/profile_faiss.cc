@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
     
     size_t dim_learn, n_learn;
     float* data_learn;
-    read_dataset("siftsmall/siftsmall_learn.fvecs", data_learn, &dim_learn, &n_learn);
+    read_dataset("siftsmall/siftsmall_base.fvecs", data_learn, &dim_learn, &n_learn);
     std::cout << "Read in learn dataset " << dim_learn << " x " << n_learn << std::endl;
     preview_dataset(data_learn);
 

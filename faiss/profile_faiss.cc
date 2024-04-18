@@ -22,9 +22,17 @@
 using idx_t = faiss::idx_t;
 
 
+void preview_dataset(float* xb) {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 10; j++) {
+            std::cout << xb[i * 10 + j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
 void read_in_learn_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
     xb = fvecs_read(filename, d, n);
-    std::cout << "Read in data of size: " << n << " x " << d << std::endl;
 }
 
 
@@ -62,6 +70,7 @@ int main(int argc, char** argv) {
     float* xb;
     read_in_learn_dataset("siftsmall/siftsmall_learn.fvecs", xb, &d, &n);
     std::cout << "Read in learn dataset " << d << " x " << n << std::endl;
+    preview_dataset(xb);
 
 
     // if (index_id == 0) {

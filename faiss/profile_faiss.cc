@@ -73,7 +73,6 @@ int main(int argc, char** argv) {
         std::string index_path = get_index_file_name(index_id, dataset);
         faiss::Index* index = faiss::read_index(index_path.c_str());
         index->search(n_query, data_query, TOP_K, dis.data(), nns.data());
-
         delete data_query;
     }
 

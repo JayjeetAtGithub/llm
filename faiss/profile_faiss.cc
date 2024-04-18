@@ -14,6 +14,7 @@
 #define TOP_K 5
 
 
+
 std::shared_ptr<faiss::Index> create_index(int index_id, size_t dim) {
     if (index_id == 0) {
         return std::make_shared<faiss::IndexFlatL2>(dim);
@@ -42,19 +43,20 @@ int main(int argc, char** argv) {
     
     if (operation == "index") {
         size_t dim_learn, n_learn;
-        std::vector<float> data_learn;
+        float* data_learn;
         std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
-        read_dataset(dataset_path_learn.c_str(), data_learn.data(), &dim_learn, &n_learn);
+        read_dataset(dataset_path_learn.c_str(), data_learn, &dim_learn, &n_learn);
         std::cout << "Read in learn dataset " << dim_learn << " x " << n_learn << std::endl;
         preview_dataset(data_learn);
 
         std::shared_ptr<faiss::Index> index = create_index(index_id, dim_learn);
         if (index_id == 1) {
-            index->train(n_learn, data_learn.data());
+            index->train(n_learn, data_learn);
         }
-        index->add(n_learn, data_learn.data());
-        std::string index_path =  get_index_file_name(index_id, dataset);
+        index->add(n_learn, data_learn);
+        std::string index_path = get_index_file_name(index_id, dataset);
         write_index(index.get(), index_path.c_str());
+        delete data_learn;
     }
 
     if (operation == "query") {
@@ -63,12 +65,12 @@ int main(int argc, char** argv) {
         std::string dataset_path_query = dataset + "/" + dataset + "_query.fvecs";
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "Read in query dataset " << dim_query << " x " << n_query << std::endl;
-        // preview_dataset(data_query);
+        preview_dataset(data_query);
 
         std::vector<faiss::idx_t> nns(TOP_K * n_query);
         std::vector<float> dis(TOP_K * n_query);
 
-        std::string index_path =  get_index_file_name(index_id, dataset);
+        std::string index_path = get_index_file_name(index_id, dataset);
         faiss::Index* index = faiss::read_index(index_path.c_str());
         index->search(n_query, data_query, TOP_K, dis.data(), nns.data());
 

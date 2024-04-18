@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
     if (operation == "index") {
         size_t dim_learn, n_learn;
         float* data_learn;
-        std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
+        std::string dataset_path_learn = dataset + "/" + dataset + "_learn.fvecs";
         read_dataset(dataset_path_learn.c_str(), data_learn, &dim_learn, &n_learn);
         std::cout << "Learn dataset shape: " << dim_learn << " x " << n_learn << std::endl;
         preview_dataset(data_learn);

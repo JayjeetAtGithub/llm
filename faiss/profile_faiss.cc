@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
             index->train(n_learn, data_learn.data());
         }
         index->add(n_learn, data_learn.data());
-        std::string index_path =  "index." + index_id_to_name(index_id) + ".faiss";
+        std::string index_path =  get_index_file_name(index_id, dataset);
         write_index(index.get(), index_path.c_str());
     }
 
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
         std::vector<faiss::idx_t> nns(TOP_K * n_query);
         std::vector<float> dis(TOP_K * n_query);
 
-        std::string index_path =  "index." + index_id_to_name(index_id) + ".faiss";
+        std::string index_path =  get_index_file_name(index_id, dataset);
         faiss::Index* index = faiss::read_index(index_path.c_str());
         index->search(n_query, data_query, TOP_K, dis.data(), nns.data());
 

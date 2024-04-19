@@ -9,7 +9,7 @@ cd /mnt/workspace/faiss/
 git pull
 
 sudo apt-get update
-sudo apt-get install -y libopenblas-dev
+# sudo apt-get install -y libopenblas-dev
 
 rm -rf build/
 mkdir -p build/

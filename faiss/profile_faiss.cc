@@ -29,7 +29,7 @@ std::shared_ptr<faiss::Index> create_index(int index_id, size_t dim) {
 
 
 int main(int argc, char** argv) {
-    if (argc < 2) {
+    if (argc < 4) {
         std::cout << "usage: " << argv[0] << " [index_id] " << "[dataset] " << "[operation]" << std::endl;
         exit(1);
     }

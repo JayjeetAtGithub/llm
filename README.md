@@ -1,7 +1,7 @@
 # Vector Database Benchmarks
 
 In this work, we are profiling vector search operations on different indexes in different vector databases and indexing libraries. So, far we have 
-profiled Qdrant, PGVector, and DiskANN. 
+profiled Qdrant, PGVector, DiskANN, and Facebook FAISS. The dataset we use can be found [here](http://corpus-texmex.irisa.fr).
 
 1. Clone the repository
 ```bash

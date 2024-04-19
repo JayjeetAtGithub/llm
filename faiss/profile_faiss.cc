@@ -73,9 +73,7 @@ int main(int argc, char** argv) {
         std::string index_path = get_index_file_name(index_id, dataset);
         faiss::Index* index = faiss::read_index(index_path.c_str());
 
-        std::cout << "About to begin search...Start profiler in 10s !";
-        std::this_thread::sleep_for(std::chrono::seconds(10));
-
+        std::cout << "Starting search...";
 
         auto s = std::chrono::high_resolution_clock::now();
         index->search(n_query, data_query, TOP_K, dis.data(), nns.data());

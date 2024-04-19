@@ -71,7 +71,11 @@ int main(int argc, char** argv) {
 
         std::string index_path = get_index_file_name(index_id, dataset);
         faiss::Index* index = faiss::read_index(index_path.c_str());
+        auto s = std::chrono::high_resolution_clock::now();
         index->search(n_query, data_query, TOP_K, dis.data(), nns.data());
+        auto e = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff = e - s;
+        std::cout << "Search took: " << diff.count() << " s" << std::endl;
         delete data_query;
     }
 

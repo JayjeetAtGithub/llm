@@ -19,8 +19,8 @@ std::shared_ptr<faiss::Index> create_index(int index_id, size_t dim) {
     if (index_id == 0) {
         return std::make_shared<faiss::IndexFlatL2>(dim);
     } else if (index_id == 1) {
-        faiss::IndexFlatL2 quantizer(dim);
-        return std::make_shared<faiss::IndexIVFFlat>(&quantizer, dim, 100);
+        std::shared_ptr<faiss::IndexFlatL2> quantizer = std::make_shared<faiss::IndexFlatL2>(dim);
+        return std::make_shared<faiss::IndexIVFFlat>(quantizer.get(), dim, 100);
     } else if (index_id == 2) {
         return std::make_shared<faiss::IndexHNSWFlat>(dim, 32);
     }

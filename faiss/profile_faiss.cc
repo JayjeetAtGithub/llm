@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
     if (operation == "query") {
         size_t dim_query, n_query;
         float* data_query;
-        std::string dataset_path_query = dataset + "/" + dataset + "_query.fvecs";
+        std::string dataset_path_query = dataset + "/" + dataset + "_learn.fvecs";
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "Query dataset shape: " << dim_query << " x " << n_query << std::endl;
         preview_dataset(data_query);

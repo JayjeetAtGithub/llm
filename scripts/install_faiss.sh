@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-if [ ! -d "faiss" ]; then
+if [ ! -d "/mnt/workspace/faiss" ]; then
     git clone https://github.com/facebookresearch/faiss /mnt/workspace/faiss
 fi
 

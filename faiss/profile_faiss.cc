@@ -73,9 +73,9 @@ int main(int argc, char** argv) {
         std::string index_path = get_index_file_name(index_id, dataset);
         faiss::Index* index = faiss::read_index(index_path.c_str());
 
-        std::cout << "Sleeping for 5 seconds..." << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-        
+        std::cout << "Sleeping for 10 seconds..." << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+
         std::cout << "Starting search..." << std::endl;
 
         auto s = std::chrono::high_resolution_clock::now();

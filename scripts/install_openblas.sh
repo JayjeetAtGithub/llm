@@ -1,11 +1,13 @@
 #!/bin/bash
 set -ex
 
-if [ ! -d "/mnt/workspace/OpenBLAS" ]; then
-    git clone https://github.com/OpenMathLib/OpenBLAS /mnt/workspace/OpenBLAS
+workspace=$1
+
+if [ ! -d "${workspace}/OpenBLAS" ]; then
+    git clone https://github.com/OpenMathLib/OpenBLAS ${workspace}/OpenBLAS
 fi
 
-cd /mnt/workspace/OpenBLAS
+cd ${workspace}/OpenBLAS
 git pull
 
 cmake -DCMAKE_BUILD_TYPE=Debug \

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -ex
 
+workspace=$1
+
 pkill -f postgres || true
 
 sudo apt update
@@ -19,8 +21,8 @@ cd postgres/
 ./configure --enable-cassert --enable-debug CFLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer"
 sudo make -j$(nproc) install
 
-sudo mkdir -p /mnt/workspace/pgsql/data
-sudo chown noobjc /mnt/workspace/pgsql/data
+sudo mkdir -p ${workspace}/pgsql/data
+sudo chown noobjc ${workspace}/pgsql/data
 
 cd ../pgvector/
 sudo PG_CONFIG=/usr/local/pgsql/bin/pg_config make -j$(nproc) install
@@ -28,7 +30,7 @@ sudo PG_CONFIG=/usr/local/pgsql/bin/pg_config make -j$(nproc) install
 cd ../
 
 # Manual steps
-# /usr/local/pgsql/bin/initdb -D /mnt/workspace/pgsql/data
-# /usr/local/pgsql/bin/pg_ctl -D /mnt/workspace/pgsql/data -l logfile start
+# /usr/local/pgsql/bin/initdb -D ${workspace}/pgsql/data
+# /usr/local/pgsql/bin/pg_ctl -D ${workspace}/pgsql/data -l logfile start
 # /usr/local/pgsql/bin/createdb vectordb
 # /usr/local/pgsql/bin/psql vectordb

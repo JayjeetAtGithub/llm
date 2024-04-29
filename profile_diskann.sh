@@ -1,7 +1,9 @@
 #!/bin/bash
 set -ex
 
-DISKANN_HOME=/mnt/workspace/DiskANN
+workspace=$1
+
+DISKANN_HOME=${workspace}/DiskANN
 DISKANN_DATA=${DISKANN_HOME}/build/data
 
 # gist

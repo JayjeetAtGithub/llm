@@ -1,11 +1,13 @@
 #!/bin/bash
 set -ex
 
-if [ ! -d "/mnt/workspace/faiss" ]; then
-    git clone https://github.com/facebookresearch/faiss /mnt/workspace/faiss
+workspace=$1
+
+if [ ! -d "${workspace}/faiss" ]; then
+    git clone https://github.com/facebookresearch/faiss ${workspace}/faiss
 fi
 
-cd /mnt/workspace/faiss/
+cd ${workspace}/faiss/
 git pull
 
 rm -rf build/

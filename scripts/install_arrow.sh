@@ -2,6 +2,7 @@
 set -ex
 
 pwd=$PWD
+workspace=$1
 
 sudo apt update
 sudo apt install -y python3 \
@@ -13,11 +14,11 @@ sudo apt install -y python3 \
                libssl-dev \
                llvm
 
-if [ ! -d "/mnt/workspace/arrow" ]; then
-    git clone https://github.com/apache/arrow /mnt/workspace/arrow
+if [ ! -d "${workspace}/arrow" ]; then
+    git clone https://github.com/apache/arrow ${workspace}/arrow
 fi
 
-cd /mnt/workspace/arrow
+cd ${workspace}/arrow
 git checkout apache-arrow-15.0.2
 git submodule update --init --recursive
 git pull origin apache-arrow-15.0.2

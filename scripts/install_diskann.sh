@@ -1,6 +1,8 @@
 #!/bin/bash
 set -ex
 
+workspace=$1
+
 # install dependencies
 sudo apt-get update
 sudo apt-get -y install make \
@@ -21,11 +23,11 @@ sudo apt-get update
 sudo apt install intel-oneapi-mkl-devel
 
 # clone DiskANN code
-if [ ! -d "/mnt/workspace/DiskANN" ]; then
-    git clone https://github.com/microsoft/DiskANN /mnt/workspace/DiskANN
+if [ ! -d "${workspace}/DiskANN" ]; then
+    git clone https://github.com/microsoft/DiskANN ${workspace}/DiskANN
 fi
 
-cd /mnt/workspace/DiskANN
+cd ${workspace}/DiskANN
 git pull
 
 # build DiskANN

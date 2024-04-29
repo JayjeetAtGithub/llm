@@ -14,7 +14,7 @@ rm -rf build/
 mkdir -p build/
 cd build/
 
-cmake -DFAISS_ENABLE_GPU=ON \
+cmake -DFAISS_ENABLE_GPU=OFF \
       -DFAISS_ENABLE_PYTHON=OFF \
       -DBUILD_SHARED_LIBS=ON \
       -DFAISS_OPT_LEVEL=avx2 \

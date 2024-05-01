@@ -3,7 +3,7 @@ import faiss
 import numpy as np
 from datasets import DatasetSIFT1M
 
-def evaluate(index):
+def evaluate(index, k = 5):
     # for timing with a single core
     # faiss.omp_set_num_threads(1)
 

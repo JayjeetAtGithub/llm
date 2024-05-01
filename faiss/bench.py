@@ -1,7 +1,7 @@
 import time
 import faiss
 import numpy as np
-from .datasets import DatasetSIFT1M
+from datasets import DatasetSIFT1M
 
 def evaluate(index):
     # for timing with a single core

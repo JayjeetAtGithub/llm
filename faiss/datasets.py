@@ -7,8 +7,8 @@ import os
 import numpy as np
 import faiss
 
-from .vecs_io import fvecs_read, ivecs_read, bvecs_mmap, fvecs_mmap
-from .exhaustive_search import knn
+from vecs_io import fvecs_read, ivecs_read, bvecs_mmap, fvecs_mmap
+from exhaustive_search import knn
 
 class Dataset:
     """ Generic abstract class for a test dataset """

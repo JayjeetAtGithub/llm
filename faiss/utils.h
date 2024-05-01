@@ -10,7 +10,7 @@
 
 #include <sys/time.h>
 
-pid_t print_pid() {
+void print_pid() {
     std::cout << "PID: " << getpid() << std::endl;
 }
 

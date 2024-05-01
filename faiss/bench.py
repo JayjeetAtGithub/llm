@@ -35,7 +35,7 @@ if __name__ == "__main__":
     print("add")
     index.add(xb)
 
-    for efSearch in 16, 32, 64, 128, 256:
+    for efSearch in 16, 32:
         for bounded_queue in [True, False]:
             print("efSearch", efSearch, "bounded queue", bounded_queue, end=' ')
             index.hnsw.search_bounded_queue = bounded_queue

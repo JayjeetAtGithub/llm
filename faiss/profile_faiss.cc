@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
     int index_id = std::stoi(argv[1]);
     std::string dataset = argv[2];
     std::string operation = argv[3];
+    print_pid();
     std::cout << "Using index: " << index_id_to_name(index_id) << "\n";
     std::cout << "Using dataset: " << dataset << std::endl;
     std::cout << "Performing operation: " << operation << std::endl;

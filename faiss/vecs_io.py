@@ -14,7 +14,7 @@ definition of the formats here: http://corpus-texmex.irisa.fr/
 
 def ivecs_read(fname):
     a = np.fromfile(fname, dtype='int32')
-    if sys.big_endian:
+    if sys.byteorder == 'big':
         a.byteswap(inplace=True)
     d = a[0]
     return a.reshape(-1, d + 1)[:, 1:].copy()

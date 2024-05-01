@@ -123,7 +123,7 @@ for dataset_basedir in (
         break
 else:
     # users can link their data directory to `./data`
-    dataset_basedir = 'data/'
+    dataset_basedir = os.getcwd()
 
 
 class DatasetSIFT1M(Dataset):

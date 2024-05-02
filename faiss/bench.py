@@ -9,6 +9,7 @@ def evaluate(index, k = 10):
 
     t0 = time.time()
     D, I = index.search(xq, k)
+    print(D, I)
     t1 = time.time()
 
     missing_rate = (I == -1).sum() / float(k * nq)

@@ -1,6 +1,5 @@
 import time
 import faiss
-import numpy as np
 from datasets import DatasetSIFT1M
 
 def evaluate(index, k = 10):

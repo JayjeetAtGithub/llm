@@ -1,8 +1,8 @@
 import numpy as np
 
-d = 5                           # dimension
-nb = 10                      # database size
-nq = 5                       # nb of queries
+d = 1536                      # dimension
+nb = 100,000                     # database size
+nq = 10,000                       # nb of queries
 np.random.seed(1234)             # make reproducible
 xb = np.random.random((nb, d)).astype('float32')
 xb[:, 0] += np.arange(nb) / 1000.
@@ -23,6 +23,6 @@ index.add(xb)                  # add vectors to the index
 print("Searches: ")
 
 k = 1                          # we want to see 4 nearest neighbors
-D, I = index.search(xq, k)
-print(I)
-print(D)
+distances, indexes = index.search(xq, k)
+print(distances)
+print(indexes)

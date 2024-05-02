@@ -22,7 +22,7 @@ index.add(xb)                  # add vectors to the index
 
 print("Searches: ")
 
-k = 4                          # we want to see 4 nearest neighbors
+k = 1                          # we want to see 4 nearest neighbors
 D, I = index.search(xb[:5], k) # sanity check
 print(I)
 print(D)

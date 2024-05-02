@@ -1,8 +1,8 @@
 import numpy as np
 
 d = 5                           # dimension
-nb = 100                      # database size
-nq = 10                       # nb of queries
+nb = 10                      # database size
+nq = 4                       # nb of queries
 np.random.seed(1234)             # make reproducible
 xb = np.random.random((nb, d)).astype('float32')
 xb[:, 0] += np.arange(nb) / 1000.
@@ -10,7 +10,10 @@ xq = np.random.random((nq, d)).astype('float32')
 xq[:, 0] += np.arange(nq) / 1000.
 
 
+print("Dataset: ")
 print(xb)
+
+print("Queries: ")
 print(xq)
 
 import faiss                   # make faiss available

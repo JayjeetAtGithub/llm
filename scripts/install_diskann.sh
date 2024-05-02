@@ -39,4 +39,4 @@ cmake -DCMAKE_BUILD_TYPE=Debug \
       -DCMAKE_C_FLAGS="-ggdb -Og -g3 -fno-omit-frame-pointer" \
       ..
 
-make -j$(nproc)
+sudo make -j$(nproc) install

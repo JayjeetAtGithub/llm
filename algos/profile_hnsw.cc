@@ -1,6 +1,7 @@
 #include "lib/hnswlib.h"
+#include "utils.h"
 
-int main() {
+int main(int argc, char **argv) {
     std::string dataset = argv[1];
     std::string operation = argv[3];
     print_pid();

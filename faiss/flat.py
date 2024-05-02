@@ -1,6 +1,6 @@
 import numpy as np
 
-d = 64                           # dimension
+d = 8                           # dimension
 nb = 100                      # database size
 nq = 10                       # nb of queries
 np.random.seed(1234)             # make reproducible

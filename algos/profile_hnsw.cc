@@ -4,6 +4,7 @@
 int main(int argc, char **argv) {
     std::string dataset = argv[1];
     std::string operation = argv[2];
+    std::string 
     print_pid();
 
     std::cout << "Using dataset: " << dataset << std::endl;
@@ -32,12 +33,13 @@ int main(int argc, char **argv) {
     // Query the elements for themselves and measure recall
     float correct = 0;
     for (int i = 0; i < n; i++) {
-        std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data + i * dim, 10);
+        std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data + i * dim, TOP_K);
+        std::cout << result.size() << std::endl;
         hnswlib::labeltype label = result.top().second;
         if (label == i) correct++;
     }
     float recall = correct / n;
-    std::cout << "Recall@10: " << recall << "\n";
+    std::cout << "Recall@" << TOP_K << recall << "\n";
 
     delete[] data;
     delete alg_hnsw;

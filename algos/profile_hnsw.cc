@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
         hnswlib::labeltype label = result.top().second;
         if (label == i) correct++;
     }
-    float recall = correct / max_elements;
+    float recall = correct / n;
     std::cout << "Recall: " << recall << "\n";
 
     // // Serialize index

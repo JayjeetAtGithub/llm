@@ -1,7 +1,7 @@
 import numpy as np
 
 d = 1536                      # dimension
-nb = 1000000                     # database size
+nb = 100000                     # database size
 nq = 10000                       # nb of queries
 np.random.seed(1234)             # make reproducible
 xb = np.random.random((nb, d)).astype('float32')

@@ -17,6 +17,10 @@ int main(int argc, char **argv) {
     std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
     read_dataset(dataset_path_learn.c_str(), data, &dim, &n);
 
+    std::cout << "Dataset Info: " << std::endl;
+    std::cout << "Dimension: " << dim << std::endl;
+    std::cout << "Num Vectors: " << n << std::endl;
+
     // Initing index
     hnswlib::L2Space space(dim);
     hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, n, M, ef_construction);

@@ -30,11 +30,11 @@ int main(int argc, char **argv) {
     hnswlib::L2Space space(dim_learn);
     hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, n_learn, M, ef_construction);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n_learn; i++) {
         alg_hnsw->addPoint(data_learn + i * dim_learn, i);
     }
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n_query; i++) {
         std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
     }
 

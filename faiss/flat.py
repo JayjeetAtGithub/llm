@@ -2,7 +2,7 @@ import numpy as np
 
 d = 5                           # dimension
 nb = 10                      # database size
-nq = 4                       # nb of queries
+nq = 5                       # nb of queries
 np.random.seed(1234)             # make reproducible
 xb = np.random.random((nb, d)).astype('float32')
 xb[:, 0] += np.arange(nb) / 1000.

@@ -19,7 +19,8 @@ print(xq)
 import faiss                   # make faiss available
 index = faiss.IndexFlatL2(d)   # build the index
 index.add(xb)                  # add vectors to the index
-print(index.ntotal)
+
+print("Searches: ")
 
 k = 4                          # we want to see 4 nearest neighbors
 D, I = index.search(xb[:5], k) # sanity check

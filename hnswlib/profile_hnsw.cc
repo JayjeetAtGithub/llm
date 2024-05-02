@@ -3,7 +3,7 @@
 int main() {
     int dim = 1536;
     int max_elements = 10000;
-    int M = 16;
+    int M = 32;
     int ef_construction = 200;
 
     // Initing index

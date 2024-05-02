@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv) {
     std::string dataset = argv[1];
-    std::string operation = argv[3];
+    std::string operation = argv[2];
     print_pid();
 
     std::cout << "Using dataset: " << dataset << std::endl;

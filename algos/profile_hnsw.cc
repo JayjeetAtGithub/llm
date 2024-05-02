@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
     float correct = 0;
     for (int i = 0; i < n; i++) {
         std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data + i * dim, TOP_K);
-        std::cout << result.size() << std::endl;
+        std::cout << result.top() << std::endl;
         hnswlib::labeltype label = result.top().second;
         if (label == i) correct++;
     }

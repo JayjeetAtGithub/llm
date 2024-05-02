@@ -12,7 +12,7 @@
 
 #include "utils.h"
 
-#define TOP_K 5
+#define TOP_K 10
 
 
 std::shared_ptr<faiss::Index> create_index(int index_id, size_t dim) {

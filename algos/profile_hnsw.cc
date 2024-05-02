@@ -1,10 +1,11 @@
 #include "lib/hnswlib.h"
 #include "utils.h"
 
+#define TOP_K 10
+
 int main(int argc, char **argv) {
     std::string dataset = argv[1];
     std::string operation = argv[2];
-    std::string 
     print_pid();
 
     std::cout << "Using dataset: " << dataset << std::endl;

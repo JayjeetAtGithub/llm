@@ -10,7 +10,8 @@ def evaluate(index, k = 10):
     t0 = time.time()
     D, I = index.search(xq, k)
     t1 = time.time()
-    print(D, I)
+    print("D: ", D)
+    print("I: ", I)
 
     missing_rate = (I == -1).sum() / float(k * nq)
     recall_at_1 = (I == gt[:, :1]).sum() / float(nq)

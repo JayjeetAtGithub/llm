@@ -22,16 +22,13 @@ int main(int argc, char **argv) {
     std::cout << "Dimension: " << dim << std::endl;
     std::cout << "Num Vectors: " << n << std::endl;
 
-    // Initing index
     hnswlib::L2Space space(dim);
     hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, n, M, ef_construction);
 
-    // Add data to index
     for (int i = 0; i < n; i++) {
         alg_hnsw->addPoint(data + i * dim, i);
     }
 
-    // Query the elements for themselves and measure recall
     float correct = 0;
     for (int i = 0; i < n; i++) {
         std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data + i * dim, TOP_K);

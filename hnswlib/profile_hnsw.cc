@@ -1,7 +1,7 @@
 #include "lib/hnswlib.h"
 
 int main() {
-    int dim = 16;
+    int dim = 1536;
     int max_elements = 10000;
     int M = 16;
     int ef_construction = 200;

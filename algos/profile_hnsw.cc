@@ -17,7 +17,6 @@ int main(int argc, char **argv) {
     std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
     read_dataset(dataset_path_learn.c_str(), data, &dim, &n);
 
-    std::cout << "Dataset Info: " << std::endl;
     std::cout << "Dimension: " << dim << std::endl;
     std::cout << "Num Vectors: " << n << std::endl;
 
@@ -33,28 +32,12 @@ int main(int argc, char **argv) {
     // Query the elements for themselves and measure recall
     float correct = 0;
     for (int i = 0; i < n; i++) {
-        std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data + i * dim, 1);
+        std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data + i * dim, 10);
         hnswlib::labeltype label = result.top().second;
         if (label == i) correct++;
     }
     float recall = correct / n;
-    std::cout << "Recall: " << recall << "\n";
-
-    // // Serialize index
-    // std::string hnsw_path = "hnsw.bin";
-    // alg_hnsw->saveIndex(hnsw_path);
-    // delete alg_hnsw;
-
-    // // Deserialize index and check recall
-    // alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
-    // correct = 0;
-    // for (int i = 0; i < max_elements; i++) {
-    //     std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data + i * dim, 1);
-    //     hnswlib::labeltype label = result.top().second;
-    //     if (label == i) correct++;
-    // }
-    // recall = (float)correct / max_elements;
-    // std::cout << "Recall of deserialized index: " << recall << "\n";
+    std::cout << "Recall@10: " << recall << "\n";
 
     delete[] data;
     delete alg_hnsw;

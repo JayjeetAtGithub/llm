@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
         if (label == i) correct++;
     }
     float recall = correct / n;
-    std::cout << "Recall@" << TOP_K << recall << "\n";
+    std::cout << "Recall@" << TOP_K << ": " << recall << "\n";
 
     delete[] data;
     delete alg_hnsw;

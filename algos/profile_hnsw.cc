@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
             auto v1 = results_brute_map[i];
             auto v2 = results_hnsw_map[i];
             int correct = 0;            
-            for (int j = 0; j < top_k; j++) {
+            for (int j = 0; j < v2.size(); j++) {
                 if (std::find(v1.begin(), v1.end(), v2[j]) != v1.end()) {
                     correct++;
                 }

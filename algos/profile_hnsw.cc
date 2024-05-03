@@ -25,6 +25,12 @@ int main(int argc, char **argv) {
         for (int i = 0; i < n_learn; i++) {
             alg_hnsw->addPoint(data_learn + i * dim_learn, i);
         }
+
+        std::string hnsw_path = "index." + dataset + ".hnswlib";
+        alg_hnsw->saveIndex(hnsw_path);
+        
+        delete alg_hnsw;
+        delete[] data_learn;
     }
 
     if (operation == "query") {
@@ -33,13 +39,18 @@ int main(int argc, char **argv) {
         std::string dataset_path_query = dataset + "/" + dataset + "_learn.fvecs";
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "Query dataset shape: " << dim_query << " x " << n_query << std::endl;
+        
+        hnswlib::L2Space space(dim_query);
+        std::string hnsw_path = "index." + dataset + ".hnswlib";
+        hnswlib::HierarchicalNSW<float>* alg_hnswalg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
+        
         for (int i = 0; i < n_query; i++) {
             std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
         }
-    }
 
-    delete[] data_learn;
-    delete[] data_query;
-    delete alg_hnsw;
+        delete alg_hnsw;
+        delete[] data_query;
+    }
+    
     return 0;
 }

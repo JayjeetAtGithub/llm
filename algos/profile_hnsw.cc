@@ -117,6 +117,7 @@ int main(int argc, char **argv) {
         delete[] data_query;
 
         // calculate recall
+        std::vector<double> recalls(n_query);
         for (int i = 0; i < n_query; i++) {
             auto v1 = results_brute_map[i];
             auto v2 = results_hnsw_map[i];
@@ -126,8 +127,10 @@ int main(int argc, char **argv) {
                     correct++;
                 }
             }
-            std::cout << "[RECALL] recall@" << top_k << " query " << i << ": " << (float)correct / top_k << std::endl;            
+            recalls[i] = (float)correct / top_k;         
         }
+        assert(recalls.size() == n_query);
+        std::cout << "[RECALL] mean recall@" << top_k << ": " << std::accumulate(recalls.begin(), recalls.end(), 0.0) / recalls.size() << std::endl;
     }
     
     return 0;

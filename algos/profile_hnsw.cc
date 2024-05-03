@@ -117,20 +117,17 @@ int main(int argc, char **argv) {
         delete[] data_query;
 
         // calculate recall
-        int recall = 0;
         for (int i = 0; i < n_query; i++) {
             auto v1 = results_brute_map[i];
             auto v2 = results_hnsw_map[i];
-            std::sort(v1.begin(), v1.end());
-            std::sort(v2.begin(), v2.end());
-            assert(v1.size() == top_k);
-            assert(v2.size() == top_k);
-            if (v1 == v2) {
-                recall++;
+            int correct = 0;            
+            for (int j = 0; j < top_k; j++) {
+                if (std::find(v1.begin(), v1.end(), v2[j]) != v1.end()) {
+                    correct++;
+                }
             }
+            std::cout << "[RECALL] recall@" << top_k << " query " << i << ": " << (float)correct / top_k << std::endl;            
         }
-        std::cout << "[INFO] correct queries: " << recall << std::endl;
-        std::cout << "[RECALL] recall@" << top_k << ": " << (float)recall / n_query << std::endl;
     }
     
     return 0;

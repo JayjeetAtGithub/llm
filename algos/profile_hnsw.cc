@@ -52,7 +52,6 @@ int main(int argc, char **argv) {
 
         std::string brute_path = "index." + dataset + ".bruteforce";
         alg_brute->saveIndex(brute_path);
-        std::cout << "[FILESIZE] brute_force_index_size: " << alg_brute->indexFileSize() << " bytes" << std::endl;
 
         delete alg_brute;
         

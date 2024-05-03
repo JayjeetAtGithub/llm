@@ -1,6 +1,8 @@
 #include "lib/hnswlib.h"
 #include "utils.h"
 
+#define MAX_ELEMENTS 10e7
+
 int main(int argc, char **argv) {
     std::string dataset = argv[1];
     std::string operation = argv[2];
@@ -10,7 +12,7 @@ int main(int argc, char **argv) {
     std::cout << "[ARG] dataset: " << dataset << std::endl;
     std::cout << "[ARG] operation: " << operation << std::endl;
 
-    int M = 32;
+    int M = 2<<4;
     int ef_construction = 200;
 
     if (operation == "index") {
@@ -40,7 +42,7 @@ int main(int argc, char **argv) {
 
         // now doing brute force search
         std::cout << "[INFO] performing brute force indexing" << std::endl;
-        hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, 10000000);
+        hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, MAX_ELEMENTS);
 
         s = std::chrono::high_resolution_clock::now();
         #pragma omp parallel for

@@ -47,6 +47,7 @@ int main(int argc, char **argv) {
         std::string hnsw_path = "index." + dataset + ".hnswlib";
         hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
         
+        #pragma omp parallel for
         for (int i = 0; i < n_query; i++) {
             std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
         }

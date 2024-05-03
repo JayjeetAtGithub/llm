@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     print_pid();
 
     #ifdef CALC_RECALL
-        index = "hnsw_recall"
+        index = "hnsw_recall";
     #endif
 
     std::cout << "[ARG] index: " << index << std::endl;

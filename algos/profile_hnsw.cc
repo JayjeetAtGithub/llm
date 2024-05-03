@@ -1,7 +1,6 @@
 #include "lib/hnswlib.h"
 #include "utils.h"
 
-#define CALC_RECALL
 #define MAX_ELEMENTS 10e7
 
 int main(int argc, char **argv) {

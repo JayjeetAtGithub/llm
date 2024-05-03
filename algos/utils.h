@@ -3,12 +3,19 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #include <sys/time.h>
+
+std::ifstream::pos_type filesize(const char* filename)
+{
+    std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+    return in.tellg(); 
+}
 
 void print_pid() {
     std::cout << "PID: " << getpid() << std::endl;

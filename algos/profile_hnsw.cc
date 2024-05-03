@@ -19,14 +19,6 @@ int main(int argc, char **argv) {
     int M = 2<<4;
     int ef_construction = 200;
 
-
-    /*
-    
-    if(index == "hnsw") {}
-    
-    
-    */
-
     if (operation == "index") {
         size_t dim_learn, n_learn;
         float* data_learn;
@@ -84,28 +76,32 @@ int main(int argc, char **argv) {
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
 
-        std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query);
-        std::unordered_map<int, std::vector<int>> results_brute_map(n_query);
-    
+        #ifdef CALC_RECALL
+            std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query);
+            std::unordered_map<int, std::vector<int>> results_brute_map(n_query);
+            for (int i = 0; i < n_query; i++) {
+                results_hnsw_map[i] = std::vector<int>(top_k, 0);
+                results_brute_map[i] = std::vector<int>(top_k, 0);
+            }
+        #endif
+
         hnswlib::L2Space space(dim_query);
 
         if (index == "hnsw") {
             std::string hnsw_path = "index." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
 
-            for (int i = 0; i < n_query; i++) {
-                results_hnsw_map[i] = std::vector<int>(top_k, 0);
-            }
-            
             auto s = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_hnsw = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
-                for (int j = 0; j < top_k; j++) {
-                    results_hnsw_map[i][j] = result_hnsw.top().second;
-                    result_hnsw.pop();
-                }
-                assert(results_hnsw_map[i].size() == top_k);
+                #ifdef CALC_RECALL
+                    for (int j = 0; j < top_k; j++) {
+                        results_hnsw_map[i][j] = result_hnsw.top().second;
+                        result_hnsw.pop();
+                    }
+                    assert(results_hnsw_map[i].size() == top_k);
+                #endif
             }
             auto e = std::chrono::high_resolution_clock::now();
             std::cout << "[TIME] query_hnsw: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
@@ -117,19 +113,17 @@ int main(int argc, char **argv) {
             std::string brute_path = "index." + dataset + ".bruteforce";
             hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
 
-            for (int i = 0; i < n_query; i++) {
-                results_brute_map[i] = std::vector<int>(top_k, 0);
-            }
-
             auto s = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_brute = alg_brute->searchKnn(data_query + i * dim_query, top_k);
-                for (int j = 0; j < top_k; j++) {
-                    results_brute_map[i][j] = result_brute.top().second;
-                    result_brute.pop();
-                }
-                assert(results_brute_map[i].size() == top_k);
+                #ifdef CALC_RECALL
+                    for (int j = 0; j < top_k; j++) {
+                        results_brute_map[i][j] = result_brute.top().second;
+                        result_brute.pop();
+                    }
+                    assert(results_brute_map[i].size() == top_k);
+                #endif
             }
             auto e = std::chrono::high_resolution_clock::now();
             std::cout << "[TIME] query_brute: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
@@ -139,21 +133,22 @@ int main(int argc, char **argv) {
 
         delete[] data_query;
 
-        // calculate recall
-        std::vector<double> recalls(n_query);
-        for (int i = 0; i < n_query; i++) {
-            auto v1 = results_brute_map[i];
-            auto v2 = results_hnsw_map[i];
-            int correct = 0;            
-            for (int j = 0; j < v2.size(); j++) {
-                if (std::find(v1.begin(), v1.end(), v2[j]) != v1.end()) {
-                    correct++;
+        #ifdef CALC_RECALL
+            std::vector<double> recalls(n_query);
+            for (int i = 0; i < n_query; i++) {
+                auto v1 = results_brute_map[i];
+                auto v2 = results_hnsw_map[i];
+                int correct = 0;            
+                for (int j = 0; j < v2.size(); j++) {
+                    if (std::find(v1.begin(), v1.end(), v2[j]) != v1.end()) {
+                        correct++;
+                    }
                 }
+                recalls[i] = (float)correct / top_k;         
             }
-            recalls[i] = (float)correct / top_k;         
-        }
-        assert(recalls.size() == n_query);
-        std::cout << "[RECALL] mean recall@" << top_k << ": " << std::accumulate(recalls.begin(), recalls.end(), 0.0) / recalls.size() << std::endl;
+            assert(recalls.size() == n_query);
+            std::cout << "[RECALL] mean recall@" << top_k << ": " << std::accumulate(recalls.begin(), recalls.end(), 0.0) / recalls.size() << std::endl;
+        #endif
     }
     
     return 0;

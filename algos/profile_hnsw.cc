@@ -85,7 +85,6 @@ int main(int argc, char **argv) {
                 results_hnsw_map[i][j] = result_hnsw.top().second;
                 result_hnsw.pop();
             }
-            std::cout << results_hnsw_map[i].size() << std::endl;
             assert(results_hnsw_map[i].size() == top_k);
         }
         auto e = std::chrono::high_resolution_clock::now();

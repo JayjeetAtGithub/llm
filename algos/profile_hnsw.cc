@@ -83,14 +83,16 @@ int main(int argc, char **argv) {
         std::string dataset_path_query = dataset + "/" + dataset + "_learn.fvecs";
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
-        
+
+        std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query);
+        std::unordered_map<int, std::vector<int>> results_brute_map(n_query);
+    
         hnswlib::L2Space space(dim_query);
 
         if (index == "hnsw") {
             std::string hnsw_path = "index." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
 
-            std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query);
             for (int i = 0; i < n_query; i++) {
                 results_hnsw_map[i] = std::vector<int>(top_k, 0);
             }
@@ -115,12 +117,11 @@ int main(int argc, char **argv) {
             std::string brute_path = "index." + dataset + ".bruteforce";
             hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
 
-            std::unordered_map<int, std::vector<int>> results_brute_map(n_query);
             for (int i = 0; i < n_query; i++) {
                 results_brute_map[i] = std::vector<int>(top_k, 0);
             }
 
-            s = std::chrono::high_resolution_clock::now();
+            auto s = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_brute = alg_brute->searchKnn(data_query + i * dim_query, top_k);
@@ -130,7 +131,7 @@ int main(int argc, char **argv) {
                 }
                 assert(results_brute_map[i].size() == top_k);
             }
-            e = std::chrono::high_resolution_clock::now();
+            auto e = std::chrono::high_resolution_clock::now();
             std::cout << "[TIME] query_brute: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
             delete alg_brute;

@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     if (operation == "index") {
         size_t dim_learn, n_learn;
         float* data_learn;
-        std::string dataset_path_learn = dataset + "/" + dataset + "_learn.fvecs";
+        std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
         read_dataset(dataset_path_learn.c_str(), data_learn, &dim_learn, &n_learn);
         std::cout << "Learn dataset shape: " << dim_learn << " x " << n_learn << std::endl;
 
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
     if (operation == "query") {
         size_t dim_query, n_query;
         float* data_query;
-        std::string dataset_path_query = dataset + "/" + dataset + "_query.fvecs";
+        std::string dataset_path_query = dataset + "/" + dataset + "_learn.fvecs";
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "Query dataset shape: " << dim_query << " x " << n_query << std::endl;
         

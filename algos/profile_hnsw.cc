@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
     int top_k = std::stoi(argv[4]);
     print_pid();
 
-    #if CALC_RECALL
+    #ifdef CALC_RECALL
         index = "hnsw_recall"
     #endif
 

@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
         s = std::chrono::high_resolution_clock::now();
         #pragma omp parallel for
         for (int i = 0; i < n_learn; i++) {
-            alg_brute->addPoint(data_learn + i * dim_learn);
+            alg_brute->addPoint(data_learn + i * dim_learn, i);
         }
         e = std::chrono::high_resolution_clock::now();
         std::cout << "[TIME] brute_force_index: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;

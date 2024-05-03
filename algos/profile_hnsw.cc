@@ -130,6 +130,7 @@ int main(int argc, char **argv) {
                 recall++;
             }
         }
+        std::cout << "[INFO] correct queries: " << recall << std::endl;
         std::cout << "[RECALL] recall@" << top_k << ": " << (float)recall / n_query << std::endl;
     }
     

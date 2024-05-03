@@ -12,3 +12,5 @@ target_link_libraries(profile_faiss faiss)
 
 add_executable(profile_hnsw profile_hnsw.cc)
 target_link_libraries(profile_hnsw)
+
+target_compile_definitions(profile_hnsw PUBLIC CALC_RECALL=${CALC_RECALL})

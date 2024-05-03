@@ -119,11 +119,15 @@ int main(int argc, char **argv) {
         // calculate recall
         int recall = 0;
         for (int i = 0; i < n_query; i++) {
+            bool correct = true;
             for (int j = 0; j < top_k; j++) {
                 if (std::find(results_brute_map[i].begin(), results_brute_map[i].end(), results_hnsw_map[i][j]) != results_brute_map[i].end()) {
-                    recall++;
+                    correct = false;
                     break;
                 }
+            }
+            if (correct) {
+                recall++;
             }
         }
         std::cout << "[RECALL] recall@" << top_k << ": " << (float)recall / n_query << std::endl;

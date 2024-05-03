@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 
         // now doing brute force search
         std::cout << "[INFO] performing brute force indexing" << std::endl;
-        hnswlib::BruteForceSearch<float>* alg_brute = new hnswlib::BruteForceSearch<float>(&space);
+        hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space);
 
         s = std::chrono::high_resolution_clock::now();
         #pragma omp parallel for

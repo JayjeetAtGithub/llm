@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
         s = std::chrono::high_resolution_clock::now();
         #pragma omp parallel for
-        for (int i = 0; i < n_query; i++) {
+        for (int i = 0; i < n_learn; i++) {
             alg_brute->addPoint(data_learn + i * dim_learn);
         }
         e = std::chrono::high_resolution_clock::now();

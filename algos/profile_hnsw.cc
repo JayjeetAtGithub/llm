@@ -4,7 +4,10 @@
 #define MAX_ELEMENTS 10e7
 
 int main(int argc, char **argv) {
-    std::cout << "usage: " << argv[0] << " [index] " << "[dataset] " << "[operation]" << " [top_k]" << std::endl;
+    if (argc < 5) {
+        std::cout << "usage: " << argv[0] << " [index] " << "[dataset] " << "[operation]" << " [top_k]" << std::endl;
+    }
+
     std::string index = argv[1];
     std::string dataset = argv[2];
     std::string operation = argv[3];

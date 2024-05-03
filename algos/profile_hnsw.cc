@@ -22,6 +22,8 @@ int main(int argc, char **argv) {
 
         hnswlib::L2Space space(dim_learn);
         hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, n_learn, M, ef_construction);
+        
+        #pragma omp parallel for
         for (int i = 0; i < n_learn; i++) {
             alg_hnsw->addPoint(data_learn + i * dim_learn, i);
         }

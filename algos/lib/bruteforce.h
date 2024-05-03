@@ -49,6 +49,7 @@ class BruteforceSearch : public AlgorithmInterface<dist_t> {
         fstdistfunc_ = s->get_dist_func();
         dist_func_param_ = s->get_dist_func_param();
         size_per_element_ = data_size_ + sizeof(labeltype);
+        std::cout << "[INFO] allocating: " << maxElements << " x " << size_per_element_ << " : " << maxElements * size_per_element_ << " bytes" << std::endl;
         data_ = (char *) malloc(maxElements * size_per_element_);
         if (data_ == nullptr)
             throw std::runtime_error("Not enough memory: BruteforceSearch failed to allocate data");

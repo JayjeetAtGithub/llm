@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
         for (int i = 0; i < n_query; i++) {
             std::priority_queue<std::pair<float, hnswlib::labeltype>> result_hnsw = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
             for (int j = 0; j < top_k; j++) {
-                results_hnsw_map[i].push_back(result_hnsw.top().second);
+                results_hnsw_map[i].emplace_back(result_hnsw.top().second);
                 result_hnsw.pop();
             }
             assert(results_hnsw_map[i].size() == top_k);
@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
         for (int i = 0; i < n_query; i++) {
             std::priority_queue<std::pair<float, hnswlib::labeltype>> result_brute = alg_brute->searchKnn(data_query + i * dim_query, top_k);
             for (int j = 0; j < top_k; j++) {
-                results_brute_map[i].push_back(result_brute.top().second);
+                results_brute_map[i].emplace_back(result_brute.top().second);
                 result_brute.pop();
             }
             assert(results_brute_map[i].size() == top_k);

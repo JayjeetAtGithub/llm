@@ -5,7 +5,7 @@
 
 int main(int argc, char **argv) {
     if (argc < 5) {
-        std::cout << "usage: " << argv[0] << " [index] " << "[dataset] " << "[operation]" << " [top_k]" << std::endl;
+        std::cout << "usage: " << argv[0] << " [index (hnsw/brute)] " << "[dataset (siftsmall/sift/gist/bigann)] " << "[operation (index/query)]" << " [top_k]" << std::endl;
     }
 
     std::string index = argv[1];
@@ -13,6 +13,10 @@ int main(int argc, char **argv) {
     std::string operation = argv[3];
     int top_k = std::stoi(argv[4]);
     print_pid();
+
+    #if CALC_RECALL
+        index = "hnsw_recall"
+    #endif
 
     std::cout << "[ARG] index: " << index << std::endl;
     std::cout << "[ARG] dataset: " << dataset << std::endl;
@@ -31,7 +35,7 @@ int main(int argc, char **argv) {
         
         hnswlib::L2Space space(dim_learn);
 
-        if (index == "hnsw") {
+        if (index == "hnsw" || index == "hnsw_recall") {
             std::cout << "[INFO] performing hnsw indexing" << std::endl;
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, n_learn, M, ef_construction);
 
@@ -50,7 +54,7 @@ int main(int argc, char **argv) {
             delete alg_hnsw;
         }
 
-        {
+        if (index == "brute" || index == "hnsw_recall") {
             std::cout << "[INFO] performing bruteforce indexing" << std::endl;
             hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, MAX_ELEMENTS);
 
@@ -90,7 +94,7 @@ int main(int argc, char **argv) {
 
         hnswlib::L2Space space(dim_query);
 
-        if (index == "hnsw") {
+        if (index == "hnsw" || index == "hnsw_recall") {
             std::string hnsw_path = "index." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
 
@@ -112,7 +116,7 @@ int main(int argc, char **argv) {
             delete alg_hnsw;
         }
 
-        {
+        if (index == "brute" || index == "hnsw_recall") {
             std::string brute_path = "index." + dataset + ".bruteforce";
             hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
 

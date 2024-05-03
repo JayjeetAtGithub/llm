@@ -72,7 +72,10 @@ int main(int argc, char **argv) {
         std::string hnsw_path = "index." + dataset + ".hnswlib";
         hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
 
-        std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query, std::vector<int>(top_k));
+        std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query);
+        for (int i = 0; i < n_query; i++) {
+            results_hnsw_map[i] = std::vector<int>(top_k);
+        }
         
         auto s = std::chrono::high_resolution_clock::now();
         #pragma omp parallel for
@@ -92,7 +95,10 @@ int main(int argc, char **argv) {
         std::string brute_path = "index." + dataset + ".bruteforce";
         hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
 
-        std::unordered_map<int, std::vector<int>> results_brute_map(n_query, std::vector<int>(top_k));
+        std::unordered_map<int, std::vector<int>> results_brute_map(n_query);
+        for (int i = 0; i < n_query; i++) {
+            results_brute_map[i] = std::vector<int>(top_k);
+        }
 
         s = std::chrono::high_resolution_clock::now();
         #pragma omp parallel for

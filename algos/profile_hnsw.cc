@@ -40,7 +40,6 @@ int main(int argc, char **argv) {
         
         delete alg_hnsw;
 
-        // now doing brute force search
         std::cout << "[INFO] performing brute force indexing" << std::endl;
         hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, MAX_ELEMENTS);
 
@@ -92,7 +91,6 @@ int main(int argc, char **argv) {
 
         delete alg_hnsw;
 
-        // perform brute force search
         std::string brute_path = "index." + dataset + ".bruteforce";
         hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
 

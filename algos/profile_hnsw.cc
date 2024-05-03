@@ -68,14 +68,20 @@ int main(int argc, char **argv) {
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
         
         hnswlib::L2Space space(dim_query);
-        
+
         std::string hnsw_path = "index." + dataset + ".hnswlib";
         hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
+
+        std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query, std::vector<int>(top_k));
         
         auto s = std::chrono::high_resolution_clock::now();
         #pragma omp parallel for
         for (int i = 0; i < n_query; i++) {
-            std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
+            std::priority_queue<std::pair<float, hnswlib::labeltype>> result_hnsw = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
+            for (int j = 0; j < top_k; j++) {
+                results_hnsw_map[i].push_back(result_hnsw.top().second);
+                result_hnsw.pop();
+            }            
         }
         auto e = std::chrono::high_resolution_clock::now();
         std::cout << "[TIME] query_hnsw: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
@@ -85,11 +91,17 @@ int main(int argc, char **argv) {
         // perform brute force search
         std::string brute_path = "index." + dataset + ".bruteforce";
         hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
-        
+
+        std::unordered_map<int, std::vector<int>> results_brute_map(n_query, std::vector<int>(top_k));
+
         s = std::chrono::high_resolution_clock::now();
         #pragma omp parallel for
         for (int i = 0; i < n_query; i++) {
-            std::priority_queue<std::pair<float, hnswlib::labeltype>> result = alg_brute->searchKnn(data_query + i * dim_query, top_k);
+            std::priority_queue<std::pair<float, hnswlib::labeltype>> result_brute = alg_brute->searchKnn(data_query + i * dim_query, top_k);
+            for (int j = 0; j < top_k; j++) {
+                results_brute_map[i].push_back(result_brute.top().second);
+                result_brute.pop();
+            }
         }
         e = std::chrono::high_resolution_clock::now();
         std::cout << "[TIME] query_brute: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
@@ -97,6 +109,18 @@ int main(int argc, char **argv) {
         delete alg_brute;
 
         delete[] data_query;
+
+        // calculate recall
+        int recall = 0;
+        for (int i = 0; i < n_query; i++) {
+            for (int j = 0; j < top_k; j++) {
+                if (std::find(results_brute_map[i].begin(), results_brute_map[i].end(), results_hnsw_map[i][j]) != results_brute_map[i].end()) {
+                    recall++;
+                    break;
+                }
+            }
+        }
+        std::cout << "[RECALL] recall@" << top_k << ": " << (float)recall / n_query << std::endl;
     }
     
     return 0;

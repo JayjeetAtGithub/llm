@@ -84,7 +84,8 @@ int main(int argc, char **argv) {
             for (int j = 0; j < top_k; j++) {
                 results_hnsw_map[i].push_back(result_hnsw.top().second);
                 result_hnsw.pop();
-            }            
+            }
+            assert(results_hnsw_map[i].size() == top_k);
         }
         auto e = std::chrono::high_resolution_clock::now();
         std::cout << "[TIME] query_hnsw: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
@@ -108,6 +109,7 @@ int main(int argc, char **argv) {
                 results_brute_map[i].push_back(result_brute.top().second);
                 result_brute.pop();
             }
+            assert(results_brute_map[i].size() == top_k);
         }
         e = std::chrono::high_resolution_clock::now();
         std::cout << "[TIME] query_brute: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;

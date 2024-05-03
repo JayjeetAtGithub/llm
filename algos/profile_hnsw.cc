@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
 
         std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query);
         for (int i = 0; i < n_query; i++) {
-            results_hnsw_map[i] = std::vector<int>(top_k);
+            results_hnsw_map[i] = std::vector<int>(top_k, 0);
         }
         
         auto s = std::chrono::high_resolution_clock::now();
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
         for (int i = 0; i < n_query; i++) {
             std::priority_queue<std::pair<float, hnswlib::labeltype>> result_hnsw = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
             for (int j = 0; j < top_k; j++) {
-                results_hnsw_map[i].emplace_back(result_hnsw.top().second);
+                results_hnsw_map[i][j] = result_hnsw.top().second;
                 result_hnsw.pop();
             }
             std::cout << results_hnsw_map[i].size() << std::endl;
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 
         std::unordered_map<int, std::vector<int>> results_brute_map(n_query);
         for (int i = 0; i < n_query; i++) {
-            results_brute_map[i] = std::vector<int>(top_k);
+            results_brute_map[i] = std::vector<int>(top_k, 0);
         }
 
         s = std::chrono::high_resolution_clock::now();
@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
         for (int i = 0; i < n_query; i++) {
             std::priority_queue<std::pair<float, hnswlib::labeltype>> result_brute = alg_brute->searchKnn(data_query + i * dim_query, top_k);
             for (int j = 0; j < top_k; j++) {
-                results_brute_map[i].emplace_back(result_brute.top().second);
+                results_brute_map[i][j] = result_brute.top().second;
                 result_brute.pop();
             }
             assert(results_brute_map[i].size() == top_k);

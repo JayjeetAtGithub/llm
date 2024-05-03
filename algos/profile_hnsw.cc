@@ -119,6 +119,10 @@ int main(int argc, char **argv) {
         // calculate recall
         int recall = 0;
         for (int i = 0; i < n_query; i++) {
+            results_brute_map[i].sort();
+            results_hnsw_map[i].sort();
+            assert(results_brute_map[i].size() == top_k);
+            assert(results_hnsw_map[i].size() == top_k);
             if (results_brute_map[i] == results_hnsw_map[i]) {
                 recall++;
             }

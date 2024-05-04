@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
                 }
             }
             auto e = std::chrono::high_resolution_clock::now();
-            std::cout << "[TIME] query_hnsw: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
+            std::cout << "[TIME] hnsw_query: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
             delete alg_hnsw;
         }
@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
             std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(20));
 
-            std::cout << "[INFO] start query flat" << std::endl;
+            std::cout << "[INFO] starting query flat" << std::endl;
             auto s = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_flat = alg_flat->searchKnn(data_query + i * dim_query, top_k);
@@ -142,7 +142,7 @@ int main(int argc, char **argv) {
                 }
             }
             auto e = std::chrono::high_resolution_clock::now();
-            std::cout << "[TIME] query_flat: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
+            std::cout << "[TIME] flat_query: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
             delete alg_flat;
         }

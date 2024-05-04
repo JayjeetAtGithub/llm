@@ -120,6 +120,7 @@ int main(int argc, char **argv) {
         if (index == "brute" || index == "hnsw_recall") {
             std::string brute_path = "index." + dataset + ".bruteforce";
             hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
+            std::cout << "[INFO] bruteforce index loaded" << std::endl;
 
             auto s = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < n_query; i++) {

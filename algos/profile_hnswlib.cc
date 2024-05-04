@@ -110,6 +110,7 @@ int main(int argc, char **argv) {
 
             std::cout << "[INFO] starting query hnsw for " << n_query << " queries" << std::endl;
             auto s = std::chrono::high_resolution_clock::now();
+            #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_hnsw = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
                 if (index == "hnsw_recall") {
@@ -140,6 +141,7 @@ int main(int argc, char **argv) {
 
             std::cout << "[INFO] starting query flat for " << n_query << " queries" << std::endl;
             auto s = std::chrono::high_resolution_clock::now();
+            #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_flat = alg_flat->searchKnn(data_query + i * dim_query, top_k);
                 if (index == "hnsw_recall") {

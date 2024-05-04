@@ -1,7 +1,7 @@
 #include "lib/hnswlib.h"
 #include "utils.h"
 
-#define MAX_ELEMENTS 10e5
+#define MAX_ELEMENTS 10e4
 
 int main(int argc, char **argv) {
     if (argc < 5) {

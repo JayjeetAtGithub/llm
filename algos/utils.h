@@ -65,6 +65,6 @@ void read_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
     xb = fvecs_read(filename, d, n);
 }
 
-std::string get_index_file_name(std::string index, std::string dataset) {
-    return "index." + index + "." + dataset + ".faiss";
+std::string get_index_file_name(std::string index, std::string dataset, std::string lib) {
+    return "index." + index + "." + dataset + "." + lib;
 }

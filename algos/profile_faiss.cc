@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
         auto e = std::chrono::high_resolution_clock::now();
         std::cout << "[TIME] " << index << "_index: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
-        std::string index_path = get_index_file_name(index, dataset);
+        std::string index_path = get_index_file_name(index, dataset, "faiss");
         write_index(idx.get(), index_path.c_str());
         std::cout << "[FILESIZE] " << index << "_index_size: " << filesize(index_path.c_str()) << " bytes" << std::endl;
 
@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
         std::vector<faiss::idx_t> nns(top_k * n_query);
         std::vector<float> dis(top_k * n_query);
 
-        std::string index_path = get_index_file_name(index, dataset);
+        std::string index_path = get_index_file_name(index, dataset, "faiss");
         faiss::Index* idx = faiss::read_index(index_path.c_str());
         std::cout << "[INFO] " << index << " index loaded" << std::endl;
 

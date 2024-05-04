@@ -98,9 +98,10 @@ int main(int argc, char **argv) {
             std::string hnsw_path = "index." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
             std::cout << "[INFO] hnsw index loaded" << std::endl;
-            std::cout << "[INFO] Start profiler....Waiting for 20 seconds" << std::endl;
+            std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(20));
 
+            std::cout << "[INFO] starting query hnsw" << std::endl;
             auto s = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_hnsw = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
@@ -124,9 +125,10 @@ int main(int argc, char **argv) {
             std::string brute_path = "index." + dataset + ".bruteforce";
             hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
             std::cout << "[INFO] bruteforce index loaded" << std::endl;
-            std::cout << "[INFO] Start profiler....Waiting for 20 seconds" << std::endl;
+            std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(20));
 
+            std::cout << "[INFO] start query bruteforce" << std::endl;
             auto s = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_brute = alg_brute->searchKnn(data_query + i * dim_query, top_k);

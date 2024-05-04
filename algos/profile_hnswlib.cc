@@ -5,19 +5,21 @@
 
 int main(int argc, char **argv) {
     if (argc < 5) {
-        std::cout << "usage: " << argv[0] << " [index (hnsw/flat/hnsw_recall)] " << "[dataset (siftsmall/sift/gist/bigann)] " << "[operation (index/query)]" << " [top_k]" << std::endl;
+        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [mode(debug/profile)]" << std::endl;
     }
 
     std::string index = argv[1];
     std::string dataset = argv[2];
     std::string operation = argv[3];
     int top_k = std::stoi(argv[4]);
+    std::string mode = argv[5];
     print_pid();
 
     std::cout << "[ARG] index: " << index << std::endl;
     std::cout << "[ARG] dataset: " << dataset << std::endl;
     std::cout << "[ARG] operation: " << operation << std::endl;
     std::cout << "[ARG] top_k: " << top_k << std::endl;
+    std::cout << "[ARG] mode: " << mode << std::endl;
 
     int M = 2<<4;
     int ef_construction = 200;
@@ -100,8 +102,11 @@ int main(int argc, char **argv) {
             std::string hnsw_path = "index." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
             std::cout << "[INFO] hnsw index loaded" << std::endl;
-            std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(20));
+            
+            if (mode == "profile") {
+                std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(20));
+            }
 
             std::cout << "[INFO] starting query hnsw for " << n_query << " queries" << std::endl;
             auto s = std::chrono::high_resolution_clock::now();
@@ -127,8 +132,11 @@ int main(int argc, char **argv) {
             std::string flat_path = "index." + dataset + ".flat";
             hnswlib::BruteforceSearch<float>* alg_flat = new hnswlib::BruteforceSearch<float>(&space, flat_path);
             std::cout << "[INFO] flat index loaded" << std::endl;
-            std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(20));
+            
+            if (mode == "profile") {
+                std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(20));
+            }
 
             std::cout << "[INFO] starting query flat for " << n_query << " queries" << std::endl;
             auto s = std::chrono::high_resolution_clock::now();

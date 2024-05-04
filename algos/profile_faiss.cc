@@ -25,19 +25,21 @@ std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
 
 int main(int argc, char** argv) {
     if (argc < 5) {
-        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] " << "[dataset (siftsmall/sift/gist/bigann)] " << "[operation (index/query)]" << " [top_k]" << std::endl;
+        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [mode(debug/profile)]" << std::endl;
     }
 
     std::string index = argv[1];
     std::string dataset = argv[2];
     std::string operation = argv[3];
     int top_k = std::stoi(argv[4]);
+    std::string mode = argv[5];
     print_pid();
 
     std::cout << "[ARG] index: " << index << std::endl;
     std::cout << "[ARG] dataset: " << dataset << std::endl;
     std::cout << "[ARG] operation: " << operation << std::endl;
     std::cout << "[ARG] top_k: " << top_k << std::endl;
+    std::cout << "[ARG] mode: " << mode << std::endl;
 
     if (operation == "index") {
         size_t dim_learn, n_learn;
@@ -82,8 +84,11 @@ int main(int argc, char** argv) {
         std::string index_path = get_index_file_name(index, dataset);
         faiss::Index* idx = faiss::read_index(index_path.c_str());
         std::cout << "[INFO] " << index << " index loaded" << std::endl;
-        std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(20));
+
+        if (mode == "profile") {
+            std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(20));
+        }
 
         std::cout << "[INFO] starting query " << index << " for " << n_query << " queries" << std::endl;
         auto s = std::chrono::high_resolution_clock::now();

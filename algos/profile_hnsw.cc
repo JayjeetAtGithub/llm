@@ -5,7 +5,7 @@
 
 int main(int argc, char **argv) {
     if (argc < 5) {
-        std::cout << "usage: " << argv[0] << " [index (hnsw/brute/hnsw_recall)] " << "[dataset (siftsmall/sift/gist/bigann)] " << "[operation (index/query)]" << " [top_k]" << std::endl;
+        std::cout << "usage: " << argv[0] << " [index (hnsw/flat/hnsw_recall)] " << "[dataset (siftsmall/sift/gist/bigann)] " << "[operation (index/query)]" << " [top_k]" << std::endl;
     }
 
     std::string index = argv[1];
@@ -50,23 +50,23 @@ int main(int argc, char **argv) {
             delete alg_hnsw;
         }
 
-        if (index == "brute" || index == "hnsw_recall") {
-            std::cout << "[INFO] performing bruteforce indexing" << std::endl;
-            hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, MAX_ELEMENTS);
+        if (index == "flat" || index == "hnsw_recall") {
+            std::cout << "[INFO] performing flat indexing" << std::endl;
+            hnswlib::BruteforceSearch<float>* alg_flat = new hnswlib::BruteforceSearch<float>(&space, MAX_ELEMENTS);
 
             auto s = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for
             for (int i = 0; i < n_learn; i++) {
-                alg_brute->addPoint(data_learn + i * dim_learn, i);
+                alg_flat->addPoint(data_learn + i * dim_learn, i);
             }
             auto e = std::chrono::high_resolution_clock::now();
-            std::cout << "[TIME] brute_force_index: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
+            std::cout << "[TIME] flat_index: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
-            std::string brute_path = "index." + dataset + ".bruteforce";
-            alg_brute->saveIndex(brute_path);
-            std::cout << "[FILESIZE] brute_force_index_size: " << filesize(brute_path.c_str()) << " bytes" << std::endl;
+            std::string flat_path = "index." + dataset + ".flat";
+            alg_flat->saveIndex(flat_path);
+            std::cout << "[FILESIZE] flat_index_size: " << filesize(flat_path.c_str()) << " bytes" << std::endl;
 
-            delete alg_brute;
+            delete alg_flat;
         }
         
         delete[] data_learn;
@@ -80,14 +80,14 @@ int main(int argc, char **argv) {
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
 
         std::unordered_map<int, std::vector<int>> results_hnsw_map;
-        std::unordered_map<int, std::vector<int>> results_brute_map;
+        std::unordered_map<int, std::vector<int>> results_flat_map;
 
         if (index == "hnsw_recall") {
             results_hnsw_map.reserve(n_query);
-            results_brute_map.reserve(n_query);
+            results_flat_map.reserve(n_query);
             for (int i = 0; i < n_query; i++) {
                 results_hnsw_map[i] = std::vector<int>(top_k, 0);
-                results_brute_map[i] = std::vector<int>(top_k, 0);
+                results_flat_map[i] = std::vector<int>(top_k, 0);
             }
         }
 
@@ -120,31 +120,31 @@ int main(int argc, char **argv) {
             delete alg_hnsw;
         }
 
-        if (index == "brute" || index == "hnsw_recall") {
+        if (index == "flat" || index == "hnsw_recall") {
             n_query = 100;
-            std::string brute_path = "index." + dataset + ".bruteforce";
-            hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
-            std::cout << "[INFO] bruteforce index loaded" << std::endl;
+            std::string flat_path = "index." + dataset + ".flat";
+            hnswlib::BruteforceSearch<float>* alg_flat = new hnswlib::BruteforceSearch<float>(&space, flat_path);
+            std::cout << "[INFO] flat index loaded" << std::endl;
             std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(20));
 
-            std::cout << "[INFO] start query bruteforce" << std::endl;
+            std::cout << "[INFO] start query flat" << std::endl;
             auto s = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < n_query; i++) {
-                std::priority_queue<std::pair<float, hnswlib::labeltype>> result_brute = alg_brute->searchKnn(data_query + i * dim_query, top_k);
+                std::priority_queue<std::pair<float, hnswlib::labeltype>> result_flat = alg_flat->searchKnn(data_query + i * dim_query, top_k);
                 if (index == "hnsw_recall") {
                     std::cout << "[INFO] saving kNN result for recall calculation" << std::endl;
                     for (int j = 0; j < top_k; j++) {
-                        results_brute_map[i][j] = result_brute.top().second;
-                        result_brute.pop();
+                        results_flat_map[i][j] = result_flat.top().second;
+                        result_flat.pop();
                     }
-                    assert(results_brute_map[i].size() == top_k);
+                    assert(results_flat_map[i].size() == top_k);
                 }
             }
             auto e = std::chrono::high_resolution_clock::now();
-            std::cout << "[TIME] query_brute: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
+            std::cout << "[TIME] query_flat: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
-            delete alg_brute;
+            delete alg_flat;
         }
 
         delete[] data_query;
@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
             std::cout << "[INFO] calculating recall@" << top_k << std::endl;
             std::vector<double> recalls(n_query);
             for (int i = 0; i < n_query; i++) {
-                auto v1 = results_brute_map[i];
+                auto v1 = results_flat_map[i];
                 auto v2 = results_hnsw_map[i];
                 int correct = 0;            
                 for (int j = 0; j < v2.size(); j++) {

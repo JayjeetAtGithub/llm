@@ -29,19 +29,21 @@ std::shared_ptr<faiss::Index> create_index(int index_id, size_t dim) {
 
 
 int main(int argc, char** argv) {
-    if (argc < 4) {
-        std::cout << "usage: " << argv[0] << " [index_id] " << "[dataset] " << "[operation]" << std::endl;
-        exit(1);
+    if (argc < 5) {
+        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] " << "[dataset (siftsmall/sift/gist/bigann)] " << "[operation (index/query)]" << " [top_k]" << std::endl;
     }
 
-    int index_id = std::stoi(argv[1]);
+    std::string index = argv[1];
     std::string dataset = argv[2];
     std::string operation = argv[3];
+    int top_k = std::stoi(argv[4]);
     print_pid();
-    std::cout << "Using index: " << index_id_to_name(index_id) << "\n";
-    std::cout << "Using dataset: " << dataset << std::endl;
-    std::cout << "Performing operation: " << operation << std::endl;
-    
+
+    std::cout << "[ARG] index: " << index << std::endl;
+    std::cout << "[ARG] dataset: " << dataset << std::endl;
+    std::cout << "[ARG] operation: " << operation << std::endl;
+    std::cout << "[ARG] top_k: " << top_k << std::endl;
+
     if (operation == "index") {
         size_t dim_learn, n_learn;
         float* data_learn;

@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
         preview_dataset(data_query);
 
         if (index == "hnsw") {
-            n_query = 100000;
+            n_query = 500000;
         } else {
             n_query = 100;
         }

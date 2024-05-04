@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
 
-        n_query = 100000;
+        n_query = 1000;
 
         std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query);
         std::unordered_map<int, std::vector<int>> results_brute_map(n_query);

@@ -99,6 +99,8 @@ int main(int argc, char **argv) {
             std::string hnsw_path = "index." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
             std::cout << "[INFO] hnsw index loaded" << std::endl;
+            std::cout << "[INFO] Start profiler....Waiting for 20 seconds" << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(20));
 
             auto s = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < n_query; i++) {
@@ -122,6 +124,8 @@ int main(int argc, char **argv) {
             std::string brute_path = "index." + dataset + ".bruteforce";
             hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
             std::cout << "[INFO] bruteforce index loaded" << std::endl;
+            std::cout << "[INFO] Start profiler....Waiting for 20 seconds" << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(20));
 
             auto s = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < n_query; i++) {

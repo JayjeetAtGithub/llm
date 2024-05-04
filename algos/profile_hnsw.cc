@@ -98,6 +98,7 @@ int main(int argc, char **argv) {
         if (index == "hnsw" || index == "hnsw_recall") {
             std::string hnsw_path = "index." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
+            std::cout << "[INFO] hnsw index loaded" << std::endl;
 
             auto s = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < n_query; i++) {

@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
         std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(20));
 
-        std::cout << "[INFO] starting query " << index << std::endl;
+        std::cout << "[INFO] starting query " << index << " for " << n_query << " queries" << std::endl;
         auto s = std::chrono::high_resolution_clock::now();
         idx->search(n_query, data_query, TOP_K, dis.data(), nns.data());
         auto e = std::chrono::high_resolution_clock::now();

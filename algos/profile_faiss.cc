@@ -15,13 +15,10 @@
 #define TOP_K 10
 
 
-std::shared_ptr<faiss::Index> create_index(int index_id, size_t dim) {
-    if (index_id == 0) {
+std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
+    if (index == "flat") {
         return std::make_shared<faiss::IndexFlatL2>(dim);
-    } else if (index_id == 1) {
-        std::shared_ptr<faiss::IndexFlatL2> quantizer = std::make_shared<faiss::IndexFlatL2>(dim);
-        return std::make_shared<faiss::IndexIVFFlat>(quantizer.get(), dim, 100);
-    } else if (index_id == 2) {
+    } else if (index == "hnsw") {
         return std::make_shared<faiss::IndexHNSWFlat>(dim, 32);
     }
     return nullptr;
@@ -52,13 +49,10 @@ int main(int argc, char** argv) {
         std::cout << "Learn dataset shape: " << dim_learn << " x " << n_learn << std::endl;
         preview_dataset(data_learn);
 
-        std::shared_ptr<faiss::Index> index = create_index(index_id, dim_learn);
-        if (index_id == 1) {
-            index->train(n_learn, data_learn);
-        }
-        index->add(n_learn, data_learn);
-        std::string index_path = get_index_file_name(index_id, dataset);
-        write_index(index.get(), index_path.c_str());
+        std::shared_ptr<faiss::Index> idx = create_index(index, dim_learn);
+        idx->add(n_learn, data_learn);
+        std::string index_path = get_index_file_name(index, dataset);
+        write_index(idx.get(), index_path.c_str());
         delete data_learn;
     }
 
@@ -73,8 +67,8 @@ int main(int argc, char** argv) {
         std::vector<faiss::idx_t> nns(TOP_K * n_query);
         std::vector<float> dis(TOP_K * n_query);
 
-        std::string index_path = get_index_file_name(index_id, dataset);
-        faiss::Index* index = faiss::read_index(index_path.c_str());
+        std::string index_path = get_index_file_name(index, dataset);
+        faiss::Index* idx = faiss::read_index(index_path.c_str());
 
         std::cout << "Sleeping for 20 seconds..." << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(20));
@@ -82,7 +76,7 @@ int main(int argc, char** argv) {
         std::cout << "Starting search..." << std::endl;
 
         auto s = std::chrono::high_resolution_clock::now();
-        index->search(n_query, data_query, TOP_K, dis.data(), nns.data());
+        idx->search(n_query, data_query, TOP_K, dis.data(), nns.data());
         auto e = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> diff = e - s;
         std::cout << "Search took: " << diff.count() << " s" << std::endl;

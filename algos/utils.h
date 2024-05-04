@@ -65,17 +65,6 @@ void read_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
     xb = fvecs_read(filename, d, n);
 }
 
-std::string index_id_to_name(int index_id) {
-    if (index_id == 0) {
-        return "IndexFlatL2";
-    } else if (index_id == 1) {
-        return "IndexIVFFlat";
-    } else if (index_id == 2) {
-        return "IndexHNSWFlat";
-    }
-    return "Unknown";
-}
-
-std::string get_index_file_name(int index_id, std::string dataset) {
-    return "index." + index_id_to_name(index_id) + "." + dataset + ".faiss";
+std::string get_index_file_name(std::string index, std::string dataset) {
+    return "index." + index + "." + dataset + ".faiss";
 }

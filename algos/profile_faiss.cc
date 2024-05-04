@@ -72,9 +72,7 @@ int main(int argc, char** argv) {
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
         preview_dataset(data_query);
 
-        if (index == "hnsw") {
-            n_query = 500000;
-        } else {
+        if (index == "flat") {
             n_query = 100;
         }
 

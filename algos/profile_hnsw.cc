@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
 
-        n_query = 1000;
+        n_query = 10000;
 
         std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query);
         std::unordered_map<int, std::vector<int>> results_brute_map(n_query);
@@ -95,7 +95,6 @@ int main(int argc, char **argv) {
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
 
             auto s = std::chrono::high_resolution_clock::now();
-            #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_hnsw = alg_hnsw->searchKnn(data_query + i * dim_query, top_k);
                 if (index == "hnsw_recall") {
@@ -118,7 +117,6 @@ int main(int argc, char **argv) {
             hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
 
             auto s = std::chrono::high_resolution_clock::now();
-            #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_brute = alg_brute->searchKnn(data_query + i * dim_query, top_k);
                 if (index == "hnsw_recall") {

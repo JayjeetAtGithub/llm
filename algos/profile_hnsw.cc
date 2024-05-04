@@ -79,8 +79,6 @@ int main(int argc, char **argv) {
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
 
-        n_query = 100;
-
         std::unordered_map<int, std::vector<int>> results_hnsw_map;
         std::unordered_map<int, std::vector<int>> results_brute_map;
 
@@ -96,6 +94,7 @@ int main(int argc, char **argv) {
         hnswlib::L2Space space(dim_query);
 
         if (index == "hnsw" || index == "hnsw_recall") {
+            n_query = 10000;
             std::string hnsw_path = "index." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
             std::cout << "[INFO] hnsw index loaded" << std::endl;
@@ -121,6 +120,7 @@ int main(int argc, char **argv) {
         }
 
         if (index == "brute" || index == "hnsw_recall") {
+            n_query = 100;
             std::string brute_path = "index." + dataset + ".bruteforce";
             hnswlib::BruteforceSearch<float>* alg_brute = new hnswlib::BruteforceSearch<float>(&space, brute_path);
             std::cout << "[INFO] bruteforce index loaded" << std::endl;

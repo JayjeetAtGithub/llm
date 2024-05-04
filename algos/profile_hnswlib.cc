@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
         hnswlib::L2Space space(dim_query);
 
         if (index == "hnsw" || index == "hnsw_recall") {
-            n_query = 100000;
+            n_query = 500000;
             std::string hnsw_path = "index." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
             std::cout << "[INFO] hnsw index loaded" << std::endl;

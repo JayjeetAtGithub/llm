@@ -12,8 +12,6 @@
 
 #include "utils.h"
 
-#define TOP_K 10
-
 
 std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
     int M = 2<<4;
@@ -78,8 +76,8 @@ int main(int argc, char** argv) {
             n_query = 100;
         }
 
-        std::vector<faiss::idx_t> nns(TOP_K * n_query);
-        std::vector<float> dis(TOP_K * n_query);
+        std::vector<faiss::idx_t> nns(top_k * n_query);
+        std::vector<float> dis(top_k * n_query);
 
         std::string index_path = get_index_file_name(index, dataset);
         faiss::Index* idx = faiss::read_index(index_path.c_str());
@@ -89,7 +87,7 @@ int main(int argc, char** argv) {
 
         std::cout << "[INFO] starting query " << index << " for " << n_query << " queries" << std::endl;
         auto s = std::chrono::high_resolution_clock::now();
-        idx->search(n_query, data_query, TOP_K, dis.data(), nns.data());
+        idx->search(n_query, data_query, top_k, dis.data(), nns.data());
         auto e = std::chrono::high_resolution_clock::now();
         std::cout << "[TIME] " << index  << "_query: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 

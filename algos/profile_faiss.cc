@@ -72,6 +72,12 @@ int main(int argc, char** argv) {
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
         preview_dataset(data_query);
 
+        if (index == "hnsw") {
+            n_query = 100000;
+        } else {
+            n_query = 100;
+        }
+
         std::vector<faiss::idx_t> nns(TOP_K * n_query);
         std::vector<float> dis(TOP_K * n_query);
 

@@ -81,11 +81,16 @@ int main(int argc, char **argv) {
 
         n_query = 100;
 
-        std::unordered_map<int, std::vector<int>> results_hnsw_map(n_query);
-        std::unordered_map<int, std::vector<int>> results_brute_map(n_query);
-        for (int i = 0; i < n_query; i++) {
-            results_hnsw_map[i] = std::vector<int>(top_k, 0);
-            results_brute_map[i] = std::vector<int>(top_k, 0);
+        std::unordered_map<int, std::vector<int>> results_hnsw_map;
+        std::unordered_map<int, std::vector<int>> results_brute_map;
+
+        if (index == "hnsw_recall") {
+            results_hnsw_map.reserve(n_query);
+            results_brute_map.reserve(n_query);
+            for (int i = 0; i < n_query; i++) {
+                results_hnsw_map[i] = std::vector<int>(top_k, 0);
+                results_brute_map[i] = std::vector<int>(top_k, 0);
+            }
         }
 
         hnswlib::L2Space space(dim_query);

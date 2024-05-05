@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
         preview_dataset(data_query);
 
         if (index == "flat") {
-            n_query = 10;
+            n_query = 100;
         }
 
         std::vector<faiss::idx_t> nns(top_k * n_query);

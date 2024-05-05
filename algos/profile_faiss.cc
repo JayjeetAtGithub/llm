@@ -18,7 +18,10 @@ std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
     if (index == "flat") {
         return std::make_shared<faiss::IndexFlatL2>(dim);
     } else if (index == "hnsw") {
-        return std::make_shared<faiss::IndexHNSWFlat>(dim, M);
+        auto idx = std::make_shared<faiss::IndexHNSWFlat>(dim, M);
+        idx->hnsw.efConstruction = 40;
+        idx->hnsw.efSearch = 16;
+        return idx;
     }
     return nullptr;
 }

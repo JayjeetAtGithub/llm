@@ -22,7 +22,8 @@ int main(int argc, char **argv) {
     std::cout << "[ARG] mode: " << mode << std::endl;
 
     int M = 2<<4;
-    int ef_construction = 200;
+    int ef_construction = 40;
+    int ef_search = 16;
 
     if (operation == "index") {
         size_t dim_learn, n_learn;
@@ -37,6 +38,7 @@ int main(int argc, char **argv) {
         if (index == "hnsw" || index == "hnsw_recall") {
             std::cout << "[INFO] performing hnsw indexing" << std::endl;
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, n_learn, M, ef_construction);
+            alg_hnsw->setEf(ef_search);
 
             auto s = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for

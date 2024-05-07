@@ -7,7 +7,7 @@ if __name__ == "__main__":
     for thread in threads:
         os.environ["OMP_NUM_THREADS"] = str(thread)
         output = subprocess.run(["./bin/profile_hnswlib", "hnsw", "gist", "query", "10", "debug"], capture_output=True)
-        time = output.stdout.splitlines()[:-1]
+        time = output.stdout.splitlines()[-1:]
         print(time)
 
 

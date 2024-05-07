@@ -22,5 +22,5 @@ if __name__ == "__main__":
             })
 
     print(data)
-    with open("hnswlib_parallelism.json", "w") as f:
+    with open(f"hnswlib_parallelism_{mode}.json", "w") as f:
         json.dump(data, f)

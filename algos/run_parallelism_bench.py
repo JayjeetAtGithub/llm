@@ -4,7 +4,7 @@ import subprocess
 
 if __name__ == "__main__":
     # search
-    data = {}
+    data = []
     threads = [32, 16]
     for thread in threads:
         for _ in range(3):
@@ -12,14 +12,15 @@ if __name__ == "__main__":
             output = subprocess.run(["./bin/profile_hnswlib", "hnsw", "gist", "query", "10", "debug"], capture_output=True)
             time = output.stdout.splitlines()[-1:]
             time_int = int(time[0].decode("utf-8").split()[2]) # ms
-            if thread not in data:
-                data[thread] = []
-            data[thread].append(time_int)
+            data.append({
+                "thread": thread,
+                "time": time_int
+            })
     
     print(data)
 
     # indexing  
-    data = {}
+    data = []
     threads = [32, 16]
     for thread in threads:
         for _ in range(3):
@@ -27,8 +28,9 @@ if __name__ == "__main__":
             output = subprocess.run(["./bin/profile_hnswlib", "hnsw", "gist", "index", "debug"], capture_output=True)
             time = output.stdout.splitlines()[-1:]
             time_int = int(time[0].decode("utf-8").split()[2])
-            if thread not in data:
-                data[thread] = []
-            data[thread].append(time_int)
+            data.append({
+                "thread": thread,
+                "time": time_int
+            })
     
     print(data)

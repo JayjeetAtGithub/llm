@@ -17,13 +17,13 @@ if __name__ == "__main__":
             print(output.stdout)
             time = output.stdout.splitlines()[-2]
             print(time)
-            # time_int = int(time[0].decode("utf-8").split()[2]) # ms
-    #         print(f"Thread: {thread}, Time: {time_int}")
-    #         data.append({
-    #             "thread": thread,
-    #             "time": time_int
-    #         })
+            time_int = int(time.decode("utf-8").split()[2]) # ms
+            print(f"Thread: {thread}, Time: {time_int}")
+            data.append({
+                "thread": thread,
+                "time": time_int
+            })
 
-    # print(data)
-    # with open(f"hnswlib_parallelism_{mode}.json", "w") as f:
-    #     json.dump(data, f)
+    print(data)
+    with open(f"hnswlib_parallelism_{mode}.json", "w") as f:
+        json.dump(data, f)

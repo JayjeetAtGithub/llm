@@ -15,7 +15,8 @@ if __name__ == "__main__":
             os.environ["OMP_NUM_THREADS"] = str(thread)
             output = subprocess.run(["./bin/profile_hnswlib", "hnsw", "gist", mode, "10", "debug"], capture_output=True)
             print(output.stdout)
-            time = output.stdout.splitlines()[-2]
+            time = output.stdout.splitlines()
+            print(time)
             time_int = int(time[0].decode("utf-8").split()[2]) # ms
             print(f"Thread: {thread}, Time: {time_int}")
             data.append({

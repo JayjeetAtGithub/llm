@@ -16,6 +16,7 @@ if __name__ == "__main__":
             output = subprocess.run(["./bin/profile_hnswlib", "hnsw", "gist", mode, "10", "debug"], capture_output=True)
             time = output.stdout.splitlines()[-1:]
             time_int = int(time[0].decode("utf-8").split()[2]) # ms
+            print(f"Thread: {thread}, Time: {time_int}")
             data.append({
                 "thread": thread,
                 "time": time_int

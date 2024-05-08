@@ -28,7 +28,7 @@ std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
 
 int main(int argc, char** argv) {
     if (argc < 5) {
-        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [mode(debug/profile)]" << std::endl;
+        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [mode(debug/profile)] [batching(y/n)]" << std::endl;
     }
 
     std::string index = argv[1];
@@ -36,6 +36,7 @@ int main(int argc, char** argv) {
     std::string operation = argv[3];
     int top_k = std::stoi(argv[4]);
     std::string mode = argv[5];
+    std::string batching = argv[6];
     print_pid();
 
     std::cout << "[ARG] index: " << index << std::endl;
@@ -43,6 +44,7 @@ int main(int argc, char** argv) {
     std::cout << "[ARG] operation: " << operation << std::endl;
     std::cout << "[ARG] top_k: " << top_k << std::endl;
     std::cout << "[ARG] mode: " << mode << std::endl;
+    std::cout << "[ARG] batching: " << batching << std::endl;
 
     if (operation == "index") {
         size_t dim_learn, n_learn;
@@ -56,7 +58,14 @@ int main(int argc, char** argv) {
         std::shared_ptr<faiss::Index> idx = create_index(index, dim_learn);
         
         auto s = std::chrono::high_resolution_clock::now();
-        idx->add(n_learn, data_learn);
+        if (batching == "y") {
+            // insert  the data in batches of 1000
+            for (int i = 0; i < n_learn; i += 1000) {
+                idx->add(n, data_learn + i * dim_learn);
+            }
+        } else {
+            idx->add(n_learn, data_learn);
+        }
         auto e = std::chrono::high_resolution_clock::now();
         std::cout << "[TIME] " << index << "_index: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
@@ -93,7 +102,14 @@ int main(int argc, char** argv) {
 
         std::cout << "[INFO] starting query " << index << " for " << n_query << " queries" << std::endl;
         auto s = std::chrono::high_resolution_clock::now();
-        idx->search(n_query, data_query, top_k, dis.data(), nns.data());
+        if (batching == "y") {
+            // search in batches of 1000
+            for (int i = 0; i < n_query; i += 1000) {
+                idx->search(1000, data_query + i * dim_query, top_k, dis.data() + i * top_k, nns.data() + i * top_k);
+            }
+        } else {
+            idx->search(n_query, data_query, top_k, dis.data(), nns.data());
+        }
         auto e = std::chrono::high_resolution_clock::now();
         std::cout << "[TIME] " << index  << "_query: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 

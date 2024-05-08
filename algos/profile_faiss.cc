@@ -61,6 +61,7 @@ int main(int argc, char** argv) {
         
         auto s = std::chrono::high_resolution_clock::now();
         if (batching == "y") {
+            std::cout << "[INFO] batching enabled with batch_size: " << batch_size << std::endl;
             for (int i = 0; i < n_learn; i += batch_size) {
                 idx->add(batch_size, data_learn + i * dim_learn);
             }
@@ -104,6 +105,7 @@ int main(int argc, char** argv) {
         std::cout << "[INFO] starting query " << index << " for " << n_query << " queries" << std::endl;
         auto s = std::chrono::high_resolution_clock::now();
         if (batching == "y") {
+            std::cout << "[INFO] batching enabled with batch_size: " << batch_size << std::endl;
             for (int i = 0; i < n_query; i += batch_size) {
                 idx->search(batch_size, data_query + i * dim_query, top_k, dis.data() + i * top_k, nns.data() + i * top_k);
             }

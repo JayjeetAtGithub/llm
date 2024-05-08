@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
         if (batching == "y") {
             // insert  the data in batches of 1000
             for (int i = 0; i < n_learn; i += 1000) {
-                idx->add(n, data_learn + i * dim_learn);
+                idx->add(1000, data_learn + i * dim_learn);
             }
         } else {
             idx->add(n_learn, data_learn);

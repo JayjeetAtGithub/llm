@@ -90,6 +90,10 @@ int main(int argc, char** argv) {
             n_query = 100;
         }
 
+        // temp
+        n_query = 100;
+        // temp
+
         std::vector<faiss::idx_t> nns(top_k * n_query);
         std::vector<float> dis(top_k * n_query);
 

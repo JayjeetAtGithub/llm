@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
         df = pd.DataFrame(data)
 
-        sns.barplot(x="thread", y="time", data=df, errorbar="sd", err_kws={'linewidth': 1.5}, capsize=.1)
+        sns.barplot(x="thread", y="time", data=df, errorbar="sd", err_kws={'linewidth': 0.6}, capsize=.1, color="orange")
         plt.xlabel("No. of Threads")
         plt.ylabel("Time (ms)")
         plt.title("Indexing Duration vs Parallelism")

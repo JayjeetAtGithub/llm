@@ -112,6 +112,7 @@ int main(int argc, char** argv) {
         if (batching == "y") {
             std::cout << "[INFO] batching enabled with batch_size: " << batch_size << std::endl;
             for (int i = 0; i < n_query; i += batch_size) {
+                std::cout << "[INFO] querying batch: " << i << std::endl;
                 idx->search(batch_size, data_query + i * dim_query, top_k, dis.data() + i * top_k, nns.data() + i * top_k);
             }
         } else {

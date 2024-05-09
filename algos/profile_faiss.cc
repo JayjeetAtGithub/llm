@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
         }
 
         // temp
-        n_query = 1000;
+        n_query = 10000;
         // temp
 
         std::vector<faiss::idx_t> nns(top_k * n_query);

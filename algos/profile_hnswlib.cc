@@ -4,8 +4,9 @@
 #define MAX_ELEMENTS 10e5
 
 int main(int argc, char **argv) {
-    if (argc < 5) {
+    if (argc < 6) {
         std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [mode(debug/profile)]" << std::endl;
+        exit(1);
     }
 
     std::string index = argv[1];

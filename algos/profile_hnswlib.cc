@@ -41,6 +41,11 @@ int main(int argc, char **argv) {
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, n_learn, M, ef_construction);
             alg_hnsw->setEf(ef_search);
 
+            if (mode == "profile") {
+                std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(20));
+            }
+
             auto s = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for
             for (int i = 0; i < n_learn; i++) {

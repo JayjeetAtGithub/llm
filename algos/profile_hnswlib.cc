@@ -33,6 +33,8 @@ int main(int argc, char **argv) {
         read_dataset(dataset_path_learn.c_str(), data_learn, &dim_learn, &n_learn);
         std::cout << "[INFO] learn dataset shape: " << dim_learn << " x " << n_learn << std::endl;
         preview_dataset(data_learn);
+
+        n_learn = 100;
         
         hnswlib::L2Space space(dim_learn);
 

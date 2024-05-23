@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
 
         if (index == "flat" || index == "hnsw_recall") {
             std::cout << "[INFO] performing flat indexing" << std::endl;
-            hnswlib::BruteforceSearch<float>* alg_flat = new hnswlib::BruteforceSearch<float>(&space, MAX_ELEMENTS);
+            hnswlib::BruteforceSearch<float>* alg_flat = new hnswlib::BruteforceSearch<float>(&space, n_learn);
 
             auto s = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for

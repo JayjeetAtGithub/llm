@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
             auto e = std::chrono::high_resolution_clock::now();
             std::cout << "[TIME] hnsw_index: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
-            std::string hnsw_path = "index.hnsw." + dataset + "." + lib;
+            std::string hnsw_path = "index.hnsw." + dataset + ".hnswlib";
             alg_hnsw->saveIndex(hnsw_path);
             std::cout << "[FILESIZE] hnsw_index_size: " << alg_hnsw->indexFileSize() << " bytes" << std::endl;
             
@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
             auto e = std::chrono::high_resolution_clock::now();
             std::cout << "[TIME] flat_index: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
-            std::string flat_path = "index.flat." + dataset + "." + lib;
+            std::string flat_path = "index.flat." + dataset + ".hnswlib";
             alg_flat->saveIndex(flat_path);
             std::cout << "[FILESIZE] flat_index_size: " << filesize(flat_path.c_str()) << " bytes" << std::endl;
 
@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
         hnswlib::L2Space space(dim_query);
 
         if (index == "hnsw" || index == "hnsw_recall") {
-            std::string hnsw_path = "index.hnsw." + dataset + "." + lib;
+            std::string hnsw_path = "index.hnsw." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
             std::cout << "[INFO] hnsw index loaded" << std::endl;
             
@@ -140,7 +140,7 @@ int main(int argc, char **argv) {
         }
 
         if (index == "flat" || index == "hnsw_recall") {
-            std::string flat_path = "index.flat." + dataset + "." + lib;
+            std::string flat_path = "index.flat." + dataset + ".hnswlib";
             hnswlib::BruteforceSearch<float>* alg_flat = new hnswlib::BruteforceSearch<float>(&space, flat_path);
             std::cout << "[INFO] flat index loaded" << std::endl;
             

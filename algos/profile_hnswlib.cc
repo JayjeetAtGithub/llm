@@ -31,12 +31,11 @@ int main(int argc, char **argv) {
         float* data_learn;
         std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
         read_dataset(dataset_path_learn.c_str(), data_learn, &dim_learn, &n_learn);
+        n_learn = 100 * 1000;
         std::cout << "[INFO] learn dataset shape: " << dim_learn << " x " << n_learn << std::endl;
         preview_dataset(data_learn);
         
         hnswlib::L2Space space(dim_learn);
-
-        n_learn = 100000;
 
         if (index == "hnsw" || index == "hnsw_recall") {
             std::cout << "[INFO] performing hnsw indexing" << std::endl;

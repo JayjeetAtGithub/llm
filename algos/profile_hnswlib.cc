@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
             auto e = std::chrono::high_resolution_clock::now();
             std::cout << "[TIME] hnsw_index: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
-            std::string hnsw_path = get_index_file_name(index, dataset, "hnswlib");
+            std::string hnsw_path = "index.hnsw." + dataset + "." + lib;
             alg_hnsw->saveIndex(hnsw_path);
             std::cout << "[FILESIZE] hnsw_index_size: " << alg_hnsw->indexFileSize() << " bytes" << std::endl;
             
@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
             auto e = std::chrono::high_resolution_clock::now();
             std::cout << "[TIME] flat_index: " << std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count() << " ms" << std::endl;
 
-            std::string flat_path = get_index_file_name(index, dataset, "hnswlib");
+            std::string flat_path = "index.flat." + dataset + "." + lib;
             alg_flat->saveIndex(flat_path);
             std::cout << "[FILESIZE] flat_index_size: " << filesize(flat_path.c_str()) << " bytes" << std::endl;
 
@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
         hnswlib::L2Space space(dim_query);
 
         if (index == "hnsw" || index == "hnsw_recall") {
-            std::string hnsw_path = get_index_file_name(index, dataset, "hnswlib");
+            std::string hnsw_path = "index.hnsw." + dataset + "." + lib;
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
             std::cout << "[INFO] hnsw index loaded" << std::endl;
             
@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
         }
 
         if (index == "flat" || index == "hnsw_recall") {
-            std::string flat_path = get_index_file_name(index, dataset, "hnswlib");
+            std::string flat_path = "index.flat." + dataset + "." + lib;
             hnswlib::BruteforceSearch<float>* alg_flat = new hnswlib::BruteforceSearch<float>(&space, flat_path);
             std::cout << "[INFO] flat index loaded" << std::endl;
             
@@ -152,7 +152,6 @@ int main(int argc, char **argv) {
             #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_flat = alg_flat->searchKnn(data_query + i * dim_query, top_k);
-                std::cout << "Size of result_flat: " << result_flat.size() << "\n";
                 if (index == "hnsw_recall") {
                     std::cout << "[INFO] saving kNN result for recall calculation" << std::endl;
                     for (int j = 0; j < top_k; j++) {

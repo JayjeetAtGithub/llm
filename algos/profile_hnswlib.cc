@@ -36,8 +36,6 @@ int main(int argc, char **argv) {
         
         hnswlib::L2Space space(dim_learn);
 
-        n_learn = 100000;
-
         if (index == "hnsw" || index == "hnsw_recall") {
             std::cout << "[INFO] performing hnsw indexing" << std::endl;
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, n_learn, M, ef_construction);

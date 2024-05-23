@@ -170,6 +170,7 @@ int main(int argc, char **argv) {
         if (index == "hnsw_recall") {
             std::cout << "[INFO] calculating recall@" << top_k << std::endl;
             std::vector<double> recalls(n_query);
+            #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 auto v1 = results_flat_map[i];
                 auto v2 = results_hnsw_map[i];

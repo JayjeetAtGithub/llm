@@ -154,7 +154,6 @@ int main(int argc, char **argv) {
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_flat = alg_flat->searchKnn(data_query + i * dim_query, top_k);
                 if (index == "hnsw_recall") {
-                    std::cout << "[INFO] saving kNN result for recall calculation" << std::endl;
                     for (int j = 0; j < top_k; j++) {
                         results_flat_map[i][j] = result_flat.top().second;
                         result_flat.pop();

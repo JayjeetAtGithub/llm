@@ -154,6 +154,7 @@ int main(int argc, char **argv) {
             #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_flat = alg_flat->searchKnn(data_query + i * dim_query, top_k);
+                std::cout << "Size of result_flat: " << result_flat.size() << "\n";
                 if (index == "hnsw_recall") {
                     std::cout << "[INFO] saving kNN result for recall calculation" << std::endl;
                     for (int j = 0; j < top_k; j++) {

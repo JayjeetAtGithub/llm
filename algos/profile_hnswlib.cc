@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
         std::unordered_map<int, std::vector<int>> results_hnsw_map;
         std::unordered_map<int, std::vector<int>> results_flat_map;
 
-        n_query = 100;
+        n_query = 1000;
 
         if (index == "hnsw_recall") {
             results_hnsw_map.reserve(n_query);

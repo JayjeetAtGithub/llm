@@ -138,7 +138,6 @@ int main(int argc, char **argv) {
         }
 
         if (index == "flat" || index == "hnsw_recall") {
-            n_query = 300;
             std::string flat_path = get_index_file_name(index, dataset, "hnswlib");
             hnswlib::BruteforceSearch<float>* alg_flat = new hnswlib::BruteforceSearch<float>(&space, flat_path);
             std::cout << "[INFO] flat index loaded" << std::endl;

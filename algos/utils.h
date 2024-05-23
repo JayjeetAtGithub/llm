@@ -66,5 +66,8 @@ void read_dataset(const char* filename, float* &xb, size_t *d, size_t *n) {
 }
 
 std::string get_index_file_name(std::string index, std::string dataset, std::string lib) {
+    if (index == "hnsw_recall") {
+        index = "hnsw";
+    }
     return "index." + index + "." + dataset + "." + lib;
 }

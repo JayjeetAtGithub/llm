@@ -150,6 +150,7 @@ int main(int argc, char **argv) {
             #pragma omp parallel for
             for (int i = 0; i < n_query; i++) {
                 std::priority_queue<std::pair<float, hnswlib::labeltype>> result_flat = alg_flat->searchKnn(data_query + i * dim_query, top_k);
+                std::cout << "[INFO] query: " << i << " result size: " << result_flat.size() << std::endl;
                 if (index == "hnsw_recall") {
                     for (int j = 0; j < top_k; j++) {
                         results_flat_map[i][j] = result_flat.top().second;

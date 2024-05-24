@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 
     int M = 2<<4;
     int ef_construction = 40;
-    int ef_search = 16;
+    int ef_search = 2<<3;
 
     if (operation == "index") {
         size_t dim_learn, n_learn;
@@ -38,7 +38,6 @@ int main(int argc, char **argv) {
         if (index == "hnsw" || index == "hnsw_recall") {
             std::cout << "[INFO] performing hnsw indexing" << std::endl;
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, n_learn, M, ef_construction);
-            alg_hnsw->setEf(ef_search);
 
             if (mode == "profile") {
                 std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
@@ -108,8 +107,9 @@ int main(int argc, char **argv) {
         if (index == "hnsw" || index == "hnsw_recall") {
             std::string hnsw_path = "index.hnsw." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
+            alg_hnsw->setEf(ef_search);
             std::cout << "[INFO] hnsw index loaded" << std::endl;
-            
+
             if (mode == "profile") {
                 std::cout << "[INFO] start profiler....waiting for 20 seconds" << std::endl;
                 std::this_thread::sleep_for(std::chrono::seconds(20));

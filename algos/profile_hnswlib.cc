@@ -2,8 +2,8 @@
 #include "utils.h"
 
 int main(int argc, char **argv) {
-    if (argc < 6) {
-        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [mode(debug/profile)]" << std::endl;
+    if (argc < 7) {
+        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [ef_search] [mode(debug/profile)]" << std::endl;
         exit(1);
     }
 
@@ -11,18 +11,19 @@ int main(int argc, char **argv) {
     std::string dataset = argv[2];
     std::string operation = argv[3];
     int top_k = std::stoi(argv[4]);
-    std::string mode = argv[5];
+    int ef_search = std::stoi(argv[5]);
+    std::string mode = argv[6];
     print_pid();
 
     std::cout << "[ARG] index: " << index << std::endl;
     std::cout << "[ARG] dataset: " << dataset << std::endl;
     std::cout << "[ARG] operation: " << operation << std::endl;
     std::cout << "[ARG] top_k: " << top_k << std::endl;
+    std::cout << "[ARG] ef_search: " << ef_search << std::endl;
     std::cout << "[ARG] mode: " << mode << std::endl;
 
     int M = 2<<4;
     int ef_construction = 40;
-    int ef_search = 2<<3;
 
     if (operation == "index") {
         size_t dim_learn, n_learn;

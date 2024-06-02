@@ -26,6 +26,7 @@ if __name__ == "__main__":
     elif idx == "ivf":
         quantizer = faiss.IndexFlatL2(dim)
         index = faiss.IndexIVFFlat(quantizer, dim, 100)
+        index.nprobe = 8
         assert(index.is_trained == False) 
         index.train(xb)
         assert(index.is_trained == True)

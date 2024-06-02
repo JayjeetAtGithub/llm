@@ -19,7 +19,12 @@ if __name__ == "__main__":
     idx = str(sys.argv[1])
 
     xb = fvecs_read("../algos/gist/gist_learn.fvecs")
+    # shape of xb
+    print(xb.shape)
+
     xq = fvecs_read("../algos/gist/gist_query.fvecs")
+    # shape of xq
+    print(xq.shape)
 
     if idx == "flat":
         index = faiss.IndexFlatL2(dim)

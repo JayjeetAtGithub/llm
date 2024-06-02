@@ -24,6 +24,9 @@ if __name__ == "__main__":
     xq = fvecs_read("../algos/gist/gist_query.fvecs")
     print("Shape of xq: ", xq.shape)
 
+    gt = ivecs_read("../algos/gist/gist_groundtruth.ivecs")
+    print("Shape of gt: ", gt.shape)
+
     if idx == "flat":
         index = faiss.IndexFlatL2(dim)
     elif idx == "ivf":
@@ -48,15 +51,11 @@ if __name__ == "__main__":
     index.add(xb)
     print(f"Index Build: {time.time() - s} seconds")
 
-    k = 10
+    top_k = 10
 
     s = time.time()
-    D, I = index.search(xq, k)
-    
-    # Shape of D
-    print(D.shape)
-
-    # Shape of I
-    print(I.shape)    
-    
+    D, I = index.search(xq, top_k)
     print(f"Search: {time.time() - s} seconds")
+
+    recall_at_100 = (I[:, :100] == gt[:, :100]).sum() / float(xq.shape[0])
+    print("recall@100: %.3f" % recall_at_100)

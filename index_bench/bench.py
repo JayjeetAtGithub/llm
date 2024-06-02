@@ -51,16 +51,14 @@ if __name__ == "__main__":
     index.add(xb)
     print(f"Index Build: {time.time() - s} seconds")
 
-    top_k = 100
+    top_k = 1000
 
     s = time.time()
     D, I = index.search(xq, top_k)
     print(f"Search: {time.time() - s} seconds")
 
+    ks = [1, 10, 100, 1000]
 
-    print(I[:, :10])
-    print(gt[:, :10])
-
-    print((I[:, :10] == gt[:, :10]).sum())
-    recall_at_10 = (I[:, :10] == gt[:, :10]).sum() / float(xq.shape[0]) / 10
-    print("recall@10: %.3f" % recall_at_10)
+    for k in ks:
+        recall_at_k = (I[:, :k] == gt[:, :k]).sum() / float(xq.shape[0]) / k
+        print("recall@%d: %.3f" % (k, recall_at_k))

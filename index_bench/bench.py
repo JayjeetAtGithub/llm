@@ -49,4 +49,5 @@ if __name__ == "__main__":
 
     s = time.time()
     D, I = index.search(xq, k)
+    print(D, I)
     print(f"Search: {time.time() - s} seconds")

@@ -50,9 +50,11 @@ if __name__ == "__main__":
     s = time.time()
     index.add(xb)
     print(f"Index Build: {time.time() - s} seconds")
+    faiss.write_index(index, f"index.{idx}.faiss")
 
     top_k = 100
 
+    index = faiss.read_index(f"index.{idx}.faiss")
     s = time.time()
     D, I = index.search(xq, top_k)
     print(f"Search: {time.time() - s} seconds")

@@ -18,7 +18,7 @@ if __name__ == "__main__":
     dim = 960
     idx = str(sys.argv[1])
 
-    xb = fvecs_read("../algos/gist/gist_learn.fvecs")
+    xb = fvecs_read("../algos/gist/gist_base.fvecs")
     print("Shape of xb: ", xb.shape)
 
     xq = fvecs_read("../algos/gist/gist_query.fvecs")

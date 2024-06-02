@@ -14,6 +14,8 @@ rm -rf build/
 mkdir -p build/
 cd build/
 
+sudo apt-get install -y libblas-dev libopenblas-dev liblapack-dev swig python3-numpy
+
 cmake -DFAISS_ENABLE_GPU=OFF \
       -DFAISS_ENABLE_PYTHON=ON \
       -DBUILD_SHARED_LIBS=ON \

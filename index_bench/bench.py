@@ -17,6 +17,7 @@ def fvecs_read(fname):
 
 if __name__ == "__main__":
     dim = 960
+    top_k = 100
     idx = str(sys.argv[1])
 
     xb = fvecs_read("../algos/gist/gist_base.fvecs")
@@ -28,34 +29,31 @@ if __name__ == "__main__":
     gt = ivecs_read("../algos/gist/gist_groundtruth.ivecs")
     print("Shape of gt: ", gt.shape)
 
-    if idx == "flat":
-        index = faiss.IndexFlatL2(dim)
-    elif idx == "ivf":
-        quantizer = faiss.IndexFlatL2(dim)
-        index = faiss.IndexIVFFlat(quantizer, dim, 100)
-        index.nprobe = 10
-        assert(index.is_trained == False) 
-        index.train(xb)
-        assert(index.is_trained == True)
-    elif idx == "lsh":
-        nbits = 16 * dim
-        index = faiss.IndexLSH(dim, nbits)
-    elif idx == "hnsw":
-        M = 64
-        ef_search = 32 
-        ef_construction = 64
-        index = faiss.IndexHNSWFlat(dim, M)
-        index.hnsw.efConstruction = ef_construction
-        index.hnsw.efSearch = ef_search
-
-    s = time.time()
-    index.add(xb)
-    print(f"Index Build: {time.time() - s} seconds")
-
     if not os.path.exists(f"index.{idx}.faiss"):
-        faiss.write_index(index, f"index.{idx}.faiss")
+        if idx == "flat":
+            index = faiss.IndexFlatL2(dim)
+        elif idx == "ivf":
+            quantizer = faiss.IndexFlatL2(dim)
+            index = faiss.IndexIVFFlat(quantizer, dim, 100)
+            index.nprobe = 10
+            assert(index.is_trained == False) 
+            index.train(xb)
+            assert(index.is_trained == True)
+        elif idx == "lsh":
+            nbits = 16 * dim
+            index = faiss.IndexLSH(dim, nbits)
+        elif idx == "hnsw":
+            M = 64
+            ef_search = 32 
+            ef_construction = 64
+            index = faiss.IndexHNSWFlat(dim, M)
+            index.hnsw.efConstruction = ef_construction
+            index.hnsw.efSearch = ef_search
 
-    top_k = 100
+        s = time.time()
+        index.add(xb)
+        print(f"Index Build: {time.time() - s} seconds")
+        faiss.write_index(index, f"index.{idx}.faiss")
 
     index = faiss.read_index(f"index.{idx}.faiss")
     s = time.time()

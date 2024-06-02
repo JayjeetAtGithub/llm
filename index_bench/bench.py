@@ -57,5 +57,5 @@ if __name__ == "__main__":
     D, I = index.search(xq, top_k)
     print(f"Search: {time.time() - s} seconds")
 
-    recall_at_10 = (I[:, :10] == gt[:, :10]).sum() / float(xq.shape[0])
+    recall_at_10 = (I[:, :10] == gt[:, :10]).sum() / float(xq.shape[0]) / 10
     print("recall@10: ", recall_at_10)

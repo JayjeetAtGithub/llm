@@ -26,12 +26,12 @@ if __name__ == "__main__":
     elif idx == "ivf":
         quantizer = faiss.IndexFlatL2(dim)
         index = faiss.IndexIVFFlat(quantizer, dim, 100)
-        index.nprobe = 8
+        index.nprobe = 10
         assert(index.is_trained == False) 
         index.train(xb)
         assert(index.is_trained == True)
     elif idx == "lsh":
-        nbits = dim * 4
+        nbits = 64 * dim
         index = faiss.IndexLSH(dim, nbits)
     elif idx == "hnsw":
         M = 64

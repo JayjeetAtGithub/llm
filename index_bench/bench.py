@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 import faiss
@@ -50,7 +51,9 @@ if __name__ == "__main__":
     s = time.time()
     index.add(xb)
     print(f"Index Build: {time.time() - s} seconds")
-    faiss.write_index(index, f"index.{idx}.faiss")
+
+    if not os.path.exists(f"index.{idx}.faiss"):
+        faiss.write_index(index, f"index.{idx}.faiss")
 
     top_k = 100
 

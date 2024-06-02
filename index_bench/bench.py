@@ -3,6 +3,7 @@ import time
 import faiss
 import numpy as np
 
+
 def ivecs_read(fname):
     a = np.fromfile(fname, dtype='int32')
     d = a[0]
@@ -15,16 +16,13 @@ def fvecs_read(fname):
 
 if __name__ == "__main__":
     dim = 960
-
     idx = str(sys.argv[1])
 
     xb = fvecs_read("../algos/gist/gist_learn.fvecs")
-    # shape of xb
-    print(xb.shape)
+    print("Shape of xb: ", xb.shape)
 
     xq = fvecs_read("../algos/gist/gist_query.fvecs")
-    # shape of xq
-    print(xq.shape)
+    print("Shape of xq: ", xq.shape)
 
     if idx == "flat":
         index = faiss.IndexFlatL2(dim)

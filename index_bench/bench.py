@@ -58,4 +58,4 @@ if __name__ == "__main__":
     print(f"Search: {time.time() - s} seconds")
 
     recall_at_10 = (I[:, :10] == gt[:, :10]).sum() / float(xq.shape[0]) / 10
-    print("recall@10: ", recall_at_10)
+    print("recall@10: %.3f" % recall_at_10)

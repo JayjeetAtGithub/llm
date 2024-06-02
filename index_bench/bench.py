@@ -24,7 +24,7 @@ if __name__ == "__main__":
     xq = fvecs_read("../algos/gist/gist_query.fvecs")
     print("Shape of xq: ", xq.shape)
 
-    gt = ivecs_read("../algos/gist/gist_groundtruth.ivecs")
+    gt = fvecs_read("../algos/gist/gist_groundtruth.ivecs")
     print("Shape of gt: ", gt.shape)
 
     if idx == "flat":

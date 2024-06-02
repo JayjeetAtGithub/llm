@@ -51,7 +51,7 @@ if __name__ == "__main__":
     index.add(xb)
     print(f"Index Build: {time.time() - s} seconds")
 
-    top_k = 10
+    top_k = 100
 
     s = time.time()
     D, I = index.search(xq, top_k)

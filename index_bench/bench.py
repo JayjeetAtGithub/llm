@@ -17,7 +17,7 @@ def fvecs_read(fname):
 
 if __name__ == "__main__":
     dim = 960
-    top_k = 100
+    top_k = 10
     idx = str(sys.argv[1])
 
     xb = fvecs_read("../algos/gist/gist_base.fvecs")
@@ -64,8 +64,7 @@ if __name__ == "__main__":
 
     print("Shape of I: ", I.shape)
 
-    ks = [1, 10, 100]
-
+    ks = [top_k]
     for k in ks:
         recall_at_k = (I[:, :k] == gt[:, :k]).sum() / k
         print("recall@%d: %.6f" % (k, recall_at_k))

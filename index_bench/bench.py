@@ -68,4 +68,4 @@ if __name__ == "__main__":
 
     for k in ks:
         recall_at_k = (I[:, :k] == gt[:, :k]).sum() / k
-        print("recall@%d: %.3f" % (k, recall_at_k))
+        print("recall@%d: %.6f" % (k, recall_at_k))

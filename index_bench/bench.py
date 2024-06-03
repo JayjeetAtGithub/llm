@@ -62,6 +62,8 @@ if __name__ == "__main__":
     D, I = index.search(xq, top_k)
     print(f"Search: {time.time() - s} seconds")
 
+    print("Shape of I: ", I.shape)
+
     ks = [1, 10, 100]
 
     for k in ks:

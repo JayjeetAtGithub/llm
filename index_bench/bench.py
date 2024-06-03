@@ -24,12 +24,11 @@ if __name__ == "__main__":
     print("Shape of xb: ", xb.shape)
 
     xq = fvecs_read("../algos/gist/gist_query.fvecs")
-    print(xq)
     xq = xq[0].reshape(1, xq.shape[1])
-    print(xq)
     print("Shape of xq: ", xq.shape)
 
     gt = ivecs_read("../algos/gist/gist_groundtruth.ivecs")
+    xq = xq[0].reshape(1, xq.shape[1])
     print("Shape of gt: ", gt.shape)
 
     if not os.path.exists(f"index.{idx}.faiss"):

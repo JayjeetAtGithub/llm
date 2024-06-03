@@ -24,6 +24,7 @@ if __name__ == "__main__":
     print("Shape of xb: ", xb.shape)
 
     xq = fvecs_read("../algos/gist/gist_query.fvecs")
+    xq = xq[0].reshape(1, xq.shape[1])
     print("Shape of xq: ", xq.shape)
 
     gt = ivecs_read("../algos/gist/gist_groundtruth.ivecs")
@@ -63,5 +64,5 @@ if __name__ == "__main__":
     ks = [1, 10, 100]
 
     for k in ks:
-        recall_at_k = (I[:, :k] == gt[:, :k]).sum() / float(xq.shape[0]) / k
+        recall_at_k = (I[:, :k] == gt[:, :k]).sum() / k
         print("recall@%d: %.3f" % (k, recall_at_k))

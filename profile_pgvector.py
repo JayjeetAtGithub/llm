@@ -60,8 +60,9 @@ if __name__ == "__main__":
         cursor.execute('SET max_parallel_maintenance_workers = 40;')
         cursor.execute('SET max_parallel_workers = 40;')
         cursor.execute('SET maintenance_work_mem = "64GB";')
+        s = time.time()
         cursor.execute('CREATE INDEX ON embeddings_table USING hnsw (embedding vector_l2_ops) WITH (m = 32, ef_construction = 64);')
-        print("Created index on embeddings_table using HNSW algorithm")
+        print(f"Created index on embeddings_table using HNSW algorithm in {time.time() - s} seconds")
 
     if args.query:
         cursor.execute('CREATE EXTENSION IF NOT EXISTS vector')

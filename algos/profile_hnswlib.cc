@@ -2,28 +2,25 @@
 #include "utils.h"
 
 int main(int argc, char **argv) {
-    if (argc < 7) {
-        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [ef_search] [mode(debug/profile)]" << std::endl;
+    if (argc < 6) {
+        std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [mode(debug/profile)]" << std::endl;
         exit(1);
     }
 
     std::string index = argv[1];
     std::string dataset = argv[2];
     std::string operation = argv[3];
-    int top_k = std::stoi(argv[4]);
-    int ef_search = std::stoi(argv[5]);
-    std::string mode = argv[6];
+    std::string mode = argv[4];
     print_pid();
 
     std::cout << "[ARG] index: " << index << std::endl;
     std::cout << "[ARG] dataset: " << dataset << std::endl;
     std::cout << "[ARG] operation: " << operation << std::endl;
-    std::cout << "[ARG] top_k: " << top_k << std::endl;
-    std::cout << "[ARG] ef_search: " << ef_search << std::endl;
     std::cout << "[ARG] mode: " << mode << std::endl;
 
     int M = 32;
-    int ef_construction = 40;
+    int ef_construction = 64;
+    int top_k = 100;
 
     if (operation == "index") {
         size_t dim_learn, n_learn;
@@ -108,7 +105,7 @@ int main(int argc, char **argv) {
         if (index == "hnsw" || index == "hnsw_recall") {
             std::string hnsw_path = "index.hnsw." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
-            alg_hnsw->setEf(ef_search);
+            alg_hnsw->setEf(100);
             std::cout << "[INFO] hnsw index loaded" << std::endl;
 
             if (mode == "profile") {

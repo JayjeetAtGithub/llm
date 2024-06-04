@@ -41,7 +41,7 @@ if __name__ == "__main__":
             index.train(xb)
             assert(index.is_trained == True)
         elif idx == "lsh":
-            nbits = 16
+            nbits = 16 * dim
             index = faiss.IndexLSH(dim, nbits)
         elif idx == "hnsw":
             M = 32

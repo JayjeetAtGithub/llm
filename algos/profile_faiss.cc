@@ -8,6 +8,7 @@
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFFlat.h>
 #include <faiss/IndexHNSW.h>
+#include <faiss/IndexLSH.h>
 #include <faiss/index_io.h>
 
 #include "utils.h"
@@ -26,7 +27,7 @@ std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
         auto idx = std::make_shared<faiss::IndexIVFFlat>(new faiss::IndexFlatL2(dim), dim, 100);
         return idx;
     } else if (index == "lsh") {
-        auto idx = std::make_shared<faiss::IndexLSH>(dim, 8);
+        auto idx = std::make_shared<faiss::IndexLSH>(dim, 16);
         return idx;
     }
     return nullptr;
@@ -61,6 +62,10 @@ int main(int argc, char** argv) {
 
         std::cout << "[INFO] performing " << index << " indexing" << std::endl;
         std::shared_ptr<faiss::Index> idx = create_index(index, dim_learn);
+
+        if (index == "ivf" || index == "lsh") {
+            idx->train(n_learn, data_learn);
+        }
         
         auto s = std::chrono::high_resolution_clock::now();        
         idx->add(n_learn, data_learn);

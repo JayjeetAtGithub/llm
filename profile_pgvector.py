@@ -21,6 +21,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     conn = psycopg2.connect("postgresql://noobjc@localhost:5432/vectordb")
+    conn.set_session(autocommit=True)
     cursor = conn.cursor()
     print("Connected to PostgreSQL: ", conn)
 

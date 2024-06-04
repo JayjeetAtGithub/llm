@@ -79,6 +79,6 @@ if __name__ == "__main__":
             res = cursor.fetchall()
             print(f"Executed query {query_idx}")
             query_idx += 1
-            if query_idx == 10000:
+            if query_idx == 1000:
                 break
         print(f"Executed queries in {time.time() - s} seconds")

@@ -62,7 +62,7 @@ if __name__ == "__main__":
         cursor.execute('SET maintenance_work_mem = "64GB";')
         s = time.time()
         cursor.execute('CREATE INDEX ON embeddings_table USING ivfflat (embedding vector_l2_ops) WITH (lists = 100);')
-        print(f"Created index on embeddings_table using HNSW algorithm in {time.time() - s} seconds")
+        print(f"Created index on embeddings_table in {time.time() - s} seconds")
 
     if args.query:
         cursor.execute('CREATE EXTENSION IF NOT EXISTS vector')

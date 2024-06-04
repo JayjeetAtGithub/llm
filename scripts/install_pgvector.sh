@@ -30,7 +30,6 @@ sudo PG_CONFIG=/usr/local/pgsql/bin/pg_config make -j$(nproc) install
 cd ../
 
 # Manual steps
-# /usr/local/pgsql/bin/initdb -D /mnt/workspace/pgsql/data
-# /usr/local/pgsql/bin/pg_ctl -D /mnt/workspace/pgsql/data -l logfile start
-# /usr/local/pgsql/bin/createdb vectordb
-# /usr/local/pgsql/bin/psql vectordb
+/usr/local/pgsql/bin/initdb -D /mnt/workspace/pgsql/data
+/usr/local/pgsql/bin/pg_ctl -D /mnt/workspace/pgsql/data -l logfile start
+/usr/local/pgsql/bin/createdb vectordb || true

@@ -36,6 +36,7 @@ if __name__ == "__main__":
         print("Created table: embeddings_table")
 
         file_list = os.listdir("dbpedia-entities-openai-1M/data")
+        stop = False
         row_idx = 0
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
@@ -44,7 +45,10 @@ if __name__ == "__main__":
                 print(f"Inserted row {row_idx} into pg_vector")
                 row_idx += 1
                 if row_idx == 100000:
+                    stop = True
                     break
+            if stop:
+                break
 
         print(f"Inserted {row_idx} rows into pg_vector")
     

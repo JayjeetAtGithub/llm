@@ -60,6 +60,7 @@ if __name__ == "__main__":
 
     if args.query:
         cursor.execute('CREATE EXTENSION IF NOT EXISTS vector')
+        cursor.execute('SET hnsw.ef_search = 100')
         register_vector(conn)
         print("Initiated extension: pg_vector")
 
@@ -69,6 +70,6 @@ if __name__ == "__main__":
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
-                res = cursor.execute(f"BEGIN; SET LOCAL hnsw.ef_search = 100; SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100; COMMIT;").fetchall()
+                res = cursor.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;").fetchall()
                 print(f"Ran query {query_idx} on pg_vector")
                 query_idx += 1

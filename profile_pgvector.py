@@ -33,7 +33,7 @@ if __name__ == "__main__":
         conn.execute('CREATE TABLE embeddings_table (id bigserial PRIMARY KEY, content text, embedding vector(1536))')
         print("Created table: embeddings_table")
 
-        file_list = os.listdir("dbpedia-entities-openai-1M/data")
+        file_list = os.listdir("dbpedia-entities-openai-1M/data")[:1]
         row_idx = 0
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))

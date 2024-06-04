@@ -35,7 +35,7 @@ if __name__ == "__main__":
         cursor.execute('CREATE TABLE embeddings_table (id bigserial PRIMARY KEY, content text, embedding vector(1536))')
         print("Created table: embeddings_table")
 
-        file_list = os.listdir("dbpedia-entities-openai-1M/data")[0]
+        file_list = os.listdir("dbpedia-entities-openai-1M/data")
         row_idx = 0
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
@@ -43,7 +43,7 @@ if __name__ == "__main__":
                 cursor.execute('INSERT INTO embeddings_table (content, embedding) VALUES (%s, %s)', (row[2], row[3]))
                 print(f"Inserted row {row_idx} into pg_vector")
                 row_idx += 1
-                if row_idx == 5000:
+                if row_idx == 100000:
                     break
 
         print(f"Inserted {row_idx} rows into pg_vector")
@@ -65,8 +65,11 @@ if __name__ == "__main__":
         register_vector(conn)
         print("Initiated extension: pg_vector")
 
+        query_idx = 0
         file = os.listdir("dbpedia-entities-openai-1M/data")[1]
         batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
         for row in batch:
             cursor.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;")
             res = cursor.fetchall()
+            print(f"Executed query {query_idx}")
+            query_idx += 1

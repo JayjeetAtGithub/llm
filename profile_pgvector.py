@@ -51,7 +51,7 @@ if __name__ == "__main__":
         conn.execute('SET max_parallel_maintenance_workers = 40;')
         conn.execute('SET max_parallel_workers = 40;')
         conn.execute('SET maintenance_work_mem = "64GB";')
-        conn.execute('CREATE INDEX ON embeddings_table USING hnsw (embedding vector_l2_ops);')
+        conn.execute('CREATE INDEX ON embeddings_table USING hnsw (embedding vector_l2_ops) WITH (m = 32, ef_construction = 32);')
         print("Created index on embeddings_table using HNSW algorithm")
 
     if args.query:
@@ -65,6 +65,6 @@ if __name__ == "__main__":
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
-                res = conn.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 5;").fetchall()
+                res = conn.execute(f"BEGIN; SET LOCAL hnsw.ef_search = 100; SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100; COMMIT;").fetchall()
                 print(f"Ran query {query_idx} on pg_vector")
                 query_idx += 1

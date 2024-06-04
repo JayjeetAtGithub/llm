@@ -37,20 +37,17 @@ if __name__ == "__main__":
         elif idx == "ivf":
             quantizer = faiss.IndexFlatL2(dim)
             index = faiss.IndexIVFFlat(quantizer, dim, 100)
-            index.nprobe = 10
             assert(index.is_trained == False) 
             index.train(xb)
             assert(index.is_trained == True)
         elif idx == "lsh":
-            nbits = 16
+            nbits = 16 * dim
             index = faiss.IndexLSH(dim, nbits)
         elif idx == "hnsw":
             M = 32
-            ef_search = 10000 
             ef_construction = 32
             index = faiss.IndexHNSWFlat(dim, M)
             index.hnsw.efConstruction = ef_construction
-            index.hnsw.efSearch = ef_search
 
         s = time.time()
         index.add(xb)
@@ -58,6 +55,12 @@ if __name__ == "__main__":
         faiss.write_index(index, f"index.{idx}.faiss")
 
     index = faiss.read_index(f"index.{idx}.faiss")
+
+    if idx == "ivf":
+        index.nprobe = 10
+    elif idx == "hnsw":
+        index.hnsw.efSearch = 10000
+    
     s = time.time()
     D, I = index.search(xq, top_k)
     print(f"Search: {time.time() - s} seconds")

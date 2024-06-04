@@ -17,7 +17,7 @@ def fvecs_read(fname):
 
 if __name__ == "__main__":
     dim = 960
-    top_k = 10000
+    top_k = 100
     idx = str(sys.argv[1])
 
     xb = fvecs_read("../algos/gist/gist_base.fvecs")
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     if idx == "ivf":
         index.nprobe = 10
     elif idx == "hnsw":
-        index.hnsw.efSearch = 10000
+        index.hnsw.efSearch = 100
     
     s = time.time()
     D, I = index.search(xq, top_k)

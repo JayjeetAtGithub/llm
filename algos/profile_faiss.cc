@@ -21,7 +21,6 @@ std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
     } else if (index == "hnsw") {
         auto idx = std::make_shared<faiss::IndexHNSWFlat>(dim, M);
         idx->hnsw.efConstruction = 40;
-        idx->hnsw.efSearch = 10000;
         return idx;
     } else if (index == "ivf") {
         auto idx = std::make_shared<faiss::IndexIVFFlat>(new faiss::IndexFlatL2(dim), dim, 100);
@@ -102,7 +101,13 @@ int main(int argc, char** argv) {
         }
 
         std::cout << "[INFO] starting query " << index << " for " << n_query << " queries" << std::endl;
-        idx->nprobe = 10;
+
+        if (index == "ivf") {
+            dynamic_cast<faiss::IndexIVFFlat*>(idx)->nprobe = 10;
+        } else if (index == "hnsw") {
+            dynamic_cast<faiss::IndexHNSWFlat*>(idx)->hnsw.efSearch = 10000;
+        }
+
         auto s = std::chrono::high_resolution_clock::now();
         idx->search(n_query, data_query, top_k, dis.data(), nns.data());
         auto e = std::chrono::high_resolution_clock::now();

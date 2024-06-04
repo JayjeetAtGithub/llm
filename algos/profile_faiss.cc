@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
         float* data_learn;
         std::string dataset_path_learn = dataset + "/" + dataset + "_base.fvecs";
         read_dataset(dataset_path_learn.c_str(), data_learn, &dim_learn, &n_learn);
+        n_learn = 100000;
         std::cout << "[INFO] learn dataset shape: " << dim_learn << " x " << n_learn << std::endl;
         preview_dataset(data_learn);
 
@@ -84,6 +85,7 @@ int main(int argc, char** argv) {
         float* data_query;
         std::string dataset_path_query = dataset + "/" + dataset + "_learn.fvecs";
         read_dataset(dataset_path_query.c_str(), data_query, &dim_query, &n_query);
+        n_query = 1000;
         std::cout << "[INFO] query dataset shape: " << dim_query << " x " << n_query << std::endl;
         preview_dataset(data_query);
 

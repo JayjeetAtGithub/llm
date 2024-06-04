@@ -13,7 +13,7 @@ if [ ! -d "postgres" ]; then
 fi
 
 if [ ! -d "pgvector" ]; then
-    git clone --branch v0.6.2 https://github.com/pgvector/pgvector
+    git clone --branch v0.7.1 https://github.com/pgvector/pgvector
 fi
 
 cd postgres/

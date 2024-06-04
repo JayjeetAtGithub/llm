@@ -55,7 +55,7 @@ if __name__ == "__main__":
         cursor.execute('SET max_parallel_maintenance_workers = 40;')
         cursor.execute('SET max_parallel_workers = 40;')
         cursor.execute('SET maintenance_work_mem = "64GB";')
-        cursor.execute('CREATE INDEX ON embeddings_table USING hnsw (embedding vector_l2_ops) WITH (m = 32, ef_construction = 32);')
+        cursor.execute('CREATE INDEX ON embeddings_table USING hnsw (embedding vector_l2_ops) WITH (m = 32, ef_construction = 64);')
         print("Created index on embeddings_table using HNSW algorithm")
 
     if args.query:

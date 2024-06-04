@@ -4,7 +4,7 @@ import argparse
 
 import psycopg2
 import pyarrow.parquet as pq
-from pgvector.psycopg import register_vector
+from pgvector.psycopg2 import register_vector
 
 
 def read_parquet_file(file_path):

@@ -102,6 +102,7 @@ int main(int argc, char** argv) {
         }
 
         std::cout << "[INFO] starting query " << index << " for " << n_query << " queries" << std::endl;
+        idx->nprobe = 10;
         auto s = std::chrono::high_resolution_clock::now();
         idx->search(n_query, data_query, top_k, dis.data(), nns.data());
         auto e = std::chrono::high_resolution_clock::now();

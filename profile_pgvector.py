@@ -67,9 +67,6 @@ if __name__ == "__main__":
 
         file = os.listdir("dbpedia-entities-openai-1M/data")[1]
         batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
-        with concurrent.futures.ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
-            futures = []
-            for row in batch:
-                futures.append(executor.submit(cursor.execute, f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;"))
-            for future in concurrent.futures.as_completed(futures):
-                print(future.result())
+        for row in batch:
+            cursor.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;")
+            res = cursor.fetchall()

@@ -26,7 +26,7 @@ std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
         auto idx = std::make_shared<faiss::IndexIVFFlat>(new faiss::IndexFlatL2(dim), dim, 100);
         return idx;
     } else if (index == "lsh") {
-        auto idx = std::make_shared<faiss::IndexLSH>(dim, 16);
+        auto idx = std::make_shared<faiss::IndexLSH>(dim, 16 * dim);
         return idx;
     }
     return nullptr;

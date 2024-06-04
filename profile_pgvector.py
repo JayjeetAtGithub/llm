@@ -72,6 +72,7 @@ if __name__ == "__main__":
         query_idx = 0
         file = os.listdir("dbpedia-entities-openai-1M/data")[25]
         batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
+        s = time.time()
         for row in batch:
             cursor.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;")
             res = cursor.fetchall()
@@ -79,3 +80,4 @@ if __name__ == "__main__":
             query_idx += 1
             if query_idx == 1000:
                 break
+        print(f"Executed 1000 queries in {time.time() - s} seconds")

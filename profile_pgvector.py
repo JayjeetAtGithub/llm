@@ -41,6 +41,8 @@ if __name__ == "__main__":
                 conn.execute('INSERT INTO embeddings_table (content, embedding) VALUES (%s, %s)', (row[2], row[3]))
                 print(f"Inserted row {row_idx} into pg_vector")
                 row_idx += 1
+                if row_idx == 5000:
+                    break
 
         print(f"Inserted {row_idx} rows into pg_vector")
     

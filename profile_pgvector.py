@@ -35,7 +35,7 @@ if __name__ == "__main__":
         cursor.execute('CREATE TABLE embeddings_table (id bigserial PRIMARY KEY, content text, embedding vector(1536))')
         print("Created table: embeddings_table")
 
-        file_list = os.listdir("dbpedia-entities-openai-1M/data")[:1]
+        file_list = os.listdir("dbpedia-entities-openai-1M/data")[0]
         row_idx = 0
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
@@ -65,16 +65,11 @@ if __name__ == "__main__":
         register_vector(conn)
         print("Initiated extension: pg_vector")
 
-        file_list = os.listdir("dbpedia-entities-openai-1M/data")[5:7]
-
-        for file in file_list:
-            batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
-            
-            with concurrent.futures.ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
-                futures = []
-                for row in batch:
-                    futures.append(executor.submit(cursor.execute, f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;"))
-                for future in concurrent.futures.as_completed(futures):
-                    print(future.result())
-
-            
+        file = os.listdir("dbpedia-entities-openai-1M/data")[1]
+        batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
+            futures = []
+            for row in batch:
+                futures.append(executor.submit(cursor.execute, f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;"))
+            for future in concurrent.futures.as_completed(futures):
+                print(future.result())

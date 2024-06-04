@@ -70,7 +70,7 @@ if __name__ == "__main__":
         print("Initiated extension: pg_vector")
 
         query_idx = 0
-        file = os.listdir("dbpedia-entities-openai-1M/data")[1]
+        file = os.listdir("dbpedia-entities-openai-1M/data")[25]
         batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
         for row in batch:
             cursor.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;")

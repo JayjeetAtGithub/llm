@@ -21,16 +21,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     conn = psycopg2.connect("postgresql://noobjc@localhost:5432/vectordb")
-    conn = conn.cursor()
+    cursor = conn.cursor()
     print("Connected to PostgreSQL: ", conn)
 
     if args.ingest:
-        conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+        cursor.execute('CREATE EXTENSION IF NOT EXISTS vector')
         register_vector(conn)
         print("Initiated extension: pg_vector")
 
-        conn.execute('DROP TABLE IF EXISTS embeddings_table')
-        conn.execute('CREATE TABLE embeddings_table (id bigserial PRIMARY KEY, content text, embedding vector(1536))')
+        cursor.execute('DROP TABLE IF EXISTS embeddings_table')
+        cursor.execute('CREATE TABLE embeddings_table (id bigserial PRIMARY KEY, content text, embedding vector(1536))')
         print("Created table: embeddings_table")
 
         file_list = os.listdir("dbpedia-entities-openai-1M/data")[:1]
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
-                conn.execute('INSERT INTO embeddings_table (content, embedding) VALUES (%s, %s)', (row[2], row[3]))
+                cursor.execute('INSERT INTO embeddings_table (content, embedding) VALUES (%s, %s)', (row[2], row[3]))
                 print(f"Inserted row {row_idx} into pg_vector")
                 row_idx += 1
                 if row_idx == 5000:
@@ -47,18 +47,18 @@ if __name__ == "__main__":
         print(f"Inserted {row_idx} rows into pg_vector")
     
     if args.index:
-        conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+        cursor.execute('CREATE EXTENSION IF NOT EXISTS vector')
         register_vector(conn)
         print("Initiated extension: pg_vector")
 
-        conn.execute('SET max_parallel_maintenance_workers = 40;')
-        conn.execute('SET max_parallel_workers = 40;')
-        conn.execute('SET maintenance_work_mem = "64GB";')
-        conn.execute('CREATE INDEX ON embeddings_table USING hnsw (embedding vector_l2_ops) WITH (m = 32, ef_construction = 32);')
+        cursor.execute('SET max_parallel_maintenance_workers = 40;')
+        cursor.execute('SET max_parallel_workers = 40;')
+        cursor.execute('SET maintenance_work_mem = "64GB";')
+        cursor.execute('CREATE INDEX ON embeddings_table USING hnsw (embedding vector_l2_ops) WITH (m = 32, ef_construction = 32);')
         print("Created index on embeddings_table using HNSW algorithm")
 
     if args.query:
-        conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+        cursor.execute('CREATE EXTENSION IF NOT EXISTS vector')
         register_vector(conn)
         print("Initiated extension: pg_vector")
 
@@ -68,6 +68,6 @@ if __name__ == "__main__":
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
             for row in batch:
-                res = conn.execute(f"BEGIN; SET LOCAL hnsw.ef_search = 100; SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100; COMMIT;").fetchall()
+                res = cursor.execute(f"BEGIN; SET LOCAL hnsw.ef_search = 100; SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100; COMMIT;").fetchall()
                 print(f"Ran query {query_idx} on pg_vector")
                 query_idx += 1

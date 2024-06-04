@@ -17,7 +17,7 @@ def fvecs_read(fname):
 
 if __name__ == "__main__":
     dim = 960
-    top_k = 10
+    top_k = 10000
     idx = str(sys.argv[1])
 
     xb = fvecs_read("../algos/gist/gist_base.fvecs")
@@ -42,12 +42,12 @@ if __name__ == "__main__":
             index.train(xb)
             assert(index.is_trained == True)
         elif idx == "lsh":
-            nbits = 16 * dim
+            nbits = 16
             index = faiss.IndexLSH(dim, nbits)
         elif idx == "hnsw":
-            M = 64
-            ef_search = 32 
-            ef_construction = 64
+            M = 32
+            ef_search = 10000 
+            ef_construction = 32
             index = faiss.IndexHNSWFlat(dim, M)
             index.hnsw.efConstruction = ef_construction
             index.hnsw.efSearch = ef_search

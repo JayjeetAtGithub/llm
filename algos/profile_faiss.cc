@@ -34,7 +34,7 @@ std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
 }
 
 int main(int argc, char** argv) {
-    if (argc < 8) {
+    if (argc < 6) {
         std::cout << "usage: " << argv[0] << " [index (hnsw/flat/lsh/ivf)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [mode(debug/profile)]" << std::endl;
         exit(1);
     }

@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 
     int M = 32;
     int ef_construction = 64;
-    int top_k = 100;
+    int top_k = 10000;
 
     if (operation == "index") {
         size_t dim_learn, n_learn;
@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
         if (index == "hnsw" || index == "hnsw_recall") {
             std::string hnsw_path = "index.hnsw." + dataset + ".hnswlib";
             hnswlib::HierarchicalNSW<float>* alg_hnsw = new hnswlib::HierarchicalNSW<float>(&space, hnsw_path);
-            alg_hnsw->setEf(100);
+            alg_hnsw->setEf(10000);
             std::cout << "[INFO] hnsw index loaded" << std::endl;
 
             if (mode == "profile") {

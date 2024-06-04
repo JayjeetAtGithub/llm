@@ -2,7 +2,7 @@
 #include "utils.h"
 
 int main(int argc, char **argv) {
-    if (argc < 6) {
+    if (argc < 5) {
         std::cout << "usage: " << argv[0] << " [index (hnsw/flat)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [mode(debug/profile)]" << std::endl;
         exit(1);
     }

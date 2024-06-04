@@ -61,12 +61,12 @@ if __name__ == "__main__":
         cursor.execute('SET max_parallel_workers = 40;')
         cursor.execute('SET maintenance_work_mem = "64GB";')
         s = time.time()
-        cursor.execute('CREATE INDEX ON embeddings_table USING hnsw (embedding vector_l2_ops) WITH (m = 32, ef_construction = 64);')
+        cursor.execute('CREATE INDEX ON embeddings_table USING ivfflat (embedding vector_l2_ops) WITH (lists = 100);')
         print(f"Created index on embeddings_table using HNSW algorithm in {time.time() - s} seconds")
 
     if args.query:
         cursor.execute('CREATE EXTENSION IF NOT EXISTS vector')
-        cursor.execute('SET hnsw.ef_search = 100')
+        cursor.execute('SET ivfflat.probes = 10;')
         register_vector(conn)
         print("Initiated extension: pg_vector")
 
@@ -79,6 +79,6 @@ if __name__ == "__main__":
             res = cursor.fetchall()
             print(f"Executed query {query_idx}")
             query_idx += 1
-            if query_idx == 1000:
+            if query_idx == 10000:
                 break
         print(f"Executed 1000 queries in {time.time() - s} seconds")

@@ -1,7 +1,8 @@
 import os
 import time
 import argparse
-
+import concurrent.futures
+import multiprocessing as mp
 import psycopg2
 import pyarrow.parquet as pq
 from pgvector.psycopg2 import register_vector
@@ -66,11 +67,14 @@ if __name__ == "__main__":
 
         file_list = os.listdir("dbpedia-entities-openai-1M/data")[5:7]
 
-        query_idx = 0
         for file in file_list:
             batch = read_parquet_file(os.path.join("dbpedia-entities-openai-1M/data", file))
-            for row in batch:
-                cursor.execute(f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;")
-                res = cursor.fetchall()
-                print(f"Ran query {query_idx} on pg_vector")
-                query_idx += 1
+            
+            with concurrent.futures.ThreadPoolExecutor(max_workers=mp.cpu_count()) as executor:
+                futures = []
+                for row in batch:
+                    futures.append(executor.submit(cursor.execute, f"SELECT * FROM embeddings_table ORDER BY embedding <-> '{row[3].tolist()}' LIMIT 100;"))
+                for future in concurrent.futures.as_completed(futures):
+                    print(future.result())
+
+            

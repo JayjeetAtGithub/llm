@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     std::cout << "[ARG] ef_search: " << ef_search << std::endl;
     std::cout << "[ARG] mode: " << mode << std::endl;
 
-    int M = 2<<4;
+    int M = 32;
     int ef_construction = 40;
 
     if (operation == "index") {

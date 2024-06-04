@@ -20,7 +20,7 @@ std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
         return std::make_shared<faiss::IndexFlatL2>(dim);
     } else if (index == "hnsw") {
         auto idx = std::make_shared<faiss::IndexHNSWFlat>(dim, M);
-        idx->hnsw.efConstruction = 40;
+        idx->hnsw.efConstruction = 32;
         return idx;
     } else if (index == "ivf") {
         auto idx = std::make_shared<faiss::IndexIVFFlat>(new faiss::IndexFlatL2(dim), dim, 100);
@@ -33,16 +33,16 @@ std::shared_ptr<faiss::Index> create_index(std::string index, size_t dim) {
 }
 
 int main(int argc, char** argv) {
-    if (argc < 6) {
-        std::cout << "usage: " << argv[0] << " [index (hnsw/flat/lsh/ivf)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [top_k] [mode(debug/profile)]" << std::endl;
+    if (argc < 5) {
+        std::cout << "usage: " << argv[0] << " [index (hnsw/flat/lsh/ivf)] [dataset (siftsmall/sift/gist/bigann)] [operation (index/query)] [mode(debug/profile)]" << std::endl;
         exit(1);
     }
 
     std::string index = argv[1];
     std::string dataset = argv[2];
     std::string operation = argv[3];
-    int top_k = std::stoi(argv[4]);
-    std::string mode = argv[5];
+    std::string mode = argv[4];
+    int32_t top_k = 100;
     print_pid();
 
     std::cout << "[ARG] index: " << index << std::endl;
@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
         if (index == "ivf") {
             dynamic_cast<faiss::IndexIVFFlat*>(idx)->nprobe = 10;
         } else if (index == "hnsw") {
-            dynamic_cast<faiss::IndexHNSWFlat*>(idx)->hnsw.efSearch = 10000;
+            dynamic_cast<faiss::IndexHNSWFlat*>(idx)->hnsw.efSearch = 100;
         }
 
         auto s = std::chrono::high_resolution_clock::now();

@@ -81,4 +81,4 @@ if __name__ == "__main__":
             query_idx += 1
             if query_idx == 10000:
                 break
-        print(f"Executed 1000 queries in {time.time() - s} seconds")
+        print(f"Executed queries in {time.time() - s} seconds")
